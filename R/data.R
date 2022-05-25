@@ -1,3 +1,9 @@
+
+#' Loads the stored data
+#'
+#' This function loads the data that is stored in the package for use in examples
+#'
+#' @export
 data_load <- function(...)
 {
   datasets <- readRDS(system.file("extdata", "gene_counts_v2.RDS", package = "benchmarking"))
@@ -5,8 +11,9 @@ data_load <- function(...)
 
 }
 
-
-
+#' Merge the Sparse Matricies
+#'
+#' This function
 merge.sparse <- function(...)
 {
 
@@ -47,13 +54,18 @@ merge_datasets <- function(data.list, intersect=TRUE)
   return(list(data))
 }
 
-
+#' View Data
+#'
+#' This function displays a short summary of each data set in the data list provided. Can be used to gain quick insights into the
+#' information that is stored in the data
+#'
+#' @param data.list A list of data sets that you would like to view
+#' @export
 view_data <- function(data.lsit)
 {
   for (i in 1:length(data.list))
   {
     str(data.list[i])
-
   }
 }
 

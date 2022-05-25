@@ -2,10 +2,18 @@
 % Please edit documentation in R/workflow.R
 \name{run_seurat_columns}
 \alias{run_seurat_columns}
-\title{Run Seurat Pipeline with the Col}
+\title{Run Seurat Pipeline with the Columns Permuted}
 \usage{
 run_seurat_columns(idx)
 }
+\arguments{
+\item{idx}{A data list with genes as rows and cells as columns}
+}
+\value{
+Normalized Information Distance
+}
 \description{
-Functions
+This functions runs the Seurat Pipeline, with experimental condition. The initial data list is appended with a the same data list,
+with permuted columns. This allows the testing of the algorithmic stability of the Seurat Pipeline for the specified data list. The
+Normalized information Distance is returned. If there is true algorthmic stabilityu this score whould be 1
 }
