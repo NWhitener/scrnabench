@@ -14,7 +14,7 @@ data_load <- function(...)
 #' Merge the Sparse Matricies
 #'
 #' This function
-merge.sparse <- function(...)
+merge_sparse <- function(...)
 {
 
   cnnew <- character()

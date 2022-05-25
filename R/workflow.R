@@ -257,5 +257,165 @@ run_seurat <- function(data.list)
 
 }
 
+run_workflow <- function(idx)
+{
+  # Harmony
+  data.list <- extract_datasets(idx)
+  data.list <- extract_common_genes(data.list)
+  data.list <- merge_datasets(data.list, intersect=TRUE)
+  #data.list <- run_gficf(data.list)
+  data.list <- preprocess_batches(data.list)
+  data.list <- run_log(data.list) #LOG
+
+  data <- annotate_seurat_object(data.list[[1]])
+  data <- run_harmony(data, batch_column)
+  write_output(data, 'harmony')
+
+  # FastMNN
+  data.list <- extract_datasets(idx)
+  data.list <- extract_common_genes(data.list)
+  data.list <- merge_datasets(data.list, intersect=TRUE)
+  #data.list <- run_gficf(data.list)
+  data.list <- preprocess_batches(data.list)
+  data.list <- run_log(data.list) #LOG
+  data <- annotate_seurat_object(data.list[[1]])
+  data <- run_fastmnn(data, batch_column)
+  write_output(data, 'fastmnn')
+
+  # CCA
+  data.list <- extract_datasets(idx)
+  data.list <- preprocess_batches(data.list)
+  #data.list <- run_gficf(data.list)
+  data.list <- run_log(data.list)
+  data <- run_cca(data.list)
+  data <- annotate_seurat_object(data)
+  write_output(data, 'cca')
+
+  # ScTransform
+  data.list <- extract_datasets(idx)
+  data.list <- preprocess_batches(data.list)
+  data <- run_sctransform(data.list)
+  data <- annotate_seurat_object(data)
+  write_output(data, 'sctransform')
+}
+
+
+run_workflow2 <- function(idx, dup)
+{
+  # Harmony
+  data.list <- duplicate_datasets(idx, dup)
+  data.list <- extract_common_genes(data.list)
+  data.list <- merge_datasets(data.list, intersect=TRUE)
+  #data.list <- run_gficf(data.list)
+  data.list <- preprocess_batches(data.list)
+  data.list <- run_log(data.list) #LOG
+
+  data <- annotate_seurat_object(data.list[[1]])
+  data <- run_harmony(data, batch_column)
+  write_output(data, 'harmony')
+
+  # FastMNN
+  data.list <- duplicate_datasets(idx, dup)
+  data.list <- extract_common_genes(data.list)
+  data.list <- merge_datasets(data.list, intersect=TRUE)
+  #data.list <- run_gficf(data.list)
+  data.list <- preprocess_batches(data.list)
+  data.list <- run_log(data.list) #LOG
+  data <- annotate_seurat_object(data.list[[1]])
+  data <- run_fastmnn(data, batch_column)
+  write_output(data, 'fastmnn')
+
+  # CCA
+  data.list <- duplicate_datasets(idx, dup)
+  data.list <- preprocess_batches(data.list)
+  #data.list <- run_gficf(data.list)
+  data.list <- run_log(data.list)
+  data <- run_cca(data.list)
+  data <- annotate_seurat_object(data)
+  write_output(data, 'cca')
+
+  # ScTransform
+  data.list <- duplicate_datasets(idx, dup)
+  data.list <- preprocess_batches(data.list)
+  data <- run_sctransform(data.list)
+  data <- annotate_seurat_object(data)
+  write_output(data, 'sctransform')
+}
+
+run_seurat_rows <- function(idx)
+{
+  data.list <- extract_datasets(idx)
+  data.list2 <- extract_datasets(idx)
+  data.list2 <- permute_rows(data.list2)
+
+  data.list <- append(data.list, data.list2)
+  data.list <- preprocess_batches(data.list)
+  data.list <- run_log(data.list)
+  data.list <- run_seurat(data.list)
+
+  x = merge(data.list[[1]]@meta.data, data.list[[2]]@meta.data, by="row.names", all=TRUE)
+  return(ARI(x$seurat_clusters.x, x$seurat_clusters.y))
+}
+
+write_output <- function(data, prefix)
+{
+  print(prefix)
+  print(dim(as.data.frame(GetAssayData(data))[VariableFeatures(data),]))
+  path = paste("./", prefix, sep="")
+
+  write.csv(t(as.data.frame(GetAssayData(data))[VariableFeatures(data),]), paste(path, "_hvg.csv", sep=""), quote=F)
+  write.csv(Embeddings(data, 'umap'), paste(path, "_umap.csv", sep=""), quote=F)
+  if(prefix=='harmony')
+  {
+    write.csv(Embeddings(data, 'harmony'), paste(path, "_harmonized.csv", sep=""), quote=F)
+  }
+  else if (prefix == 'fastmnn')
+  {
+    write.csv(Embeddings(data, 'mnn'), paste(path, "_harmonized.csv", sep=""), quote=F)
+  }
+  else
+  {
+    write.csv(Embeddings(data, 'pca'), paste(path, "_pca.csv", sep=""), quote=F)
+  }
+  write.csv(data@meta.data, paste(path, "_labels.csv", sep=""), quote=F)
+}
+
+
+annotate_seurat_object <-function(data)
+{
+  cols = colnames(data)
+  for (i in (1:length(cols)))
+  {
+    col <- cols[i]
+    col <- str_split(col, "-")[[1]][1]
+    data@meta.data$ID[i] <- col
+    chunks <- str_split(col, "_")
+    data@meta.data$TECHNLOGY[i] <- chunks[[1]][1]
+
+    if(chunks[[1]][2] == "PE" | chunks[[1]][2] == "SE")
+    {
+      data@meta.data$CENTER[i] <- "TBU"
+    }
+    else
+    {
+      data@meta.data$CENTER[i] <- chunks[[1]][2]
+    }
+
+    if(chunks[[1]][3] == "M" | chunks[[1]][3] == "HT")
+    {
+      data@meta.data$CELL_LINE[i] <- ifelse(chunks[[1]][4] == "A", 'HCC1395', 'HCC1395BL')
+      data@meta.data$PREPROCESS[i] <- chunks[[1]][5]
+    }
+    else
+    {
+      data@meta.data$CELL_LINE[i] <- ifelse(chunks[[1]][3] == "A", 'HCC1395', 'HCC1395BL')
+      data@meta.data$PREPROCESS[i] <- chunks[[1]][4]
+    }
+  }
+  data@meta.data$SID <- as.numeric(as.factor(data@meta.data$ID))
+  data@meta.data$orig.ident <- data@meta.data$CELL_LINE
+
+  return(data)
+}
 
 
