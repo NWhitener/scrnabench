@@ -6,11 +6,8 @@
 #' @export
 data_load <- function(...)
 {
-  gene_counts<- readRDS(system.file("extdata", "gene_counts_v2.RDS", package = "benchmarking"))
+  gene_counts<- readRDS(system.file("extdata", "gene_counts_v6.RDS", package = "benchmarking"))
   datasets <- ls(gene_counts)
-  idx <- which(ifelse(grepl("Mix", datasets), "discard", "keep") == "discard")
-  gene_counts <- gene_counts[-c(idx)]
-  datasets <- datasets[ -c(idx)]
   return(datasets)
 
 }
