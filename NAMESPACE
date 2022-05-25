@@ -2,6 +2,10 @@
 
 export(data_load)
 export(extract_datasets)
+export(merge_datasets)
+export(merge_sparse)
+export(permute_columns)
+export(permute_rows)
 export(run_gficf)
 export(run_log)
 export(run_seurat)
