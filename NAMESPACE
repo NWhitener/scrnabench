@@ -3,4 +3,5 @@
 export(extract_datasets)
 export(run_gficf)
 export(run_log)
+export(run_seurat)
 export(run_seurat_columns)

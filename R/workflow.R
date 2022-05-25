@@ -44,7 +44,7 @@ run_fastmnn <- function(data, batch_name)
 
 }
 
-#' Run Seurat Columns
+#' Run Seurat Pipeline with the Col
 #'
 #' Functions
 #'
@@ -231,6 +231,15 @@ run_sctransform <- function(data.list)
 
 }
 
+#' Runs the Seurat Pipeline
+#'
+#' This function completes the Seurat Pipeline on a list of data. This process starts with finding the variable features (genes), then
+#' scaling the data, running PCA, UMPA, and then find clusters.  This step can be done to test your benchamrk data sets
+#' or for down stream analysis. For more information on the Seurat Pipeline
+#' please see https://satijalab.org/seurat/index.html
+#'
+#' @param data.list A data list of Data sets in the Gene in Row and Cell in Columns format
+#' @export
 run_seurat <- function(data.list)
 {
   data.list <- lapply(X = data.list, FUN = function(x) {

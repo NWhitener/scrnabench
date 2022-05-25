@@ -2,7 +2,7 @@
 % Please edit documentation in R/workflow.R
 \name{run_seurat_columns}
 \alias{run_seurat_columns}
-\title{Run Seurat Columns}
+\title{Run Seurat Pipeline with the Col}
 \usage{
 run_seurat_columns(idx)
 }
