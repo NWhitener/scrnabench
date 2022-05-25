@@ -11,9 +11,15 @@ data_load <- function(...)
 
 }
 
-#' Merge the Sparse Matricies
+#' Merge the Sparse Matrices
 #'
-#' This function
+#' This function merges the contents of two lists into a sparse matrix. It assumes that the data sets
+#' are of the same format, with genes stored in rows and cells stored in columns. The lists are merged base on the
+#' union of the row names and the union of the column names
+#'
+#' TODO: FIX arguement passing
+#'
+#' @export
 merge_sparse <- function(...)
 {
 
@@ -42,7 +48,16 @@ merge_sparse <- function(...)
   Matrix::sparseMatrix(i=i,j=j,x=x,dims=c(length(rnnew),length(cnnew)),dimnames=list(rnnew,cnnew))
 }
 
-
+#' Merges Data sets
+#'
+#' This function merges a series of data lists into one data matrix, based on the intersection of the individuals. If there is intersection
+#' the matrix is merged as sparse to handle zeros, otherwise it is merged as a matrix. This function assumes that the data is
+#' in the format genes in rows and cells in columns.
+#'
+#' @param data.list A list of data set to merge
+#' @param intersect A Boolean parameter, that decides if the output should be a sparse matrix or a matrix
+#' @return A data list of the merged data
+#' @export
 merge_datasets <- function(data.list, intersect=TRUE)
 {
   data <- data.list[[1]]

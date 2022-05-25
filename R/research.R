@@ -39,6 +39,16 @@ duplicate_datasets <- function(names, ndup)
 
 }
 
+
+#' Permute the Rows of a Data List
+#'
+#' This function is designed for experimental analysis of algorithmic stability. It permutes the rows of a data list
+#' so that further experimentation can be done wit the data list to check the  algorithmic stability of a pipeline or
+#' method
+#'
+#' @param data.list A data list that you would like to permute the rows of
+#' @return The data list with the rows permuted
+#' @export
 permute_rows <- function(data.list)
 {
   data.list <- lapply(X = data.list, FUN = function(x) {
@@ -47,6 +57,16 @@ permute_rows <- function(data.list)
   return(data.list)
 }
 
+
+#' Permute the columns of a Data List
+#'
+#' This function is designed for experimental analysis of algorithmic stability. It permutes the columns of a data list
+#' so that further experimentation can be done wit the data list to check the  algorithmic stability of a pipeline or
+#' method
+#'
+#' @param data.list A data list that you would like to permute the columns of
+#' @return The data list with the columns permuted
+#' @export
 permute_columns <- function(data.list)
 {
   data.list <- lapply(X = data.list, FUN = function(x) {
