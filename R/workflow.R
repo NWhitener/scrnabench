@@ -56,7 +56,7 @@ run_seurat_columns <- function(idx)
   data.list <- run_seurat(data.list)
 
   x = merge(data.list[[1]]@meta.data, data.list[[2]]@meta.data, by="row.names", all=TRUE)
-  return(NID(x$seurat_clusters.x, x$seurat_clusters.y))
+  return(aricode::NID(x$seurat_clusters.x, x$seurat_clusters.y))
 }
 
 

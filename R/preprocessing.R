@@ -62,7 +62,7 @@ preprocess_data <- function(data.list)
 {
   data.list <- lapply(X = data.list, function(x)
   {
-    x <- CreateSeuratObject(counts = x, min.cells = 3,min.features = 200)
+    x <- Seurat::CreateSeuratObject(counts = x, min.cells = 3,min.features = 200)
     x[["percent.mt"]] <- Seurat::PercentageFeatureSet(x, pattern = "^MT-")
     Total_mRNAs <- x[["nCount_RNA"]]$nCount_RNA
     mupper_bound <- 10^(mean(log10(Total_mRNAs)) + 2*sd(log10(Total_mRNAs)))

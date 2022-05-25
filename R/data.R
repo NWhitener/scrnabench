@@ -1,23 +1,23 @@
-merge.sparse <- function(...) 
+merge.sparse <- function(...)
 {
-  
+
   cnnew <- character()
   rnnew <- character()
   x <- vector()
   i <- numeric()
   j <- numeric()
-  
+
   for (M in list(...)) {
-    
+
     cnold <- colnames(M)
     rnold <- rownames(M)
-    
-    cnnew <- data.table::union(cnnew,cnold)
-    rnnew <- data.table::union(rnnew,rnold)
-    
+
+    cnnew <- union(cnnew,cnold)
+    rnnew <- union(rnnew,rnold)
+
     cindnew <- match(cnold,cnnew)
     rindnew <- match(rnold,rnnew)
-    
+
     ind <- summary(M)
     i <- c(i,rindnew[ind[,1]])
     j <- c(j,cindnew[ind[,2]])
@@ -44,17 +44,17 @@ view_data <- function(data.lsit)
   for (i in 1:length(data.list))
   {
     str(data.list[i])
-  
+
   }
 }
 
-#' Extract Datasets 
-#' 
+#' Extract Datasets
+#'
 #' This function extracts a set of Data sets for further use in the workflow. Each data set that is extracted will be a dgCMatrix
-#' with rows representing genes and cells representing columns 
-#' 
+#' with rows representing genes and cells representing columns
+#'
 #' @param names A list of names representing the data sets you would like to extract
-#' @return A data list of the matrices of the data sets that were extracted 
+#' @return A data list of the matrices of the data sets that were extracted
 #' @export
 extract_datasets <- function(names)
 {
