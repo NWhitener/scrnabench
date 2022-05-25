@@ -44,7 +44,12 @@ run_fastmnn <- function(data, batch_name)
 
 }
 
-
+#' Run Seurat Columns
+#'
+#' Functions
+#'
+#' @export
+#'
 run_seurat_columns <- function(idx)
 {
   data.list <- extract_datasets(idx)
