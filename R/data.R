@@ -1,3 +1,12 @@
+data_load <- function(...)
+{
+  datasets <- readRDS(system.file("extdata", "gene_counts_v2.RDS", package = "benchmarking"))
+  return(datasets)
+
+}
+
+
+
 merge.sparse <- function(...)
 {
 
