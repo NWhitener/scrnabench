@@ -2,18 +2,18 @@
 % Please edit documentation in R/workflow.R
 \name{build_seurat_rows}
 \alias{build_seurat_rows}
-\title{Run Seurat Pipeline with the Rows Permuted}
+\title{Build Seurat Pipeline with the Rows Permuted}
 \usage{
 build_seurat_rows(idx, seed = 1)
 }
 \arguments{
-\item{idx}{A data list with genes as rows and cells as columns}
+\item{idx}{A data set with genes as rows and cells as columns}
 }
 \value{
 Adjusted Rand Index
 }
 \description{
-This functions runs the Seurat Pipeline, with experimental condition. The initial data list is appended with a the same data list,
+This functions builds the Seurat Pipeline, with experimental condition. The initial data set is appended with a the same data list,
 with permuted rows. This allows the testing of the algorithmic stability of the Seurat Pipeline for the specified data list. The
 Normalized information Distance is returned. If there is true algorithmic stability this score would be 1
 }

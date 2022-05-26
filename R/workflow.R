@@ -1,3 +1,12 @@
+#' Run CCA
+#'
+#' This function runs the data integration protocol detailed in the Seurat "Introduction to scRNA-seq
+#' integration" found at https://satijalab.org/seurat/articles/integration_introduction.html. This function completes the entire
+#' protocol on either gficf or log transformed data.
+#'
+#' @param data.list A data list of data sets to integrate using the cca protocol
+#' @return data.combined A data list of the combined data from the cca protocol
+#' @export
 run_cca <- function(data.list)
 {
 
@@ -24,9 +33,14 @@ run_cca <- function(data.list)
   return(data.combined)
 }
 
-
-
-
+#' Run Harmony
+#'
+#' This function runs the data integration protocol detailed in the Seurat ## FIND VING. AND LINK . This function completes the entire
+#' protocol on either gficf or log transformed data.
+#'
+#' @param data.list A data list of data sets to integrate using the harmony protocol
+#' @return data.combined A data list of the combined data from the harmony protocol
+#' @export
 run_harmony <- function(idx, batch_name)
 {
     data.list <- extract_datasets(idx)
@@ -44,7 +58,14 @@ run_harmony <- function(idx, batch_name)
     retunr(data.list)
 }
 
-
+#' Run fastmnn
+#'
+#' This function runs the data integration protocol detailed in the Seurat ## FIND VING. AND LINK . This function completes the entire
+#' protocol on either gficf or log transformed data.
+#'
+#' @param data.list A data list of data sets to integrate using the fastmnn protocol
+#' @return data.combined A data list of the combined data from the fastmnn protocol
+#' @export
 run_fastmnn <- function(idx, batch_name)
 {
 
@@ -60,6 +81,36 @@ run_fastmnn <- function(idx, batch_name)
   data.list <- run_cluster(data.list)
   DefaultAssay(data.list) <- "mnn.reconstructed"
   return(data.list)
+
+}
+
+
+#' Run sctransform
+#'
+#' This function runs the data integration protocol detailed in the Seurat "Using sctransform in Seurtat"
+#' found at https://satijalab.org/seurat/articles/sctransform_vignette.html . This function completes the entire
+#' protocol on either gficf or log transformed data.
+#'
+#' @param data.list A data list of data sets to integrate using the sctransform protocol
+#' @return data.combined A data list of the combined data from the sctransform protocol
+#' @export
+run_sctransform <- function(data.list)
+{
+
+  data.list <- extract_datasets(idx)
+  data.list <- preprocess_data(data.list)
+  data.list <- lapply(X = data.list, FUN = SCTransform)
+  features <- Seurat::SelectIntegrationFeatures(object.list = data.list, nfeatures=2000)
+  data.list <- Seurart::PrepSCTIntegration(object.list = data.list, anchor.features = features)
+  k.filter <- min(200, min(sapply(data.list, ncol)))
+  data.anchors <- Seurat::FindIntegrationAnchors(object.list = data.list, normalization.method = "SCT", anchor.features = features, k.filter = k.filter)
+  data.combined <- Seurat::IntegrateData(anchorset = data.anchors, normalization.method = "SCT")
+  DefaultAssay(data.combined) <- "integrated"
+  data.combined <- scale_data(data.combined)
+  data.combined <- run_pca(data.combined)
+  data.combined <- run_umap(data.combined)
+  data.combined <- run_cluster(data.combined)
+  return(data.combined)
 
 }
 
@@ -85,16 +136,14 @@ run_seurat <- function(data.list)
 }
 
 
-#' Run Seurat Pipeline with the Columns Permuted
+#' Build Seurat Pipeline with the Columns Permuted
 #'
-#' This functions runs the Seurat Pipeline, with experimental condition. The initial data list is appended with a the same data list,
+#' This functions builds the Seurat Pipeline, with experimental condition. The initial data set is appended with a the same data list,
 #' with permuted columns. This allows the testing of the algorithmic stability of the Seurat Pipeline for the specified data list. The
 #' Normalized information Distance is returned. If there is true algorithmic stability this score would be 1
 #'
-#' @param idx A data list with genes as rows and cells as columns
-#' @return Normalized Information Distance
-#' @export
-#'
+#' @param idx A data set with genes as rows and cells as columns
+#' @return Adjusted Rand Index
 build_seurat_columns <- function(idx, seed = 1)
 {
   set.seed(seed)
@@ -106,19 +155,17 @@ build_seurat_columns <- function(idx, seed = 1)
   data.list <- run_log(data.list)
   data.list <- run_seurat(data.list)
   x = merge(data.list[[1]]@meta.data, data.list[[2]]@meta.data, by="row.names", all=TRUE)
-  return(aricode::NID(x$seurat_clusters.x, x$seurat_clusters.y))
+  return(aricode::ARI(x$seurat_clusters.x, x$seurat_clusters.y))
 }
 
-#' Run Seurat Pipeline with the Rows Permuted
+#' Build Seurat Pipeline with the Rows Permuted
 #'
-#' This functions runs the Seurat Pipeline, with experimental condition. The initial data list is appended with a the same data list,
+#' This functions builds the Seurat Pipeline, with experimental condition. The initial data set is appended with a the same data list,
 #' with permuted rows. This allows the testing of the algorithmic stability of the Seurat Pipeline for the specified data list. The
 #' Normalized information Distance is returned. If there is true algorithmic stability this score would be 1
 #'
-#' @param idx A data list with genes as rows and cells as columns
+#' @param idx A data set with genes as rows and cells as columns
 #' @return Adjusted Rand Index
-#' @export
-#'
 build_seurat_rows <- function(idx, seed = 1)
 {
   set.seed(seed)
@@ -133,30 +180,40 @@ build_seurat_rows <- function(idx, seed = 1)
   return(aricode::ARI(x$seurat_clusters.x, x$seurat_clusters.y))
 }
 
-
-
-
-
-
-run_sctransform <- function(data.list)
+#' Run the Seurat Pipeline with column Permutations
+#'
+#' This function runs the built Seurat pipeline with column permutations on a data list. The results are appened into
+#' the rows of a new matrix, with the idx and the ARI recorded
+#' @return a results matrix with ARI and idx number
+#' @export
+run_seurat_columns <- function()
 {
-
-  data.list <- extract_datasets(idx)
-  data.list <- preprocess_data(data.list)
-  data.list <- lapply(X = data.list, FUN = SCTransform)
-  features <- Seurat::SelectIntegrationFeatures(object.list = data.list, nfeatures=2000)
-  data.list <- Seurart::PrepSCTIntegration(object.list = data.list, anchor.features = features)
-  k.filter <- min(200, min(sapply(data.list, ncol)))
-  data.anchors <- Seurat::FindIntegrationAnchors(object.list = data.list, normalization.method = "SCT", anchor.features = features, k.filter = k.filter)
-  data.combined <- Seurat::IntegrateData(anchorset = data.anchors, normalization.method = "SCT")
-  DefaultAssay(data.combined) <- "integrated"
-  data.combined <- scale_data(data.combined)
-  data.combined <- run_pca(data.combined)
-  data.combined <- run_umap(data.combined)
-  data.combined <- run_cluster(data.combined)
-  return(data.combined)
-
+  results = cbind('idx', 'ARI')
+  for (idx in datasets)
+  {
+    result <- build_seurat_columns(idx)
+    results <- rbind(results, cbind(idx, result))
+  }
+  return(results)
 }
+
+#' Run the Seurat Pipeline with row Permutations
+#'
+#' This function runs the built Seurat pipeline with row permutations on a data list. The results are appended into
+#' the rows of a new matrix, with the idx and the ARI recorded
+#' @return a results matrix with ARI and idx number
+#' @export
+run_seurat_rows <- function()
+{
+  results = cbind('idx', 'ARI')
+  for (idx in datasets)
+  {
+    result <- build_seurat_rows(idx)
+    results <- rbind(results, cbind(idx, result))
+  }
+  return(results)
+}
+
 
 
 run_workflow <- function(idx)
