@@ -111,6 +111,8 @@ run_seurat_rows <- function(idx)
 
 
 
+
+
 run_sctransform <- function(data.list)
 {
   data.list <- lapply(X = data.list, FUN = SCTransform)
@@ -217,20 +219,6 @@ run_workflow2 <- function(idx, dup)
   write_output(data, 'sctransform')
 }
 
-run_seurat_rows <- function(idx)
-{
-  data.list <- extract_datasets(idx)
-  data.list2 <- extract_datasets(idx)
-  data.list2 <- permute_rows(data.list2)
-
-  data.list <- append(data.list, data.list2)
-  data.list <- preprocess_data(data.list)
-  data.list <- run_log(data.list)
-  data.list <- run_seurat(data.list)
-
-  x = merge(data.list[[1]]@meta.data, data.list[[2]]@meta.data, by="row.names", all=TRUE)
-  return(ARI(x$seurat_clusters.x, x$seurat_clusters.y))
-}
 
 write_output <- function(data, prefix)
 {
