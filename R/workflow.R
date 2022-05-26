@@ -72,7 +72,7 @@ run_seurat <- function(data.list)
 #'
 #' This functions runs the Seurat Pipeline, with experimental condition. The initial data list is appended with a the same data list,
 #' with permuted columns. This allows the testing of the algorithmic stability of the Seurat Pipeline for the specified data list. The
-#' Normalized information Distance is returned. If there is true algorthmic stabilityu this score whould be 1
+#' Normalized information Distance is returned. If there is true algorithmic stability this score would be 1
 #'
 #' @param idx A data list with genes as rows and cells as columns
 #' @return Normalized Information Distance
@@ -92,7 +92,16 @@ run_seurat_columns <- function(idx)
   return(aricode::NID(x$seurat_clusters.x, x$seurat_clusters.y))
 }
 
-
+#' Run Seurat Pipeline with the Rows Permuted
+#'
+#' This functions runs the Seurat Pipeline, with experimental condition. The initial data list is appended with a the same data list,
+#' with permuted rows. This allows the testing of the algorithmic stability of the Seurat Pipeline for the specified data list. The
+#' Normalized information Distance is returned. If there is true algorithmic stability this score would be 1
+#'
+#' @param idx A data list with genes as rows and cells as columns
+#' @return Adjusted Rand Index
+#' @export
+#'
 run_seurat_rows <- function(idx)
 {
   data.list <- extract_datasets(idx)
