@@ -20,10 +20,19 @@ run_cca <- function(data.list)
 }
 
 
-run_harmony <- function(data, batch_name)
+
+
+run_harmony <- function(idx, batch_name)
 {
-  data <- FindVariableFeatures(data, nfeatures = 2000) %>%
-    Seurat::ScaleData() %>%
+    data.list <- extract_datasets(idx)
+    data.list <- extract_common_genes(data.list)
+    data.list <- merge_datasets(data.list, intersect=TRUE)
+    #data.list <- run_gficf(data.list)
+    data.list <- preprocess_data(data.list)
+    data.list <- run_log(data.list) #LOG
+    #data <- annotate_seurat_object(data.list[[1]])
+    data.list <- select_hvg(data.list)
+    data.list = scale_data(data.list)
     Seurat::RunPCA(verbose = FALSE) %>%
     harmony::RunHarmony(group.by.vars = batch_name) %>%
     Seurat::RunUMAP(reduction = "harmony", dims = 1:30) %>%
@@ -57,14 +66,12 @@ run_fastmnn <- function(data, batch_name)
 run_seurat <- function(data.list)
 {
   data.list <- lapply(X = data.list, FUN = function(x) {
-    x <- Seurat::FindVariableFeatures(x, selection.method = "vst", nfeatures = 2000)
-    x <- Seurat::ScaleData(x, verbose = FALSE)
-    x <- Seurat::RunPCA(x, npcs = 30, verbose = FALSE)
-    x <- Seurat::RunUMAP(x, reduction = "pca", dims = 1:30)
-    x <- Seurat::FindNeighbors(x, reduction = "pca", dims = 1:30)
-    x <- Seurat::FindClusters(x, resolution = 0.5)
+    x <- RunPCA(x, npcs = 30, verbose = FALSE)
+    x <- RunUMAP(x, reduction = "pca", dims = 1:30)
+    x <- FindNeighbors(x, reduction = "pca", dims = 1:30)
+    x <- FindClusters(x, resolution = 0.5)
   })
-
+  return(data.list)
 }
 
 
@@ -102,8 +109,9 @@ run_seurat_columns <- function(idx)
 #' @return Adjusted Rand Index
 #' @export
 #'
-run_seurat_rows <- function(idx)
+build_seurat_rows <- function(idx, seed = 1 )
 {
+  set.seed(seed)
   data.list <- extract_datasets(idx)
   data.list2 <- extract_datasets(idx)
   data.list2 <- permute_rows(data.list2)
@@ -164,7 +172,7 @@ run_workflow <- function(idx)
   #data.list <- run_gficf(data.list)
   data.list <- preprocess_data(data.list)
   data.list <- run_log(data.list) #LOG
-  data <- annotate_seurat_object(data.list[[1]])
+  #data <- annotate_seurat_object(data.list[[1]])
   data <- run_fastmnn(data, batch_column)
   write_output(data, 'fastmnn')
 
@@ -174,14 +182,14 @@ run_workflow <- function(idx)
   #data.list <- run_gficf(data.list)
   data.list <- run_log(data.list)
   data <- run_cca(data.list)
-  data <- annotate_seurat_object(data)
+  #data <- annotate_seurat_object(data)
   write_output(data, 'cca')
 
   # ScTransform
   data.list <- extract_datasets(idx)
   data.list <- preprocess_data(data.list)
   data <- run_sctransform(data.list)
-  data <- annotate_seurat_object(data)
+  #data <- annotate_seurat_object(data)
   write_output(data, 'sctransform')
 }
 
@@ -196,7 +204,7 @@ run_workflow2 <- function(idx, dup)
   data.list <- preprocess_data(data.list)
   data.list <- run_log(data.list) #LOG
 
-  data <- annotate_seurat_object(data.list[[1]])
+ # data <- annotate_seurat_object(data.list[[1]])
   data <- run_harmony(data, batch_column)
   write_output(data, 'harmony')
 
@@ -207,7 +215,7 @@ run_workflow2 <- function(idx, dup)
   #data.list <- run_gficf(data.list)
   data.list <- preprocess_data(data.list)
   data.list <- run_log(data.list) #LOG
-  data <- annotate_seurat_object(data.list[[1]])
+ # data <- annotate_seurat_object(data.list[[1]])
   data <- run_fastmnn(data, batch_column)
   write_output(data, 'fastmnn')
 
@@ -217,14 +225,14 @@ run_workflow2 <- function(idx, dup)
   #data.list <- run_gficf(data.list)
   data.list <- run_log(data.list)
   data <- run_cca(data.list)
-  data <- annotate_seurat_object(data)
+  #data <- annotate_seurat_object(data)
   write_output(data, 'cca')
 
   # ScTransform
   data.list <- duplicate_datasets(idx, dup)
   data.list <- preprocess_data(data.list)
   data <- run_sctransform(data.list)
-  data <- annotate_seurat_object(data)
+  #data <- annotate_seurat_object(data)
   write_output(data, 'sctransform')
 }
 
@@ -253,42 +261,7 @@ write_output <- function(data, prefix)
 }
 
 
-annotate_seurat_object <-function(data)
-{
-  cols = colnames(data)
-  for (i in (1:length(cols)))
-  {
-    col <- cols[i]
-    col <- str_split(col, "-")[[1]][1]
-    data@meta.data$ID[i] <- col
-    chunks <- str_split(col, "_")
-    data@meta.data$TECHNLOGY[i] <- chunks[[1]][1]
 
-    if(chunks[[1]][2] == "PE" | chunks[[1]][2] == "SE")
-    {
-      data@meta.data$CENTER[i] <- "TBU"
-    }
-    else
-    {
-      data@meta.data$CENTER[i] <- chunks[[1]][2]
-    }
-
-    if(chunks[[1]][3] == "M" | chunks[[1]][3] == "HT")
-    {
-      data@meta.data$CELL_LINE[i] <- ifelse(chunks[[1]][4] == "A", 'HCC1395', 'HCC1395BL')
-      data@meta.data$PREPROCESS[i] <- chunks[[1]][5]
-    }
-    else
-    {
-      data@meta.data$CELL_LINE[i] <- ifelse(chunks[[1]][3] == "A", 'HCC1395', 'HCC1395BL')
-      data@meta.data$PREPROCESS[i] <- chunks[[1]][4]
-    }
-  }
-  data@meta.data$SID <- as.numeric(as.factor(data@meta.data$ID))
-  data@meta.data$orig.ident <- data@meta.data$CELL_LINE
-
-  return(data)
-}
 
 
 get_scenario <- function(scenario_id)

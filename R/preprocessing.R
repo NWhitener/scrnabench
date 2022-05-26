@@ -25,6 +25,7 @@ extract_common_genes <- function(data)
 #' @export
 run_gficf <-function(data.list)
 {
+
   data.list <- lapply(X = data.list, FUN = function(x) {
     x <- SeuratObject::CreateSeuratObject(counts = x)
     x$RNA@data <- gficf::gficf(M=x$RNA@counts, normalize=TRUE, storeRaw=FALSE)$gficf
@@ -72,12 +73,28 @@ preprocess_data <- function(data.list)
     glower_bound <- 10^(mean(log10(Total_Genes)) - 2*sd(log10(Total_Genes)))
     x <- subset(x = x, subset = nFeature_RNA > glower_bound & nFeature_RNA < gupper_bound &
                   nCount_RNA > mlower_bound & nCount_RNA < mupper_bound & percent.mt < 10)
-  })
+    x<-annotate_seurat_object(x)
 
+     })
   return(data.list)
 }
 
 
 # Make A test Dataset Example to make sure that we have a working preprocessing file/data file
 
+select_hvg <- function(data.list)
+{
+  data.list <- lapply(X = data.list, FUN = function(x) {
+    x <- FindVariableFeatures(x, selection.method = "vst", nfeatures = 2000)
+  })
+  return(data.list)
+}
+
+scale_data <- function(data.list)
+{
+  data.list <- lapply(X = data.list, FUN = function(x) {
+    x <- ScaleData(x)
+  })
+  return(data.list)
+}
 

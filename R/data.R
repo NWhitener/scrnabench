@@ -111,4 +111,39 @@ extract_datasets <- function(names)
   return(data.list)
 }
 
+annotate_seurat_object <-function(data)
+{
+  cols = colnames(data)
+  for (i in (1:length(cols)))
+  {
+    col <- cols[i]
+    col <- str_split(col, "-")[[1]][1]
+    data@meta.data$ID[i] <- col
+    chunks <- str_split(col, "_")
+    data@meta.data$TECHNLOGY[i] <- chunks[[1]][1]
 
+    if(chunks[[1]][2] == "PE" | chunks[[1]][2] == "SE")
+    {
+      data@meta.data$CENTER[i] <- "TBU"
+    }
+    else
+    {
+      data@meta.data$CENTER[i] <- chunks[[1]][2]
+    }
+
+    if(chunks[[1]][3] == "M" | chunks[[1]][3] == "HT")
+    {
+      data@meta.data$CELL_LINE[i] <- ifelse(chunks[[1]][4] == "A", 'HCC1395', 'HCC1395BL')
+      data@meta.data$PREPROCESS[i] <- chunks[[1]][5]
+    }
+    else
+    {
+      data@meta.data$CELL_LINE[i] <- ifelse(chunks[[1]][3] == "A", 'HCC1395', 'HCC1395BL')
+      data@meta.data$PREPROCESS[i] <- chunks[[1]][4]
+    }
+  }
+  data@meta.data$SID <- as.numeric(as.factor(data@meta.data$ID))
+  data@meta.data$orig.ident <- data@meta.data$CELL_LINE
+
+  return(data)
+}

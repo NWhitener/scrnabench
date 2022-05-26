@@ -74,3 +74,14 @@ permute_columns <- function(data.list)
   })
   return(data.list)
 }
+
+
+
+
+run_pca <- function(idx)
+{
+  data.list <- lapply(X = data.list, FUN = function(x) {
+    x <- Seurat::RunPCA(x, verbose = FALSE)
+  })
+  return(data.list)
+}
