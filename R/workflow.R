@@ -30,14 +30,13 @@ run_harmony <- function(idx, batch_name)
     #data.list <- run_gficf(data.list)
     data.list <- preprocess_data(data.list)
     data.list <- run_log(data.list) #LOG
-    #data <- annotate_seurat_object(data.list[[1]])
     data.list <- select_hvg(data.list)
     data.list = scale_data(data.list)
-    Seurat::RunPCA(verbose = FALSE) %>%
-    harmony::RunHarmony(group.by.vars = batch_name) %>%
-    Seurat::RunUMAP(reduction = "harmony", dims = 1:30) %>%
-    Seurat::FindNeighbors(data, reduction = "harmony", dims = 1:30) %>%
-    Seurat::FindClusters()
+    data.list = run_pca(data.list)
+    data.list = harmony::RunHarmony(group.by.vars = batch_name)
+    data.list = run_umap(data.list, "harmony")
+    data.list = run_cluster(data.list, "harmony")
+    retunr(data.list)
 }
 
 
@@ -154,16 +153,8 @@ run_sctransform <- function(data.list)
 run_workflow <- function(idx)
 {
   # Harmony
-  data.list <- extract_datasets(idx)
-  data.list <- extract_common_genes(data.list)
-  data.list <- merge_datasets(data.list, intersect=TRUE)
-  #data.list <- run_gficf(data.list)
-  data.list <- preprocess_data(data.list)
-  data.list <- run_log(data.list) #LOG
-
-  data <- annotate_seurat_object(data.list[[1]])
   data <- run_harmony(data, batch_column)
-  write_output(data, 'harmony')
+  write_output(data[1], 'harmony')
 
   # FastMNN
   data.list <- extract_datasets(idx)

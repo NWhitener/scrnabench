@@ -78,10 +78,27 @@ permute_columns <- function(data.list)
 
 
 
-run_pca <- function(idx)
+run_pca <- function(data.list)
 {
   data.list <- lapply(X = data.list, FUN = function(x) {
     x <- Seurat::RunPCA(x, verbose = FALSE)
+  })
+  return(data.list)
+}
+
+run_umap <- function(data.list, reduction_choosen = "pca")
+{
+  data.list <- lapply(X = data.list, FUN = function(x) {
+    x <- Seurat::RunUMAP(x,reduction = reduction_choosen, dims = 1:30)
+  })
+  return(data.list)
+}
+
+run_cluster <- function(data.list, reduction_choosen = "pca")
+{
+  data.list <- lapply(X = data.list, FUN = function(x) {
+    x <- Seurat::FindNeighbors(x, reduction = reduction_choosen, dims = 1:30)
+    x <- Seurat::FindClusters(x, resolution = 0.5)
   })
   return(data.list)
 }
