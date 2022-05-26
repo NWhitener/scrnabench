@@ -19,7 +19,7 @@ data_load <- function()
 #' are of the same format, with genes stored in rows and cells stored in columns. The lists are merged base on the
 #' union of the row names and the union of the column names
 #'
-#' TODO: FIX arguement passing
+#' TODO: FIX argument passing
 #'
 #' @export
 merge_sparse <- function(...)
