@@ -4,7 +4,7 @@
 \alias{data_load}
 \title{Loads the stored data}
 \usage{
-data_load(...)
+data_load()
 }
 \description{
 This function loads the data that is stored in the package for use in examples

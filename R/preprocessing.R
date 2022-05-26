@@ -82,6 +82,16 @@ preprocess_data <- function(data.list)
 
 # Make A test Dataset Example to make sure that we have a working preprocessing file/data file
 
+
+
+#' Select Highly Variable Genes
+#'
+#' This function uses the FindVariablesFeatures of Seurat to find the Highly variable genes of a data set. This function
+#' assumes that genes are in rows and cells are in columns. The "vst" selection method is used with 2000 nfeatures.
+#'
+#' @param data.list A list of data sets that you wouuld like the variable genes of
+#' @return A data list of that includes the variable genes of the original data list
+#' @export
 select_hvg <- function(data.list)
 {
   data.list <- lapply(X = data.list, FUN = function(x) {
@@ -90,6 +100,14 @@ select_hvg <- function(data.list)
   return(data.list)
 }
 
+#' Scales the Data
+#'
+#' This function uses the ScaleData of Seurat to scale the data set. This function
+#' assumes that genes are in rows and cells are in columns.
+#'
+#' @param data.list A list of data sets that you would like to scale
+#' @return A data list of that includes the scaled data
+#' @export
 scale_data <- function(data.list)
 {
   data.list <- lapply(X = data.list, FUN = function(x) {

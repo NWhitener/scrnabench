@@ -77,7 +77,14 @@ permute_columns <- function(data.list)
 
 
 
-
+#' Run Principle Component Analysis
+#'
+#' This functions runs the Seurat RunPCA function on a list of data sets. This functions assumes that genes are in rows and
+#' cells are in columns. The default parameters are used, and verbose is set to false
+#'
+#' @param data.list A data list of data sets
+#' @return A data list with PCA completed on the features
+#' @export
 run_pca <- function(data.list)
 {
   data.list <- lapply(X = data.list, FUN = function(x) {
@@ -86,6 +93,15 @@ run_pca <- function(data.list)
   return(data.list)
 }
 
+
+#' Run Uniform Manifold Aproximation and Projection
+#'
+#' This functions runs the Seurat RunUMAP function on a list of data sets. This functions assumes that genes are in rows and
+#' cells are in columns. The default reduction is set to "pca" with the first 30 dimensions being accepted
+#'
+#' @param data.list A data list of data sets
+#' @return A data list with UMAP completed on the features
+#' @export
 run_umap <- function(data.list, reduction_choosen = "pca")
 {
   data.list <- lapply(X = data.list, FUN = function(x) {
@@ -94,6 +110,16 @@ run_umap <- function(data.list, reduction_choosen = "pca")
   return(data.list)
 }
 
+#' Complete Clustering Steps
+#'
+#' This functions runs the Seurat FindNeighbors and FindCLusters function on a list of data sets.
+#' This functions assumes that genes are in rows and
+#'  cells are in columns. The FindNeighbors reduction is set to "pca" by default and uses the first 30 dimensions
+#'  The FindClusters resolution is set to 0.5
+#'
+#' @param data.list A data list of data sets
+#' @return A data list with clustering completed completed on the features
+#' @export
 run_cluster <- function(data.list, reduction_choosen = "pca")
 {
   data.list <- lapply(X = data.list, FUN = function(x) {

@@ -1,7 +1,13 @@
 run_cca <- function(data.list)
 {
+
+  data.list <- extract_datasets(idx)
+  data.list <- preprocess_data(data.list)
+  #data.list <- run_gficf(data.list)
+  data.list <- run_log(data.list)
+
   data.list <- lapply(X = data.list, FUN = function(x) {
-    x <- Seurat::FindVariableFeatures(x, selection.method = "vst", nfeatures = 2000)
+    x <- select_hvg(x)
   })
 
   features <- Suerat::SelectIntegrationFeatures(object.list = data.list)
@@ -10,11 +16,10 @@ run_cca <- function(data.list)
   data.combined <- Seurat::IntegrateData(anchorset = data.anchors)
   DefaultAssay(data.combined) <- "integrated"
 
-  data.combined <- Seurat::ScaleData(data.combined, verbose = FALSE)
-  data.combined <- Seurat::RunPCA(data.combined, npcs = 30, verbose = FALSE)
-  data.combined <- Seurat::RunUMAP(data.combined, reduction = "pca", dims = 1:30)
-  data.combined <- Seurat::FindNeighbors(data.combined, reduction = "pca", dims = 1:30)
-  data.combined <- Seurat::FindClusters(data.combined, resolution = 0.5)
+  data.combined <- scale_data(data.combined)
+  data.combined <- run_pca(data.combined)
+  data.combined <- run_umap(data.combnined)
+  data.combined <- run_cluster(data.combined)
 
   return(data.combined)
 }
@@ -40,15 +45,21 @@ run_harmony <- function(idx, batch_name)
 }
 
 
-run_fastmnn <- function(data, batch_name)
+run_fastmnn <- function(idx, batch_name)
 {
-  data <- Seurat::FindVariableFeatures(data, nfeatures=2000)
-  data <- SeuratWrapper::RunFastMNN(object.list = SplitObject(data, split.by = batch_name))
-  data <- Seurat::RunUMAP(data, reduction = "mnn", dims = 1:30) %>%
-    Seurat::FindNeighbors(reduction = "mnn", dims = 1:30) %>%
-    Seurat::FindClusters()
-  DefaultAssay(data) <- "mnn.reconstructed"
-  return(data)
+
+  data.list <- extract_datasets(idx)
+  data.list <- extract_common_genes(data.list)
+  data.list <- merge_datasets(data.list, intersect=TRUE)
+  data.list <- preprocess_data(data.list)
+  data.list <- run_log(data.list) #LOG
+  #data.list<- run_gficf(data.list)
+  data.list <- select_hvg(data.list)
+  data.list <- SeuratWrapper::RunFastMNN(object.list = SplitObject(data.list, split.by = batch_name))
+  data.list <- run_umap(data.list)
+  data.list <- run_cluster(data.list)
+  DefaultAssay(data.list) <- "mnn.reconstructed"
+  return(data.list)
 
 }
 
@@ -84,8 +95,9 @@ run_seurat <- function(data.list)
 #' @return Normalized Information Distance
 #' @export
 #'
-run_seurat_columns <- function(idx)
+build_seurat_columns <- function(idx, seed = 1)
 {
+  set.seed(seed)
   data.list <- extract_datasets(idx)
   data.list2 <- extract_datasets(idx)
   data.list2 <- permute_columns(data.list2)
@@ -93,7 +105,6 @@ run_seurat_columns <- function(idx)
   data.list <- preprocess_data(data.list)
   data.list <- run_log(data.list)
   data.list <- run_seurat(data.list)
-
   x = merge(data.list[[1]]@meta.data, data.list[[2]]@meta.data, by="row.names", all=TRUE)
   return(aricode::NID(x$seurat_clusters.x, x$seurat_clusters.y))
 }
@@ -108,18 +119,16 @@ run_seurat_columns <- function(idx)
 #' @return Adjusted Rand Index
 #' @export
 #'
-build_seurat_rows <- function(idx, seed = 1 )
+build_seurat_rows <- function(idx, seed = 1)
 {
   set.seed(seed)
   data.list <- extract_datasets(idx)
   data.list2 <- extract_datasets(idx)
   data.list2 <- permute_rows(data.list2)
-
   data.list <- append(data.list, data.list2)
   data.list <- preprocess_data(data.list)
   data.list <- run_log(data.list)
   data.list <- run_seurat(data.list)
-
   x = merge(data.list[[1]]@meta.data, data.list[[2]]@meta.data, by="row.names", all=TRUE)
   return(aricode::ARI(x$seurat_clusters.x, x$seurat_clusters.y))
 }
@@ -131,6 +140,9 @@ build_seurat_rows <- function(idx, seed = 1 )
 
 run_sctransform <- function(data.list)
 {
+
+  data.list <- extract_datasets(idx)
+  data.list <- preprocess_data(data.list)
   data.list <- lapply(X = data.list, FUN = SCTransform)
   features <- Seurat::SelectIntegrationFeatures(object.list = data.list, nfeatures=2000)
   data.list <- Seurart::PrepSCTIntegration(object.list = data.list, anchor.features = features)
@@ -138,13 +150,10 @@ run_sctransform <- function(data.list)
   data.anchors <- Seurat::FindIntegrationAnchors(object.list = data.list, normalization.method = "SCT", anchor.features = features, k.filter = k.filter)
   data.combined <- Seurat::IntegrateData(anchorset = data.anchors, normalization.method = "SCT")
   DefaultAssay(data.combined) <- "integrated"
-
-  data.combined <- Seurat::ScaleData(data.combined, verbose = FALSE)
-  data.combined <- Seurat::RunPCA(data.combined, npcs = 30, verbose = FALSE)
-  data.combined <- Seurat::RunUMAP(data.combined, reduction = "pca", dims = 1:30)
-  data.combined <- Seurat::FindNeighbors(data.combined, reduction = "pca", dims = 1:30)
-  data.combined <- Seurat::FindClusters(data.combined, resolution = 0.5)
-
+  data.combined <- scale_data(data.combined)
+  data.combined <- run_pca(data.combined)
+  data.combined <- run_umap(data.combined)
+  data.combined <- run_cluster(data.combined)
   return(data.combined)
 
 }
@@ -156,74 +165,41 @@ run_workflow <- function(idx)
   data <- run_harmony(data, batch_column)
   write_output(data[1], 'harmony')
 
-  # FastMNN
-  data.list <- extract_datasets(idx)
-  data.list <- extract_common_genes(data.list)
-  data.list <- merge_datasets(data.list, intersect=TRUE)
-  #data.list <- run_gficf(data.list)
-  data.list <- preprocess_data(data.list)
-  data.list <- run_log(data.list) #LOG
-  #data <- annotate_seurat_object(data.list[[1]])
+ #FastMnn
   data <- run_fastmnn(data, batch_column)
   write_output(data, 'fastmnn')
 
   # CCA
-  data.list <- extract_datasets(idx)
-  data.list <- preprocess_data(data.list)
-  #data.list <- run_gficf(data.list)
-  data.list <- run_log(data.list)
   data <- run_cca(data.list)
-  #data <- annotate_seurat_object(data)
   write_output(data, 'cca')
 
   # ScTransform
-  data.list <- extract_datasets(idx)
-  data.list <- preprocess_data(data.list)
   data <- run_sctransform(data.list)
-  #data <- annotate_seurat_object(data)
   write_output(data, 'sctransform')
 }
 
-
+#Work Out Bug In Duplicate Dataset
 run_workflow2 <- function(idx, dup)
 {
   # Harmony
   data.list <- duplicate_datasets(idx, dup)
-  data.list <- extract_common_genes(data.list)
-  data.list <- merge_datasets(data.list, intersect=TRUE)
-  #data.list <- run_gficf(data.list)
-  data.list <- preprocess_data(data.list)
-  data.list <- run_log(data.list) #LOG
-
- # data <- annotate_seurat_object(data.list[[1]])
   data <- run_harmony(data, batch_column)
   write_output(data, 'harmony')
 
   # FastMNN
   data.list <- duplicate_datasets(idx, dup)
-  data.list <- extract_common_genes(data.list)
-  data.list <- merge_datasets(data.list, intersect=TRUE)
-  #data.list <- run_gficf(data.list)
-  data.list <- preprocess_data(data.list)
-  data.list <- run_log(data.list) #LOG
- # data <- annotate_seurat_object(data.list[[1]])
   data <- run_fastmnn(data, batch_column)
   write_output(data, 'fastmnn')
 
   # CCA
   data.list <- duplicate_datasets(idx, dup)
-  data.list <- preprocess_data(data.list)
-  #data.list <- run_gficf(data.list)
-  data.list <- run_log(data.list)
   data <- run_cca(data.list)
-  #data <- annotate_seurat_object(data)
   write_output(data, 'cca')
 
   # ScTransform
   data.list <- duplicate_datasets(idx, dup)
-  data.list <- preprocess_data(data.list)
   data <- run_sctransform(data.list)
-  #data <- annotate_seurat_object(data)
+
   write_output(data, 'sctransform')
 }
 

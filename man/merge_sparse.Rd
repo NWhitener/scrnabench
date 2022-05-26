@@ -12,5 +12,5 @@ are of the same format, with genes stored in rows and cells stored in columns. T
 union of the row names and the union of the column names
 }
 \details{
-TODO: FIX arguement passing
+TODO: FIX argument passing
 }
