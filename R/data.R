@@ -4,10 +4,11 @@
 #' This function loads the data that is stored in the package for use in examples
 #'
 #' @export
-data_load <- function(...)
+data_load <- function()
 {
-  gene_counts<- readRDS(system.file("extdata", "gene_counts_v6.RDS", package = "benchmarking"))
-  datasets <- ls(gene_counts)
+
+  gene_counts <<- readRDS(system.file("extdata", "gene_counts_v6.RDS", package = "benchmarking", mustWork = TRUE))
+  datasets <<- ls(gene_counts)
   return(datasets)
 
 }
@@ -75,13 +76,15 @@ merge_datasets <- function(data.list, intersect=TRUE)
 #' This function displays a short summary of each data set in the data list provided. Can be used to gain quick insights into the
 #' information that is stored in the data
 #'
+#' TODO: FIX
 #' @param data.list A list of data sets that you would like to view
 #' @export
-view_data <- function(data.lsit)
+view_data <- function(data)
 {
-  for (i in 1:length(data.list))
+  for (i in 1:length(data))
   {
-    str(data.list[i])
+    str(extract_datasets(data[i]))
+
   }
 }
 
