@@ -1,5 +1,14 @@
 
 #Data Dependent
+
+#' Duplicate Datasets
+#'
+#' This function duplicates a dataset a variable number of times. This function is to be used in
+#' research situations.
+#'
+#' @param names A list of dataset names that should be duplicated
+#' @param ndups The number of duplicates that are desired
+#' @return a data.list of the duplicated datasets
 duplicate_datasets <- function(names, ndup)
 {
   data.list <- list()

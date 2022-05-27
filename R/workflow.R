@@ -215,15 +215,25 @@ run_seurat_rows <- function()
 }
 
 
-
-run_workflow <- function(idx)
+#' Run Integration  (Need a better name)
+#'
+#' This functions completes an integration pipeline, using
+#' 4 integration techniques. It implements the Harmony, FastMNN, CCA, and scTranform integration techniques.
+#' These are implemented via the Seurat and Harmony packages. See ?run_harmony, ?run_cca, ?run_fastmnn, and ?run_sctransform
+#' for more information on these pipeline structures. Each of these integration will write the integrated data set to a file
+#' in the current directory
+#'
+#' @param idx A list of data set names that you would like to integrate with
+#' the 4 pipelines
+#' @export
+run_integration <- function(idx)
 {
   # Harmony
-  data <- run_harmony(data, batch_column)
+  data <- run_harmony(data.list, batch_column)
   write_output(data[1], 'harmony')
 
  #FastMnn
-  data <- run_fastmnn(data, batch_column)
+  data <- run_fastmnn(data.list, batch_column)
   write_output(data, 'fastmnn')
 
   # CCA
@@ -236,7 +246,19 @@ run_workflow <- function(idx)
 }
 
 #Work Out Bug In Duplicate Dataset
-run_workflow2 <- function(idx, dup)
+#' Run Integration Duplicated (Need a better name)
+#'
+#' This functions completes an integration pipeline on a dupilcated set of the original data, using
+#' 4 integration techniques. It implements the Harmony, FastMNN, CCA, and scTranform integration techniques.
+#' These are implemented via the Seurat and Harmony packages. See ?run_harmony, ?run_cca, ?run_fastmnn, and ?run_sctransform
+#' for more information on these pipeline structures. Each of these integration will write the integrated data set to a file
+#' in the current directory
+#'
+#' @param idx A list of data set names that you would like to integrate with
+#' the 4 pipelines
+#' @param dup The number of duplications that would like to execute
+#' @export
+run_duplicate_integrations <- function(idx, dup)
 {
   # Harmony
   data.list <- duplicate_datasets(idx, dup)
@@ -260,7 +282,13 @@ run_workflow2 <- function(idx, dup)
   write_output(data, 'sctransform')
 }
 
-
+#' Write Output
+#'
+#' This function writes the output of the data integration pipelines
+#' to a file with the associated labels, and data information.
+#'
+#' @param data The data the needs to be output
+#' @param prefix The prefix of the integratio technique used
 write_output <- function(data, prefix)
 {
   print(prefix)
@@ -287,7 +315,12 @@ write_output <- function(data, prefix)
 
 
 
-
+#' Get Scenario
+#'
+#' This function gets the Scenario used in the creation of the data and the sequencing
+#' technique used in collection. Only to be used internally.
+#'
+#' @param scenario_id The scenario_id that you would like to identify
 get_scenario <- function(scenario_id)
 {
   scenarios = list(
