@@ -6,13 +6,14 @@
 #'  @param data A scRNA-seq data object( Seurat) with the rows as genes and the cells as objects
 #'  @return A list of the common genes in the data object
 #'  @export
-extract_common_genes <- function(data)
+extract_common_genes <- function(data.list)
 {
-   common_gene_names <- Reduce(intersect, lapply(data, row.names))
-   data.list <- lapply(data, function(x)
-                { x[row.names(x) %in% common_gene_names,] })
-   return(data.list)
+  common_gene_names <- Reduce(intersect, lapply(data.list, row.names))
+  data.list <- lapply(data.list, function(x)
+  { x[row.names(x) %in% common_gene_names,] })
+  return(data.list)
 }
+
 
 #' Runs the GFICF Transformations
 #'

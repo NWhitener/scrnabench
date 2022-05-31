@@ -61,11 +61,11 @@ merge_datasets <- function(data.list)
 #' TODO: FIX
 #' @param data.list A list of data sets that you would like to view
 #' @export
-view_data <- function(data)
+view_data <- function(idx)
 {
-  for (i in 1:length(data))
+  for (i in 1:length(idx))
   {
-    str(extract_datasets(data[i]))
+    str(extract_datasets(idx[i]))
 
   }
 }
