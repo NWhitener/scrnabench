@@ -73,7 +73,7 @@ preprocess <- function(data.list)
     glower_bound <- 10^(mean(log10(Total_Genes)) - 2*sd(log10(Total_Genes)))
     x <- subset(x = x, subset = nFeature_RNA > glower_bound & nFeature_RNA < gupper_bound &
                   nCount_RNA > mlower_bound & nCount_RNA < mupper_bound & percent.mt < 10)
-    x<-annotate_seurat_object(x)
+    x<-annotate_datasets(x)
 
      })
   return(data.list)
