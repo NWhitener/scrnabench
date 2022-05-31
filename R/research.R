@@ -9,43 +9,12 @@
 #' @param names A list of dataset names that should be duplicated
 #' @param ndups The number of duplicates that are desired
 #' @return a data.list of the duplicated datasets
-duplicate_datasets <- function(names, ndup)
+duplicate_datasets <- function(data.list, duplicates=2)
 {
-  data.list <- list()
-  if(length(names) == 2)
-  {
-    for (i in c(1: ndup))
-    {
-      x <- paste(names[1], "_dup", i, sep="")
-      cells <- gene_counts[names[1]]
-      data.list[x] <- cells
-      x = paste(names[2], "_dup", i, sep="")
-      cells <- gene_counts[names[2]]
-      data.list[x] <- cells
-    }
-  }
-  else
-  {
-    # there is a bug in this method
-    for (i in c(1: ndup))
-    {
-      x <- paste(names[1], "_dup", i, sep="")
-      cells <- gene_counts[names[1]]
-      data.list[x] <- cells
-    }
-  }
-
-  for (name in names(data.list))
-  {
-    data.list[[name]] <- as.matrix(data.list[[name]])
-    data.list[[name]] <- as(data.list[[name]], "dgCMatrix")
-    ix = Matrix::rowSums(data.list[[name]] != 0)
-    data.list[[name]] = data.list[[name]][ix > 0,]
-    ncols = length(colnames(data.list[[name]]))
-    colnames(data.list[[name]]) = paste(name, seq(1:ncols), sep="-")
-  }
+  names <- names(data.list)
+  names <- rep(names, duplicates)
+  data.list <- extract_datasets(names)
   return(data.list)
-
 }
 
 
@@ -136,4 +105,12 @@ run_cluster <- function(data.list, reduction_choosen = "pca")
     x <- Seurat::FindClusters(x, resolution = 0.5)
   })
   return(data.list)
+}
+
+
+
+permute_dataset_order <- function(data.list)
+{
+  permuted.list <- data.list[sample(length(data.list))]
+  return(permuted.list)
 }

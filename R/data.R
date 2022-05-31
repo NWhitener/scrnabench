@@ -118,11 +118,6 @@ extract_datasets <- function(names)
 #' @export
 annotate_datasets <- function(data.list)
 {
-
-  if(!is.list(names))
-  {
-    stop("A list of names of the datasets is required to annotate")
-  }
   data.list <- lapply(data.list, function(x)
   {
     cols = colnames(x)
@@ -155,9 +150,16 @@ annotate_datasets <- function(data.list)
         x@meta.data$PREPROCESS[i] <- chunks[[1]][4]
       }
     }
-    x@meta.data$SID <- as.numeric(as.factor(x@meta.data$ID))
+    x@meta.data$SID <- rep(1, length(x@meta.data$ID))
     x@meta.data$orig.ident <- x@meta.data$CELL_LINE
     x <- x
   })
+
+  for (i in range(1, length(data.list)))
+  {
+    data.list[[i]]@meta.data$SID = rep(i, length(data.list[[i]]@meta.data$SID))
+  }
+
   return(data.list)
 }
+

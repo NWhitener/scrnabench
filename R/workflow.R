@@ -41,21 +41,12 @@ run_cca <- function(data.list)
 #' @param data.list A data list of data sets to integrate using the harmony protocol
 #' @return data.combined A data list of the combined data from the harmony protocol
 #' @export
-run_harmony <- function(idx, batch_name)
+run_harmony <- function(data.list, batch_name='SID')
 {
-    data.list <- extract_datasets(idx)
-    data.list <- extract_common_genes(data.list)
-    data.list <- merge_datasets(data.list, intersect=TRUE)
-    #data.list <- run_gficf(data.list)
-    data.list <- preprocess_data(data.list)
-    data.list <- run_log(data.list) #LOG
-    data.list <- select_hvg(data.list)
-    data.list = scale_data(data.list)
-    data.list = run_pca(data.list)
-    data.list = harmony::RunHarmony(group.by.vars = batch_name)
-    data.list = run_umap(data.list, "harmony")
-    data.list = run_cluster(data.list, "harmony")
-    retunr(data.list)
+  data.list <- lapply(X = data.list, FUN = function(x) {
+    x <- harmony::RunHarmony(object = x, group.by.vars = batch_name)
+  })
+  return(data.list)
 }
 
 #' Run fastmnn
