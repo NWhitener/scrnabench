@@ -229,19 +229,19 @@ run_seurat_rows <- function()
 run_integration <- function(idx)
 {
   # Harmony
-  data <- run_harmony(data.list, batch_column)
+  data <- run_harmony(idx, batch_name = "SID")
   write_output(data[1], 'harmony')
 
  #FastMnn
-  data <- run_fastmnn(data.list, batch_column)
+  data <- run_fastmnn(idx, batch_column)
   write_output(data, 'fastmnn')
 
   # CCA
-  data <- run_cca(data.list)
+  data <- run_cca(idx)
   write_output(data, 'cca')
 
   # ScTransform
-  data <- run_sctransform(data.list)
+  data <- run_sctransform(idx)
   write_output(data, 'sctransform')
 }
 
@@ -463,5 +463,7 @@ get_scenario <- function(scenario_id)
 
   return(scenarios[[scenario_id]])
 }
+
+
 
 

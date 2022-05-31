@@ -42,12 +42,12 @@ merge_sparse <- function(...)
     cindnew <- match(cnold,cnnew)
     rindnew <- match(rnold,rnnew)
 
-    ind <- summary(M)
+    ind <- Matrix::summary(M)
     i <- c(i,rindnew[ind[,1]])
     j <- c(j,cindnew[ind[,2]])
     x <- c(x,ind[,3])
   }
-  Matrix::sparseMatrix(i=i,j=j,x=x,dims=c(length(rnnew),length(cnnew)),dimnames=list(rnnew,cnnew))
+  sparseMatrix(i=i,j=j,x=x,dims=c(length(rnnew),length(cnnew)),dimnames=list(rnnew,cnnew))
 }
 
 #' Merges Data sets
@@ -63,13 +63,19 @@ merge_sparse <- function(...)
 merge_datasets <- function(data.list, intersect=TRUE)
 {
   data <- data.list[[1]]
+  #print(str(data.list[[1]]))
   for (i in 2:length(data.list))
   {
-    if(intersect) { data <- merge.sparse(data, data.list[[i]]) }
+    if(intersect) {
+      str(data.list[[i]])
+      data <- merge_sparse(data, data.list[[i]]) }
     else { data <- merge.Matrix(data, data.list[[i]], by.x = rownames(data), by.y=rownames(data.list[[i]]), all.x = TRUE, all.y = TRUE) }
   }
   return(list(data))
 }
+
+
+
 
 #' View Data
 #'
@@ -101,6 +107,7 @@ extract_datasets <- function(names)
   data.list <- gene_counts[names]
   for (name in names)
   {
+    print(class(data.list[[name]]))
     data.list[[name]] <- as.matrix(data.list[[name]])
     data.list[[name]] <- as(data.list[[name]], "dgCMatrix")
     ix = Matrix::rowSums(data.list[[name]] != 0)
