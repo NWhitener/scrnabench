@@ -6,12 +6,13 @@
 \usage{
 extract_common_genes(data.list)
 }
+\arguments{
+\item{data}{A scRNA-seq data object( Seurat) with the rows as genes and the cells as objects}
+}
+\value{
+A list of the common genes in the data object
+}
 \description{
 This function takes a data set and returns the genes that are "common" in the data set. It assumes that the row names
 are the gene names.
-}
-\details{
-@param data A scRNA-seq data object( Seurat) with the rows as genes and the cells as objects
-@return A list of the common genes in the data object
-@export
 }
