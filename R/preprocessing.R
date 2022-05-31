@@ -63,7 +63,7 @@ preprocess <- function(data.list)
 {
   data.list <- lapply(X = data.list, function(x)
   {
-    x <- Seurat::CreateSeuratObject(counts = x, min.cells = 3,min.features = 200)
+    x <- Seurat::CreateSeuratObject(counts = x, min.cells = 3, min.features = 200)
     x[["percent.mt"]] <- Seurat::PercentageFeatureSet(x, pattern = "^MT-")
     Total_mRNAs <- x[["nCount_RNA"]]$nCount_RNA
     mupper_bound <- 10^(mean(log10(Total_mRNAs)) + 2*sd(log10(Total_mRNAs)))
@@ -73,9 +73,8 @@ preprocess <- function(data.list)
     glower_bound <- 10^(mean(log10(Total_Genes)) - 2*sd(log10(Total_Genes)))
     x <- subset(x = x, subset = nFeature_RNA > glower_bound & nFeature_RNA < gupper_bound &
                   nCount_RNA > mlower_bound & nCount_RNA < mupper_bound & percent.mt < 10)
-    x<-annotate_datasets(x)
+  })
 
-     })
   return(data.list)
 }
 
@@ -95,7 +94,7 @@ preprocess <- function(data.list)
 select_hvg <- function(data.list)
 {
   data.list <- lapply(X = data.list, FUN = function(x) {
-    x <- FindVariableFeatures(x, selection.method = "vst", nfeatures = 2000)
+    x <- Seurat::FindVariableFeatures(x, selection.method = "vst", nfeatures = 2000)
   })
   return(data.list)
 }
@@ -111,7 +110,7 @@ select_hvg <- function(data.list)
 scale_data <- function(data.list)
 {
   data.list <- lapply(X = data.list, FUN = function(x) {
-    x <- ScaleData(x)
+    x <- Seurat::ScaleData(x)
   })
   return(data.list)
 }
