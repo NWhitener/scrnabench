@@ -13,25 +13,24 @@ data_load <- function()
 
 }
 
-#' Merge the Sparse Matrices
+#' Merge the Sparse data sets
 #'
 #' This function merges the contents of two lists into a sparse matrix. It assumes that the data sets
 #' are of the same format, with genes stored in rows and cells stored in columns. The lists are merged base on the
 #' union of the row names and the union of the column names
 #'
-#' TODO: FIX argument passing
-#'
+#' @param data.list A list of data that  you would like to merge
+#' @return A list of the merged data sets
 #' @export
-merge_sparse <- function(...)
+merge_datasets <- function(data.list)
 {
-
   cnnew <- character()
   rnnew <- character()
   x <- vector()
   i <- numeric()
   j <- numeric()
 
-  for (M in list(...)) {
+  for (M in data.list) {
 
     cnold <- colnames(M)
     rnold <- rownames(M)
@@ -47,31 +46,8 @@ merge_sparse <- function(...)
     j <- c(j,cindnew[ind[,2]])
     x <- c(x,ind[,3])
   }
-  sparseMatrix(i=i,j=j,x=x,dims=c(length(rnnew),length(cnnew)),dimnames=list(rnnew,cnnew))
-}
-
-#' Merges Data sets
-#'
-#' This function merges a series of data lists into one data matrix, based on the intersection of the individuals. If there is intersection
-#' the matrix is merged as sparse to handle zeros, otherwise it is merged as a matrix. This function assumes that the data is
-#' in the format genes in rows and cells in columns.
-#'
-#' @param data.list A list of data set to merge
-#' @param intersect A Boolean parameter, that decides if the output should be a sparse matrix or a matrix
-#' @return A data list of the merged data
-#' @export
-merge_datasets <- function(data.list, intersect=TRUE)
-{
-  data <- data.list[[1]]
-  #print(str(data.list[[1]]))
-  for (i in 2:length(data.list))
-  {
-    if(intersect) {
-      str(data.list[[i]])
-      data <- merge_sparse(data, data.list[[i]]) }
-    else { data <- merge.Matrix(data, data.list[[i]], by.x = rownames(data), by.y=rownames(data.list[[i]]), all.x = TRUE, all.y = TRUE) }
-  }
-  return(list(data))
+  merged <- Matrix::sparseMatrix(i=i,j=j,x=x,dims=c(length(rnnew),length(cnnew)),dimnames=list(rnnew,cnnew))
+  return(list(merged))
 }
 
 
@@ -107,7 +83,6 @@ extract_datasets <- function(names)
   data.list <- gene_counts[names]
   for (name in names)
   {
-    print(class(data.list[[name]]))
     data.list[[name]] <- as.matrix(data.list[[name]])
     data.list[[name]] <- as(data.list[[name]], "dgCMatrix")
     ix = Matrix::rowSums(data.list[[name]] != 0)
@@ -119,7 +94,7 @@ extract_datasets <- function(names)
 }
 
 
-#' Annotate Seurat Object
+#' Annotate Datasets
 #'
 #' This function annotates a created Seurat object. It edits the chunks and meta.data in
 #' order to annotate the object for use in down stream analysis
@@ -127,39 +102,43 @@ extract_datasets <- function(names)
 #' @param data A Seurat object that you want annotated
 #' @return A annotated Seurat Object
 #' @export
-annotate_seurat_object <-function(data)
+annotate_datasets <- function(data.list)
 {
-  cols = colnames(data)
-  for (i in (1:length(cols)))
+  data.list <- lapply(data.list, function(x)
   {
-    col <- cols[i]
-    col <- str_split(col, "-")[[1]][1]
-    data@meta.data$ID[i] <- col
-    chunks <- str_split(col, "_")
-    data@meta.data$TECHNLOGY[i] <- chunks[[1]][1]
+    cols = colnames(x)
+    for (i in (1:length(cols)))
+    {
+      col <- cols[i]
+      col <- stringr::str_split(col, "-")[[1]][1]
+      x@meta.data$ID[i] <- col
 
-    if(chunks[[1]][2] == "PE" | chunks[[1]][2] == "SE")
-    {
-      data@meta.data$CENTER[i] <- "TBU"
-    }
-    else
-    {
-      data@meta.data$CENTER[i] <- chunks[[1]][2]
-    }
+      chunks <- stringr::str_split(col, "_")
+      x@meta.data$TECHNLOGY[i] <- chunks[[1]][1]
 
-    if(chunks[[1]][3] == "M" | chunks[[1]][3] == "HT")
-    {
-      data@meta.data$CELL_LINE[i] <- ifelse(chunks[[1]][4] == "A", 'HCC1395', 'HCC1395BL')
-      data@meta.data$PREPROCESS[i] <- chunks[[1]][5]
-    }
-    else
-    {
-      data@meta.data$CELL_LINE[i] <- ifelse(chunks[[1]][3] == "A", 'HCC1395', 'HCC1395BL')
-      data@meta.data$PREPROCESS[i] <- chunks[[1]][4]
-    }
-  }
-  data@meta.data$SID <- as.numeric(as.factor(data@meta.data$ID))
-  data@meta.data$orig.ident <- data@meta.data$CELL_LINE
+      if(chunks[[1]][2] == "PE" | chunks[[1]][2] == "SE")
+      {
+        x@meta.data$CENTER[i] <- "TBU"
+      }
+      else
+      {
+        x@meta.data$CENTER[i] <- chunks[[1]][2]
+      }
 
-  return(data)
+      if(chunks[[1]][3] == "M" | chunks[[1]][3] == "HT")
+      {
+        x@meta.data$CELL_LINE[i] <- ifelse(chunks[[1]][4] == "A", 'HCC1395', 'HCC1395BL')
+        x@meta.data$PREPROCESS[i] <- chunks[[1]][5]
+      }
+      else
+      {
+        x@meta.data$CELL_LINE[i] <- ifelse(chunks[[1]][3] == "A", 'HCC1395', 'HCC1395BL')
+        x@meta.data$PREPROCESS[i] <- chunks[[1]][4]
+      }
+    }
+    x@meta.data$SID <- as.numeric(as.factor(x@meta.data$ID))
+    x@meta.data$orig.ident <- x@meta.data$CELL_LINE
+    x <- x
+  })
+  return(data.list)
 }
