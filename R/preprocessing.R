@@ -59,7 +59,7 @@ run_log <- function(data.list)
 #'
 #' @param data.list A list of data, with Genes in Rows and Cells in Columns
 #' @return A data list of data that falls within the specified data limitations which acts as preprocesses
-preprocess_data <- function(data.list)
+preprocess <- function(data.list)
 {
   data.list <- lapply(X = data.list, function(x)
   {
