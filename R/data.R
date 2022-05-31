@@ -24,6 +24,11 @@ data_load <- function()
 #' @export
 merge_datasets <- function(data.list)
 {
+  if(!is.list(names))
+  {
+    stop("A list of names of the datasets is required to merge datasets")
+  }
+
   cnnew <- character()
   rnnew <- character()
   x <- vector()
@@ -63,6 +68,11 @@ merge_datasets <- function(data.list)
 #' @export
 view_data <- function(idx)
 {
+
+  if(!is.list(names))
+  {
+    stop("A list of names of the datasets is required to view datasets")
+  }
   for (i in 1:length(idx))
   {
     str(extract_datasets(idx[i]))
@@ -80,6 +90,10 @@ view_data <- function(idx)
 #' @export
 extract_datasets <- function(names)
 {
+  if(!is.list(names))
+  {
+    stop("A list of names of the datasets is required to extract datasets")
+  }
   data.list <- gene_counts[names]
   for (name in names)
   {
@@ -104,6 +118,11 @@ extract_datasets <- function(names)
 #' @export
 annotate_datasets <- function(data.list)
 {
+
+  if(!is.list(names))
+  {
+    stop("A list of names of the datasets is required to annotate")
+  }
   data.list <- lapply(data.list, function(x)
   {
     cols = colnames(x)
