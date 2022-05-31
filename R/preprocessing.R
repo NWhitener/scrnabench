@@ -3,9 +3,9 @@
 #' This function takes a data set and returns the genes that are "common" in the data set. It assumes that the row names
 #' are the gene names.
 #'
-#'  @param data A scRNA-seq data object( Seurat) with the rows as genes and the cells as objects
-#'  @return A list of the common genes in the data object
-#'  @export
+#' @param data A scRNA-seq data object( Seurat) with the rows as genes and the cells as objects
+#' @return A list of the common genes in the data object
+#' @export
 extract_common_genes <- function(data.list)
 {
   common_gene_names <- Reduce(intersect, lapply(data.list, row.names))

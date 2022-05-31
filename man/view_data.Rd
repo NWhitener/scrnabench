@@ -4,7 +4,7 @@
 \alias{view_data}
 \title{View Data}
 \usage{
-view_data(data)
+view_data(idx)
 }
 \arguments{
 \item{data.list}{A list of data sets that you would like to view}

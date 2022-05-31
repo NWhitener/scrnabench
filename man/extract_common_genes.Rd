@@ -4,7 +4,7 @@
 \alias{extract_common_genes}
 \title{Extract the Common Genes}
 \usage{
-extract_common_genes(data)
+extract_common_genes(data.list)
 }
 \description{
 This function takes a data set and returns the genes that are "common" in the data set. It assumes that the row names
