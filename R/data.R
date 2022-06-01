@@ -19,20 +19,20 @@ data_load <- function()
 #' are of the same format, with genes stored in rows and cells stored in columns. The lists are merged base on the
 #' union of the row names and the union of the column names
 #'
-#' @param data.list A list of data that  you would like to merge
+#' @param dataList A list of data that  you would like to merge
 #' @return A list of the merged data sets
 #' @export
-merge_datasets <- function(data.list)
+merge_datasets <- function(dataList)
 {
 
-  if(is.list(data.list)== "FALSE")
+  if(is.list(dataList)== "FALSE")
   {
     stop("A data list of datasets is required to merge datasets")
   }
-  if(length(data.list) == 1)
+  if(length(dataList) == 1)
   {
     warning("Only one dataset provided, returning the original dataset")
-    return(data.list)
+    return(dataList)
   }
   cnnew <- character()
   rnnew <- character()
@@ -40,7 +40,7 @@ merge_datasets <- function(data.list)
   i <- numeric()
   j <- numeric()
 
-  for (M in data.list) {
+  for (M in dataList) {
 
     cnold <- colnames(M)
     rnold <- rownames(M)
@@ -68,7 +68,7 @@ merge_datasets <- function(data.list)
 #' This function displays a short summary of each data set in the data list provided. Can be used to gain quick insights into the
 #' information that is stored in the data
 #'
-#' @param data.list A list of data sets that you would like to view
+#' @param dataList A list of data sets that you would like to view
 #' @export
 view_data <- function(idx)
 {
@@ -98,17 +98,17 @@ extract_datasets <- function(names)
   {
     stop("A list of names of the datasets is required to extract datasets")
   }
-  data.list <- gene_counts[names]
+  dataList <- gene_counts[names]
   for (name in names)
   {
-    data.list[[name]] <- as.matrix(data.list[[name]])
-    data.list[[name]] <- as(data.list[[name]], "dgCMatrix")
-    ix = Matrix::rowSums(data.list[[name]] != 0)
-    data.list[[name]] = data.list[[name]][ix > 0,]
-    ncols = length(colnames(data.list[[name]]))
-    colnames(data.list[[name]]) = paste(name, seq(1:ncols), sep="-")
+    dataList[[name]] <- as.matrix(dataList[[name]])
+    dataList[[name]] <- as(dataList[[name]], "dgCMatrix")
+    ix = Matrix::rowSums(dataList[[name]] != 0)
+    dataList[[name]] = dataList[[name]][ix > 0,]
+    ncols = length(colnames(dataList[[name]]))
+    colnames(dataList[[name]]) = paste(name, seq(1:ncols), sep="-")
   }
-  return(data.list)
+  return(dataList)
 }
 
 
@@ -120,13 +120,13 @@ extract_datasets <- function(names)
 #' @param data A Seurat object that you want annotated
 #' @return A annotated Seurat Object
 #' @export
-annotate_datasets <- function(data.list)
+annotate_datasets <- function(dataList)
 {
-  if(is.list(data.list)== "FALSE")
+  if(is.list(dataList)== "FALSE")
   {
     stop("A data list of datasets is required to annotate datasets")
   }
-  data.list <- lapply(data.list, function(x)
+  dataList <- lapply(dataList, function(x)
   {
     cols = colnames(x)
     for (i in (1:length(cols)))
@@ -163,11 +163,11 @@ annotate_datasets <- function(data.list)
     x <- x
   })
 
-  for (i in range(1, length(data.list)))
+  for (i in range(1, length(dataList)))
   {
-    data.list[[i]]@meta.data$SID = rep(i, length(data.list[[i]]@meta.data$SID))
+    dataList[[i]]@meta.data$SID = rep(i, length(dataList[[i]]@meta.data$SID))
   }
 
-  return(data.list)
+  return(dataList)
 }
 

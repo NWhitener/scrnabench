@@ -6,22 +6,22 @@
 #' @param data A scRNA-seq data object( Seurat) with the rows as genes and the cells as objects
 #' @return A list of the common genes in the data object
 #' @export
-extract_common_genes <- function(data.list)
+extract_common_genes <- function(dataList)
 {
   ###Error Handling/warning
-  if(is.list(data.list)== "FALSE")
+  if(is.list(dataList)== "FALSE")
   {
     stop("A data list of datasets is required to extract common genes")
   }
-  if(length(data.list) == 1)
+  if(length(dataList) == 1)
   {
     warning("Only one dataset provided, returning the original dataset")
-    return(data.list)
+    return(dataList)
   }
-  common_gene_names <- Reduce(intersect, lapply(data.list, row.names))
-  data.list <- lapply(data.list, function(x)
+  common_gene_names <- Reduce(intersect, lapply(dataList, row.names))
+  dataList <- lapply(dataList, function(x)
   { x[row.names(x) %in% common_gene_names,] })
-  return(data.list)
+  return(dataList)
 }
 
 #' Runs the GFICF Transformations
@@ -30,22 +30,22 @@ extract_common_genes <- function(data.list)
 #' create and use GFICF data for further downstream data analysis and computations. For more information on the GFICF calculation
 #' please see https://github.com/dibbelab/gficf
 #'
-#' @param data.list A data list of Data sets in the Gene in Row and Cell in Columns format
+#' @param dataList A data list of Data sets in the Gene in Row and Cell in Columns format
 #' @return A data list with GFICF scores of Each Gene Cell Relationship
 #' @export
-run_gficf <-function(data.list)
+run_gficf <-function(dataList)
 {
 
-  if(is.list(data.list)== "FALSE")
+  if(is.list(dataList)== "FALSE")
   {
     stop("A data list of datasets is required to apply GFICF to datasets")
   }
-  data.list <- lapply(X = data.list, FUN = function(x) {
+  dataList <- lapply(X = dataList, FUN = function(x) {
     x <- SeuratObject::CreateSeuratObject(counts = x)
     x$RNA@data <- gficf::gficf(M=x$RNA@counts, normalize=TRUE, storeRaw=FALSE)$gficf
     x$RNA@counts <- x$RNA@data[rownames(x$RNA@data),]
   })
-  return(data.list)
+  return(dataList)
 }
 
 #' Runs the Log Transformation
@@ -54,19 +54,19 @@ run_gficf <-function(data.list)
 #' create and use Log data for further downstream data analysis and computations. For more information on the Log calculation
 #' please see https://cran.r-project.org/web/packages/Seurat/Seurat.pdf
 #'
-#' @param data.list A data list of Data sets in the Gene in Row and Cell in Columns format
+#' @param dataList A data list of Data sets in the Gene in Row and Cell in Columns format
 #' @return A data list with Log scores of Each Gene Cell Relationship
 #' @export
-run_log <- function(data.list)
+run_log <- function(dataList)
 {
-  if(is.list(data.list)== "FALSE")
+  if(is.list(dataList)== "FALSE")
   {
     stop("A data list of datasets is required to apply the Log transformations to datasets")
   }
-  data.list <- lapply(X = data.list, FUN = function(x) {
+  dataList <- lapply(X = dataList, FUN = function(x) {
     x <- Seurat::NormalizeData(x)
   })
-  return(data.list)
+  return(dataList)
 }
 
 #' Preprocesses the a Data List
@@ -75,17 +75,17 @@ run_log <- function(data.list)
 #' Total Gene Counts that are present in the list. This creates a filtered set of genes to use in experiments, removing extreme
 #' outliers. These bounds are similar to the ?monocle? package. CITE PAPER
 #'
-#' @param data.list A list of data, with Genes in Rows and Cells in Columns
+#' @param dataList A list of data, with Genes in Rows and Cells in Columns
 #' @return A data list of data that falls within the specified data limitations which acts as preprocesses
 #' @export
-preprocess <- function(data.list)
+preprocess <- function(dataList)
 {
-  if(is.list(data.list)== "FALSE")
+  if(is.list(dataList)== "FALSE")
   {
     stop("A data list of datasets is required to preprocess datasets")
   }
 
-  data.list <- lapply(X = data.list, function(x)
+  dataList <- lapply(X = dataList, function(x)
   {
     x <- Seurat::CreateSeuratObject(counts = x, min.cells = 3, min.features = 200)
     x[["percent.mt"]] <- Seurat::PercentageFeatureSet(x, pattern = "^MT-")
@@ -99,7 +99,7 @@ preprocess <- function(data.list)
                   nCount_RNA > mlower_bound & nCount_RNA < mupper_bound & percent.mt < 10)
   })
 
-  return(data.list)
+  return(dataList)
 }
 
 #' Select Highly Variable Genes
@@ -107,19 +107,19 @@ preprocess <- function(data.list)
 #' This function uses the FindVariablesFeatures of Seurat to find the Highly variable genes of a data set. This function
 #' assumes that genes are in rows and cells are in columns. The "vst" selection method is used with 2000 nfeatures.
 #'
-#' @param data.list A list of data sets that you wouuld like the variable genes of
+#' @param dataList A list of data sets that you wouuld like the variable genes of
 #' @return A data list of that includes the variable genes of the original data list
 #' @export
-select_hvg <- function(data.list)
+select_hvg <- function(dataList)
 {
-  if(is.list(data.list)== "FALSE")
+  if(is.list(dataList)== "FALSE")
   {
     stop("A data list of datasets is required to select the Highly Variable Genes of a dataset")
   }
-  data.list <- lapply(X = data.list, FUN = function(x) {
+  dataList <- lapply(X = dataList, FUN = function(x) {
     x <- Seurat::FindVariableFeatures(x, selection.method = "vst", nfeatures = 2000)
   })
-  return(data.list)
+  return(dataList)
 }
 
 #' Scales the Data
@@ -127,19 +127,19 @@ select_hvg <- function(data.list)
 #' This function uses the ScaleData of Seurat to scale the data set. This function
 #' assumes that genes are in rows and cells are in columns.
 #'
-#' @param data.list A list of data sets that you would like to scale
+#' @param dataList A list of data sets that you would like to scale
 #' @return A data list of that includes the scaled data
 #' @export
-scale_data <- function(data.list)
+scale_data <- function(dataList)
 {
 
-  if(is.list(data.list)== "FALSE")
+  if(is.list(dataList)== "FALSE")
   {
     stop("A data list of datasets is required to scale datasets")
   }
-  data.list <- lapply(X = data.list, FUN = function(x) {
+  dataList <- lapply(X = dataList, FUN = function(x) {
     x <- Seurat::ScaleData(x)
   })
-  return(data.list)
+  return(dataList)
 }
 

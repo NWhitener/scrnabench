@@ -14,14 +14,14 @@ run_harmony3 <- function(data, batch_name)
 run_workflow <- function(idx)
 {
   # Harmony
-  data.list <- extract_datasets(idx)
-  data.list <- extract_common_genes(data.list)
-  data.list <- merge_datasets(data.list, intersect=TRUE)
-  #data.list <- run_gficf(data.list)
-  data.list <- preprocess_data(data.list)
-  data.list <- run_log(data.list) #LOG
+  dataList <- extract_datasets(idx)
+  dataList <- extract_common_genes(dataList)
+  dataList <- merge_datasets(dataList, intersect=TRUE)
+  #dataList <- run_gficf(dataList)
+  dataList <- preprocess_data(dataList)
+  dataList <- run_log(dataList) #LOG
 
-  data <- annotate_seurat_object(data.list[[1]])
+  data <- annotate_seurat_object(dataList[[1]])
   data <- run_harmony3(data, batch_column)
   #write_output(data, 'harmony')
 }

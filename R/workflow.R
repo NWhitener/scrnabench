@@ -4,24 +4,24 @@
 #' integration" found at https://satijalab.org/seurat/articles/integration_introduction.html. This function completes the entire
 #' protocol on either gficf or log transformed data.
 #'
-#' @param data.list A data list of data sets to integrate using the cca protocol
+#' @param dataList A data list of data sets to integrate using the cca protocol
 #' @return data.combined A data list of the combined data from the cca protocol
 #' @export
-run_cca <- function(data.list)
+run_cca <- function(dataList)
 {
 
-  data.list <- extract_datasets(idx)
-  data.list <- preprocess_data(data.list)
-  #data.list <- run_gficf(data.list)
-  data.list <- run_log(data.list)
+  dataList <- extract_datasets(idx)
+  dataList <- preprocess_data(dataList)
+  #dataList <- run_gficf(dataList)
+  dataList <- run_log(dataList)
 
-  data.list <- lapply(X = data.list, FUN = function(x) {
+  dataList <- lapply(X = dataList, FUN = function(x) {
     x <- select_hvg(x)
   })
 
-  features <- Suerat::SelectIntegrationFeatures(object.list = data.list)
-  k.filter <- min(200, min(sapply(data.list, ncol)))
-  data.anchors <- Seurat::FindIntegrationAnchors(object.list = data.list, anchor.features = features, k.filter=k.filter)
+  features <- Suerat::SelectIntegrationFeatures(object.list = dataList)
+  k.filter <- min(200, min(sapply(dataList, ncol)))
+  data.anchors <- Seurat::FindIntegrationAnchors(object.list = dataList, anchor.features = features, k.filter=k.filter)
   data.combined <- Seurat::IntegrateData(anchorset = data.anchors)
   DefaultAssay(data.combined) <- "integrated"
 
@@ -38,17 +38,17 @@ run_cca <- function(data.list)
 #' This function runs the data integration protocol detailed in the Seurat ## FIND VING. AND LINK . This function completes the entire
 #' protocol on either gficf or log transformed data.
 #'
-#' @param data.list A data list of data sets to integrate using the harmony protocol
+#' @param dataList A data list of data sets to integrate using the harmony protocol
 #' @return data.combined A data list of the combined data from the harmony protocol
 #' @export
-run_harmony <- function(data.list, batch_name='SID')
+run_harmony <- function(dataList, batch_name='SID')
 {
   ##STOP ON LESS THAN 2 DATASETS
 
-  data.list <- lapply(X = data.list, FUN = function(x) {
+  dataList <- lapply(X = dataList, FUN = function(x) {
     x <- harmony::RunHarmony(object = x, group.by.vars = batch_name)
   })
-  return(data.list)
+  return(dataList)
 }
 
 #' Run fastmnn
@@ -56,25 +56,25 @@ run_harmony <- function(data.list, batch_name='SID')
 #' This function runs the data integration protocol detailed in the Seurat ## FIND VING. AND LINK . This function completes the entire
 #' protocol on either gficf or log transformed data.
 #'
-#' @param data.list A data list of data sets to integrate using the fastmnn protocol
+#' @param dataList A data list of data sets to integrate using the fastmnn protocol
 #' @return data.combined A data list of the combined data from the fastmnn protocol
 #' @export
 run_fastmnn <- function(idx, batch_name)
 {
 
   ##REWRITE
-  data.list <- extract_datasets(idx)
-  data.list <- extract_common_genes(data.list)
-  data.list <- merge_datasets(data.list, intersect=TRUE)
-  data.list <- preprocess_data(data.list)
-  data.list <- run_log(data.list) #LOG
-  #data.list<- run_gficf(data.list)
-  data.list <- select_hvg(data.list)
-  data.list <- SeuratWrapper::RunFastMNN(object.list = SplitObject(data.list, split.by = batch_name))
-  data.list <- run_umap(data.list)
-  data.list <- run_cluster(data.list)
-  DefaultAssay(data.list) <- "mnn.reconstructed"
-  return(data.list)
+  dataList <- extract_datasets(idx)
+  dataList <- extract_common_genes(dataList)
+  dataList <- merge_datasets(dataList, intersect=TRUE)
+  dataList <- preprocess_data(dataList)
+  dataList <- run_log(dataList) #LOG
+  #dataList<- run_gficf(dataList)
+  dataList <- select_hvg(dataList)
+  dataList <- SeuratWrapper::RunFastMNN(object.list = SplitObject(dataList, split.by = batch_name))
+  dataList <- run_umap(dataList)
+  dataList <- run_cluster(dataList)
+  DefaultAssay(dataList) <- "mnn.reconstructed"
+  return(dataList)
 
 }
 
@@ -85,19 +85,19 @@ run_fastmnn <- function(idx, batch_name)
 #' found at https://satijalab.org/seurat/articles/sctransform_vignette.html . This function completes the entire
 #' protocol on either gficf or log transformed data.
 #'
-#' @param data.list A data list of data sets to integrate using the sctransform protocol
+#' @param dataList A data list of data sets to integrate using the sctransform protocol
 #' @return data.combined A data list of the combined data from the sctransform protocol
 #' @export
-run_sctransform <- function(data.list)
+run_sctransform <- function(dataList)
 {
 
-  data.list <- extract_datasets(idx)
-  data.list <- preprocess_data(data.list)
-  data.list <- lapply(X = data.list, FUN = SCTransform)
-  features <- Seurat::SelectIntegrationFeatures(object.list = data.list, nfeatures=2000)
-  data.list <- Seurart::PrepSCTIntegration(object.list = data.list, anchor.features = features)
-  k.filter <- min(200, min(sapply(data.list, ncol)))
-  data.anchors <- Seurat::FindIntegrationAnchors(object.list = data.list, normalization.method = "SCT", anchor.features = features, k.filter = k.filter)
+  dataList <- extract_datasets(idx)
+  dataList <- preprocess_data(dataList)
+  dataList <- lapply(X = dataList, FUN = SCTransform)
+  features <- Seurat::SelectIntegrationFeatures(object.list = dataList, nfeatures=2000)
+  dataList <- Seurart::PrepSCTIntegration(object.list = dataList, anchor.features = features)
+  k.filter <- min(200, min(sapply(dataList, ncol)))
+  data.anchors <- Seurat::FindIntegrationAnchors(object.list = dataList, normalization.method = "SCT", anchor.features = features, k.filter = k.filter)
   data.combined <- Seurat::IntegrateData(anchorset = data.anchors, normalization.method = "SCT")
   DefaultAssay(data.combined) <- "integrated"
   data.combined <- scale_data(data.combined)
@@ -116,17 +116,17 @@ run_sctransform <- function(data.list)
 #' or for down stream analysis. For more information on the Seurat Pipeline
 #' please see https://satijalab.org/seurat/index.html
 #'
-#' @param data.list A data list of Data sets in the Gene in Row and Cell in Columns format
+#' @param dataList A data list of Data sets in the Gene in Row and Cell in Columns format
 #' @export
-run_seurat <- function(data.list)
+run_seurat <- function(dataList)
 {
-  data.list <- lapply(X = data.list, FUN = function(x) {
+  dataList <- lapply(X = dataList, FUN = function(x) {
     x <- RunPCA(x, npcs = 30, verbose = FALSE)
     x <- RunUMAP(x, reduction = "pca", dims = 1:30)
     x <- FindNeighbors(x, reduction = "pca", dims = 1:30)
     x <- FindClusters(x, resolution = 0.5)
   })
-  return(data.list)
+  return(dataList)
 }
 
 
@@ -141,14 +141,14 @@ run_seurat <- function(data.list)
 build_seurat_columns <- function(idx, seed = 1)
 {
   set.seed(seed)
-  data.list <- extract_datasets(idx)
-  data.list2 <- extract_datasets(idx)
-  data.list2 <- permute_columns(data.list2)
-  data.list <- append(data.list, data.list2)
-  data.list <- preprocess_data(data.list)
-  data.list <- run_log(data.list)
-  data.list <- run_seurat(data.list)
-  x = merge(data.list[[1]]@meta.data, data.list[[2]]@meta.data, by="row.names", all=TRUE)
+  dataList <- extract_datasets(idx)
+  dataList2 <- extract_datasets(idx)
+  dataList2 <- permute_columns(dataList2)
+  dataList <- append(dataList, dataList2)
+  dataList <- preprocess_data(dataList)
+  dataList <- run_log(dataList)
+  dataList <- run_seurat(dataList)
+  x = merge(dataList[[1]]@meta.data, dataList[[2]]@meta.data, by="row.names", all=TRUE)
   return(aricode::ARI(x$seurat_clusters.x, x$seurat_clusters.y))
 }
 
@@ -163,14 +163,14 @@ build_seurat_columns <- function(idx, seed = 1)
 build_seurat_rows <- function(idx, seed = 1)
 {
   set.seed(seed)
-  data.list <- extract_datasets(idx)
-  data.list2 <- extract_datasets(idx)
-  data.list2 <- permute_rows(data.list2)
-  data.list <- append(data.list, data.list2)
-  data.list <- preprocess_data(data.list)
-  data.list <- run_log(data.list)
-  data.list <- run_seurat(data.list)
-  x = merge(data.list[[1]]@meta.data, data.list[[2]]@meta.data, by="row.names", all=TRUE)
+  dataList <- extract_datasets(idx)
+  dataList2 <- extract_datasets(idx)
+  dataList2 <- permute_rows(dataList2)
+  dataList <- append(dataList, dataList2)
+  dataList <- preprocess_data(dataList)
+  dataList <- run_log(dataList)
+  dataList <- run_seurat(dataList)
+  x = merge(dataList[[1]]@meta.data, dataList[[2]]@meta.data, by="row.names", all=TRUE)
   return(aricode::ARI(x$seurat_clusters.x, x$seurat_clusters.y))
 }
 
@@ -255,23 +255,23 @@ run_integration <- function(idx)
 run_duplicate_integrations <- function(idx, dup)
 {
   # Harmony
-  data.list <- duplicate_datasets(idx, dup)
+  dataList <- duplicate_datasets(idx, dup)
   data <- run_harmony(data, batch_column)
   write_output(data, 'harmony')
 
   # FastMNN
-  data.list <- duplicate_datasets(idx, dup)
+  dataList <- duplicate_datasets(idx, dup)
   data <- run_fastmnn(data, batch_column)
   write_output(data, 'fastmnn')
 
   # CCA
-  data.list <- duplicate_datasets(idx, dup)
-  data <- run_cca(data.list)
+  dataList <- duplicate_datasets(idx, dup)
+  data <- run_cca(dataList)
   write_output(data, 'cca')
 
   # ScTransform
-  data.list <- duplicate_datasets(idx, dup)
-  data <- run_sctransform(data.list)
+  dataList <- duplicate_datasets(idx, dup)
+  data <- run_sctransform(dataList)
 
   write_output(data, 'sctransform')
 }

@@ -8,13 +8,13 @@
 #'
 #' @param names A list of dataset names that should be duplicated
 #' @param ndups The number of duplicates that are desired
-#' @return a data.list of the duplicated datasets
-duplicate_datasets <- function(data.list, duplicates=2)
+#' @return a dataList of the duplicated datasets
+duplicate_datasets <- function(dataList, duplicates=2)
 {
-  names <- names(data.list)
+  names <- names(dataList)
   names <- rep(names, duplicates)
-  data.list <- extract_datasets(names)
-  return(data.list)
+  dataList <- extract_datasets(names)
+  return(dataList)
 }
 
 
@@ -24,15 +24,15 @@ duplicate_datasets <- function(data.list, duplicates=2)
 #' so that further experimentation can be done wit the data list to check the  algorithmic stability of a pipeline or
 #' method
 #'
-#' @param data.list A data list that you would like to permute the rows of
+#' @param dataList A data list that you would like to permute the rows of
 #' @return The data list with the rows permuted
 #' @export
-permute_rows <- function(data.list)
+permute_rows <- function(dataList)
 {
-  data.list <- lapply(X = data.list, FUN = function(x) {
+  dataList <- lapply(X = dataList, FUN = function(x) {
     x <- x[sample(1:nrow(x)),]
   })
-  return(data.list)
+  return(dataList)
 }
 
 
@@ -42,15 +42,15 @@ permute_rows <- function(data.list)
 #' so that further experimentation can be done wit the data list to check the  algorithmic stability of a pipeline or
 #' method
 #'
-#' @param data.list A data list that you would like to permute the columns of
+#' @param dataList A data list that you would like to permute the columns of
 #' @return The data list with the columns permuted
 #' @export
-permute_columns <- function(data.list)
+permute_columns <- function(dataList)
 {
-  data.list <- lapply(X = data.list, FUN = function(x) {
+  dataList <- lapply(X = dataList, FUN = function(x) {
     x <- x[,sample(1:ncol(x))]
   })
-  return(data.list)
+  return(dataList)
 }
 
 
@@ -60,15 +60,15 @@ permute_columns <- function(data.list)
 #' This functions runs the Seurat RunPCA function on a list of data sets. This functions assumes that genes are in rows and
 #' cells are in columns. The default parameters are used, and verbose is set to false
 #'
-#' @param data.list A data list of data sets
+#' @param dataList A data list of data sets
 #' @return A data list with PCA completed on the features
 #' @export
-run_pca <- function(data.list)
+run_pca <- function(dataList)
 {
-  data.list <- lapply(X = data.list, FUN = function(x) {
+  dataList <- lapply(X = dataList, FUN = function(x) {
     x <- Seurat::RunPCA(x, verbose = FALSE)
   })
-  return(data.list)
+  return(dataList)
 }
 
 
@@ -77,15 +77,15 @@ run_pca <- function(data.list)
 #' This functions runs the Seurat RunUMAP function on a list of data sets. This functions assumes that genes are in rows and
 #' cells are in columns. The default reduction is set to "pca" with the first 30 dimensions being accepted
 #'
-#' @param data.list A data list of data sets
+#' @param dataList A data list of data sets
 #' @return A data list with UMAP completed on the features
 #' @export
-run_umap <- function(data.list, reduction_choosen = "pca")
+run_umap <- function(dataList, reduction_choosen = "pca")
 {
-  data.list <- lapply(X = data.list, FUN = function(x) {
+  dataList <- lapply(X = dataList, FUN = function(x) {
     x <- Seurat::RunUMAP(x,reduction = reduction_choosen, dims = 1:30)
   })
-  return(data.list)
+  return(dataList)
 }
 
 #' Complete Clustering Steps
@@ -95,22 +95,22 @@ run_umap <- function(data.list, reduction_choosen = "pca")
 #'  cells are in columns. The FindNeighbors reduction is set to "pca" by default and uses the first 30 dimensions
 #'  The FindClusters resolution is set to 0.5
 #'
-#' @param data.list A data list of data sets
+#' @param dataList A data list of data sets
 #' @return A data list with clustering completed completed on the features
 #' @export
-run_cluster <- function(data.list, reduction_choosen = "pca")
+run_cluster <- function(dataList, reduction_choosen = "pca")
 {
-  data.list <- lapply(X = data.list, FUN = function(x) {
+  dataList <- lapply(X = dataList, FUN = function(x) {
     x <- Seurat::FindNeighbors(x, reduction = reduction_choosen, dims = 1:30)
     x <- Seurat::FindClusters(x, resolution = 0.5)
   })
-  return(data.list)
+  return(dataList)
 }
 
 
 
-permute_dataset_order <- function(data.list)
+permute_dataset_order <- function(dataList)
 {
-  permuted.list <- data.list[sample(length(data.list))]
+  permuted.list <- dataList[sample(length(dataList))]
   return(permuted.list)
 }
