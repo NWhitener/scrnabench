@@ -90,7 +90,7 @@ view_data <- function(idx)
 #' @export
 extract_datasets <- function(names)
 {
-  if(!is.list(names))
+  if(!is.vector(names))
   {
     stop("A list of names of the datasets is required to extract datasets")
   }
