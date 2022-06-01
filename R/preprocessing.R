@@ -9,13 +9,20 @@
 extract_common_genes <- function(data.list)
 {
   ###Error Handling/warning
-
+  if(is.list(data.list)== "FALSE")
+  {
+    stop("A data list of datasets is required to extract common genes")
+  }
+  if(length(data.list) == 1)
+  {
+    warning("Only one dataset provided, returning the original dataset")
+    return(data.list)
+  }
   common_gene_names <- Reduce(intersect, lapply(data.list, row.names))
   data.list <- lapply(data.list, function(x)
   { x[row.names(x) %in% common_gene_names,] })
   return(data.list)
 }
-
 
 #' Runs the GFICF Transformations
 #'
@@ -29,6 +36,10 @@ extract_common_genes <- function(data.list)
 run_gficf <-function(data.list)
 {
 
+  if(is.list(data.list)== "FALSE")
+  {
+    stop("A data list of datasets is required to apply GFICF to datasets")
+  }
   data.list <- lapply(X = data.list, FUN = function(x) {
     x <- SeuratObject::CreateSeuratObject(counts = x)
     x$RNA@data <- gficf::gficf(M=x$RNA@counts, normalize=TRUE, storeRaw=FALSE)$gficf
@@ -48,6 +59,10 @@ run_gficf <-function(data.list)
 #' @export
 run_log <- function(data.list)
 {
+  if(is.list(data.list)== "FALSE")
+  {
+    stop("A data list of datasets is required to apply the Log transformations to datasets")
+  }
   data.list <- lapply(X = data.list, FUN = function(x) {
     x <- Seurat::NormalizeData(x)
   })
@@ -65,6 +80,11 @@ run_log <- function(data.list)
 #' @export
 preprocess <- function(data.list)
 {
+  if(is.list(data.list)== "FALSE")
+  {
+    stop("A data list of datasets is required to preprocess datasets")
+  }
+
   data.list <- lapply(X = data.list, function(x)
   {
     x <- Seurat::CreateSeuratObject(counts = x, min.cells = 3, min.features = 200)
@@ -82,11 +102,6 @@ preprocess <- function(data.list)
   return(data.list)
 }
 
-
-# Make A test Dataset Example to make sure that we have a working preprocessing file/data file
-
-
-
 #' Select Highly Variable Genes
 #'
 #' This function uses the FindVariablesFeatures of Seurat to find the Highly variable genes of a data set. This function
@@ -97,6 +112,10 @@ preprocess <- function(data.list)
 #' @export
 select_hvg <- function(data.list)
 {
+  if(is.list(data.list)== "FALSE")
+  {
+    stop("A data list of datasets is required to select the Highly Variable Genes of a dataset")
+  }
   data.list <- lapply(X = data.list, FUN = function(x) {
     x <- Seurat::FindVariableFeatures(x, selection.method = "vst", nfeatures = 2000)
   })
@@ -113,6 +132,11 @@ select_hvg <- function(data.list)
 #' @export
 scale_data <- function(data.list)
 {
+
+  if(is.list(data.list)== "FALSE")
+  {
+    stop("A data list of datasets is required to scale datasets")
+  }
   data.list <- lapply(X = data.list, FUN = function(x) {
     x <- Seurat::ScaleData(x)
   })

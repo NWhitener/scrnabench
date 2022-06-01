@@ -27,7 +27,7 @@ merge_datasets <- function(data.list)
 
   if(is.list(data.list)== "FALSE")
   {
-    stop("A list of names of the datasets is required to merge datasets")
+    stop("A data list of datasets is required to merge datasets")
   }
   if(length(data.list) == 1)
   {
@@ -68,7 +68,6 @@ merge_datasets <- function(data.list)
 #' This function displays a short summary of each data set in the data list provided. Can be used to gain quick insights into the
 #' information that is stored in the data
 #'
-#' TODO: FIX
 #' @param data.list A list of data sets that you would like to view
 #' @export
 view_data <- function(idx)
@@ -123,6 +122,10 @@ extract_datasets <- function(names)
 #' @export
 annotate_datasets <- function(data.list)
 {
+  if(is.list(data.list)== "FALSE")
+  {
+    stop("A data list of datasets is required to annotate datasets")
+  }
   data.list <- lapply(data.list, function(x)
   {
     cols = colnames(x)
