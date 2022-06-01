@@ -43,6 +43,8 @@ run_cca <- function(data.list)
 #' @export
 run_harmony <- function(data.list, batch_name='SID')
 {
+  ##STOP ON LESS THAN 2 DATASETS
+
   data.list <- lapply(X = data.list, FUN = function(x) {
     x <- harmony::RunHarmony(object = x, group.by.vars = batch_name)
   })
@@ -60,6 +62,7 @@ run_harmony <- function(data.list, batch_name='SID')
 run_fastmnn <- function(idx, batch_name)
 {
 
+  ##REWRITE
   data.list <- extract_datasets(idx)
   data.list <- extract_common_genes(data.list)
   data.list <- merge_datasets(data.list, intersect=TRUE)

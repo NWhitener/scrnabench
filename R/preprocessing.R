@@ -8,6 +8,8 @@
 #' @export
 extract_common_genes <- function(data.list)
 {
+  ###Error Handling/warning
+
   common_gene_names <- Reduce(intersect, lapply(data.list, row.names))
   data.list <- lapply(data.list, function(x)
   { x[row.names(x) %in% common_gene_names,] })

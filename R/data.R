@@ -24,11 +24,16 @@ data_load <- function()
 #' @export
 merge_datasets <- function(data.list)
 {
-  if(!is.list(names))
+
+  if(is.list(data.list)== "FALSE")
   {
     stop("A list of names of the datasets is required to merge datasets")
   }
-
+  if(length(data.list) == 1)
+  {
+    warning("Only one dataset provided, returning the original dataset")
+    return(data.list)
+  }
   cnnew <- character()
   rnnew <- character()
   x <- vector()
@@ -69,7 +74,7 @@ merge_datasets <- function(data.list)
 view_data <- function(idx)
 {
 
-  if(!is.list(names))
+  if(!is.vector(idx))
   {
     stop("A list of names of the datasets is required to view datasets")
   }
