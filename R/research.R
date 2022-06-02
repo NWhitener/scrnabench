@@ -127,7 +127,7 @@ permute_dataset_order <- function(dataList)
 #' Run Kmeans
 #'
 #' This function runs Kmeans Clustering. It uses the simple Kmeans algorithm with
-#' a max nunber of iterations set to be 100.
+#' a max number of iterations set to be 100.
 #'
 #' @param dataList A list of datasets to apply the Kmeans algorithm too
 #' @param k The number of cluster centers to use, defaults to 10
@@ -142,7 +142,7 @@ run_kmeans <- function(dataList, k=10)
 
   dataList <- lapply(X = dataList, FUN = function(x){
     clustData = x@reductions[["pca"]]@cell.embeddings
-    x@meta.data$kmeans_cluster<- stats::kmeans(clustData,  k, iter.max = 100)$cluster
+    x@meta.data$KMEANS_CLUSTERS<- stats::kmeans(clustData,  k, iter.max = 100)$cluster
     x <- x
     print(x@meta.data)
   })

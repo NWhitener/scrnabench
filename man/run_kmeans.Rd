@@ -16,5 +16,5 @@ The dataList with kmeans clusters stored in the meta data
 }
 \description{
 This function runs Kmeans Clustering. It uses the simple Kmeans algorithm with
-a max nunber of iterations set to be 100.
+a max number of iterations set to be 100.
 }
