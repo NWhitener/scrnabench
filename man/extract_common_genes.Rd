@@ -4,7 +4,7 @@
 \alias{extract_common_genes}
 \title{Extract the Common Genes}
 \usage{
-extract_common_genes(data.list)
+extract_common_genes(dataList)
 }
 \arguments{
 \item{data}{A scRNA-seq data object( Seurat) with the rows as genes and the cells as objects}

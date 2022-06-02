@@ -4,10 +4,10 @@
 \alias{run_sctransform}
 \title{Run sctransform}
 \usage{
-run_sctransform(data.list)
+run_sctransform(dataList)
 }
 \arguments{
-\item{data.list}{A data list of data sets to integrate using the sctransform protocol}
+\item{dataList}{A data list of data sets to integrate using the sctransform protocol}
 }
 \value{
 data.combined A data list of the combined data from the sctransform protocol

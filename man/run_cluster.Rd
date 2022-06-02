@@ -4,10 +4,10 @@
 \alias{run_cluster}
 \title{Complete Clustering Steps}
 \usage{
-run_cluster(data.list, reduction_choosen = "pca")
+run_cluster(dataList, reduction_choosen = "pca")
 }
 \arguments{
-\item{data.list}{A data list of data sets}
+\item{dataList}{A data list of data sets}
 }
 \value{
 A data list with clustering completed completed on the features

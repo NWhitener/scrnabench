@@ -108,9 +108,44 @@ run_cluster <- function(dataList, reduction_choosen = "pca")
 }
 
 
-
+#' Permute the Order fo the data sets
+#'
+#' This function permutes the order of the data set
+#'
+#' @param dataList a data list of data sets to permute the order of
+#' @return A permuted dataset list
+#' @export
 permute_dataset_order <- function(dataList)
 {
-  permuted.list <- dataList[sample(length(dataList))]
-  return(permuted.list)
+  dataList <- lapply(X = dataList, FUN = function(x) {
+  permutedList <- dataList[sample(length(dataList))]
+  return(permutedList)
+  })
+}
+
+
+#' Run Kmeans
+#'
+#' This function runs Kmeans Clustering. It uses the simple Kmeans algorithm with
+#' a max nunber of iterations set to be 100.
+#'
+#' @param dataList A list of datasets to apply the Kmeans algorithm too
+#' @param k The number of cluster centers to use, defaults to 10
+#' @return The dataList with kmeans clusters stored in the meta data
+#' @export
+run_kmeans <- function(dataList, k=10)
+{
+  if(is.vector(dataList)== "FALSE")
+  {
+    stop("A data list of datasets is required to apply the cluster the datasets")
+  }
+
+  dataList <- lapply(X = dataList, FUN = function(x){
+    clustData = x@reductions[["pca"]]@cell.embeddings
+    x@meta.data$kmeans_cluster<- stats::kmeans(clustData,  k, iter.max = 100)$cluster
+    x <- x
+    print(x@meta.data)
+  })
+
+  return(dataList)
 }

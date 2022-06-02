@@ -7,7 +7,7 @@
 run_fastmnn(idx, batch_name)
 }
 \arguments{
-\item{data.list}{A data list of data sets to integrate using the fastmnn protocol}
+\item{dataList}{A data list of data sets to integrate using the fastmnn protocol}
 }
 \value{
 data.combined A data list of the combined data from the fastmnn protocol

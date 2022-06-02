@@ -4,7 +4,7 @@
 \alias{annotate_datasets}
 \title{Annotate Datasets}
 \usage{
-annotate_datasets(data.list)
+annotate_datasets(dataList)
 }
 \arguments{
 \item{data}{A Seurat object that you want annotated}

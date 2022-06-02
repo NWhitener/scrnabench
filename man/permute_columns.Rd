@@ -4,10 +4,10 @@
 \alias{permute_columns}
 \title{Permute the columns of a Data List}
 \usage{
-permute_columns(data.list)
+permute_columns(dataList)
 }
 \arguments{
-\item{data.list}{A data list that you would like to permute the columns of}
+\item{dataList}{A data list that you would like to permute the columns of}
 }
 \value{
 The data list with the columns permuted

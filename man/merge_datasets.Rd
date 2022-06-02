@@ -4,10 +4,10 @@
 \alias{merge_datasets}
 \title{Merge the Sparse data sets}
 \usage{
-merge_datasets(data.list)
+merge_datasets(dataList)
 }
 \arguments{
-\item{data.list}{A list of data that  you would like to merge}
+\item{dataList}{A list of data that  you would like to merge}
 }
 \value{
 A list of the merged data sets

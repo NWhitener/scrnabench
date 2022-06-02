@@ -4,10 +4,10 @@
 \alias{preprocess}
 \title{Preprocesses the a Data List}
 \usage{
-preprocess(data.list)
+preprocess(dataList)
 }
 \arguments{
-\item{data.list}{A list of data, with Genes in Rows and Cells in Columns}
+\item{dataList}{A list of data, with Genes in Rows and Cells in Columns}
 }
 \value{
 A data list of data that falls within the specified data limitations which acts as preprocesses

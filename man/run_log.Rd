@@ -4,10 +4,10 @@
 \alias{run_log}
 \title{Runs the Log Transformation}
 \usage{
-run_log(data.list)
+run_log(dataList)
 }
 \arguments{
-\item{data.list}{A data list of Data sets in the Gene in Row and Cell in Columns format}
+\item{dataList}{A data list of Data sets in the Gene in Row and Cell in Columns format}
 }
 \value{
 A data list with Log scores of Each Gene Cell Relationship

@@ -4,10 +4,10 @@
 \alias{permute_rows}
 \title{Permute the Rows of a Data List}
 \usage{
-permute_rows(data.list)
+permute_rows(dataList)
 }
 \arguments{
-\item{data.list}{A data list that you would like to permute the rows of}
+\item{dataList}{A data list that you would like to permute the rows of}
 }
 \value{
 The data list with the rows permuted

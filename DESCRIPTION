@@ -11,7 +11,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.0
 URL: https://github.com/NWhitener/benchmarking
 BugReports: https://github.com/NWhitener/benchmarking/issues
-Imports:  Seurat, Matrix, cowplot, tidyverse, harmony, patchwork, data.table, Matrix.utils, aricode, dplyr, stringr
+Imports:  Seurat, Matrix, tidyverse, harmony, patchwork, data.table, Matrix.utils, aricode, dplyr, stringr, cluster
 remote:   satijalab/seurat-wrappers, dibbelab/gficf
 
 

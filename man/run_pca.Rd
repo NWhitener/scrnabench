@@ -4,10 +4,10 @@
 \alias{run_pca}
 \title{Run Principle Component Analysis}
 \usage{
-run_pca(data.list)
+run_pca(dataList)
 }
 \arguments{
-\item{data.list}{A data list of data sets}
+\item{dataList}{A data list of data sets}
 }
 \value{
 A data list with PCA completed on the features

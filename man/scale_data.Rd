@@ -4,10 +4,10 @@
 \alias{scale_data}
 \title{Scales the Data}
 \usage{
-scale_data(data.list)
+scale_data(dataList)
 }
 \arguments{
-\item{data.list}{A list of data sets that you would like to scale}
+\item{dataList}{A list of data sets that you would like to scale}
 }
 \value{
 A data list of that includes the scaled data

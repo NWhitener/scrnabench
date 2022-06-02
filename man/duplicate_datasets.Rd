@@ -4,7 +4,7 @@
 \alias{duplicate_datasets}
 \title{Duplicate Datasets}
 \usage{
-duplicate_datasets(names, ndup)
+duplicate_datasets(dataList, duplicates = 2)
 }
 \arguments{
 \item{names}{A list of dataset names that should be duplicated}
@@ -12,7 +12,7 @@ duplicate_datasets(names, ndup)
 \item{ndups}{The number of duplicates that are desired}
 }
 \value{
-a data.list of the duplicated datasets
+a dataList of the duplicated datasets
 }
 \description{
 This function duplicates a dataset a variable number of times. This function is to be used in

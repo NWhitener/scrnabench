@@ -1,3 +1,18 @@
+complete_kmeans <- function(dataList)
+{
+  dataList <- extract_datasets(idx)
+
+  dataList <- preprocess(dataList)
+  dataList <- annotate_datasets(dataList)
+  dataList <- run_log(dataList)
+  dataList <- select_hvg(dataList)
+  dataList <- scale_data(dataList)
+  dataList <- run_pca(dataList)
+  dataList <-run_kmeans(dataList)
+
+}
+
+
 #' Run CCA
 #'
 #' This function runs the data integration protocol detailed in the Seurat "Introduction to scRNA-seq

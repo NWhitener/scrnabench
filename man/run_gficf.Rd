@@ -4,10 +4,10 @@
 \alias{run_gficf}
 \title{Runs the GFICF Transformations}
 \usage{
-run_gficf(data.list)
+run_gficf(dataList)
 }
 \arguments{
-\item{data.list}{A data list of Data sets in the Gene in Row and Cell in Columns format}
+\item{dataList}{A data list of Data sets in the Gene in Row and Cell in Columns format}
 }
 \value{
 A data list with GFICF scores of Each Gene Cell Relationship

@@ -4,10 +4,10 @@
 \alias{run_umap}
 \title{Run Uniform Manifold Aproximation and Projection}
 \usage{
-run_umap(data.list, reduction_choosen = "pca")
+run_umap(dataList, reduction_choosen = "pca")
 }
 \arguments{
-\item{data.list}{A data list of data sets}
+\item{dataList}{A data list of data sets}
 }
 \value{
 A data list with UMAP completed on the features

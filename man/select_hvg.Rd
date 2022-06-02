@@ -4,10 +4,10 @@
 \alias{select_hvg}
 \title{Select Highly Variable Genes}
 \usage{
-select_hvg(data.list)
+select_hvg(dataList)
 }
 \arguments{
-\item{data.list}{A list of data sets that you wouuld like the variable genes of}
+\item{dataList}{A list of data sets that you wouuld like the variable genes of}
 }
 \value{
 A data list of that includes the variable genes of the original data list

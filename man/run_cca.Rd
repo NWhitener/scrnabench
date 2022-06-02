@@ -4,10 +4,10 @@
 \alias{run_cca}
 \title{Run CCA}
 \usage{
-run_cca(data.list)
+run_cca(dataList)
 }
 \arguments{
-\item{data.list}{A data list of data sets to integrate using the cca protocol}
+\item{dataList}{A data list of data sets to integrate using the cca protocol}
 }
 \value{
 data.combined A data list of the combined data from the cca protocol

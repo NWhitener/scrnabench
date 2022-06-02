@@ -4,10 +4,10 @@
 \alias{run_seurat}
 \title{Runs the Seurat Pipeline}
 \usage{
-run_seurat(data.list)
+run_seurat(dataList)
 }
 \arguments{
-\item{data.list}{A data list of Data sets in the Gene in Row and Cell in Columns format}
+\item{dataList}{A data list of Data sets in the Gene in Row and Cell in Columns format}
 }
 \description{
 This function completes the Seurat Pipeline on a list of data. This process starts with finding the variable features (genes), then

@@ -7,12 +7,9 @@
 view_data(idx)
 }
 \arguments{
-\item{data.list}{A list of data sets that you would like to view}
+\item{dataList}{A list of data sets that you would like to view}
 }
 \description{
 This function displays a short summary of each data set in the data list provided. Can be used to gain quick insights into the
 information that is stored in the data
-}
-\details{
-TODO: FIX
 }
