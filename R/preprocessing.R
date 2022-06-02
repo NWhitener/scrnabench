@@ -40,12 +40,14 @@ run_gficf <-function(dataList)
   {
     stop("A data list of datasets is required to apply GFICF to datasets")
   }
-  dataList <- lapply(X = dataList, FUN = function(x) {
-    x <- SeuratObject::CreateSeuratObject(counts = x)
-    x$RNA@data <- gficf::gficf(M=x$RNA@counts, normalize=TRUE, storeRaw=FALSE)$gficf
-    x$RNA@counts <- x$RNA@data[rownames(x$RNA@data),]
-  })
-  return(dataList)
+    for (i in range(1:length(names(data.list))))
+    {
+      data.list[[i]] <- Seurat::CreateSeuratObject(counts = data.list[[i]])
+      data.list[[i]]$RNA@data <- gficf::gficf(M=data.list[[i]]$RNA@counts,
+                                              normalize=TRUE, storeRaw=FALSE)$gficf
+      data.list[[i]]$RNA@counts <- data.list[[i]]$RNA@data[rownames(data.list[[i]]$RNA@data),]
+    }
+    return(data.list)
 }
 
 #' Runs the Log Transformation
@@ -143,3 +145,56 @@ scale_data <- function(dataList)
   return(dataList)
 }
 
+
+#' Run Principle Component Analysis
+#'
+#' This functions runs the Seurat RunPCA function on a list of data sets. This functions assumes that genes are in rows and
+#' cells are in columns. The default parameters are used, and verbose is set to false
+#'
+#' @param dataList A data list of data sets
+#' @return A data list with PCA completed on the features
+#' @export
+run_pca <- function(dataList)
+{
+  dataList <- lapply(X = dataList, FUN = function(x) {
+    x <- Seurat::RunPCA(x, verbose = FALSE)
+  })
+  return(dataList)
+}
+
+
+#' Run Uniform Manifold Aproximation and Projection
+#'
+#' This functions runs the Seurat RunUMAP function on a list of data sets. This functions assumes that genes are in rows and
+#' cells are in columns. The default reduction is set to "pca" with the first 30 dimensions being accepted
+#'
+#' @param dataList A data list of data sets
+#' @return A data list with UMAP completed on the features
+#' @export
+run_umap <- function(dataList, reduction_choosen = "pca")
+{
+  dataList <- lapply(X = dataList, FUN = function(x) {
+    x <- Seurat::RunUMAP(x,reduction = reduction_choosen, dims = 1:30)
+  })
+  return(dataList)
+}
+
+#' Run tSNE
+#'
+#' This functions runs the Seurat RunTSNE function on a list of data sets. This functions assumes that genes are in rows and
+#' cells are in columns. The default reduction is set to "pca" with the first 30 dimensions being accepted
+#'
+#' @param dataList A data list of data sets
+#' @return A data list with tSNE completed on the features
+#' @export
+run_tsne <- function(dataList, reduction_choosen = 'pca')
+{
+  if(is.list(dataList)== "FALSE")
+  {
+    stop("A data list of datasets is required to apply the tSNE reduction to datasets")
+  }
+  dataList <- lapply(X = dataList, FUN = function(x) {
+    x <- Seurat::RunTSNE(x, reduction = reduction_choosen, dims = 1:30)
+  })
+  return(dataList)
+}

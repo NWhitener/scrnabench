@@ -55,38 +55,7 @@ permute_columns <- function(dataList)
 
 
 
-#' Run Principle Component Analysis
-#'
-#' This functions runs the Seurat RunPCA function on a list of data sets. This functions assumes that genes are in rows and
-#' cells are in columns. The default parameters are used, and verbose is set to false
-#'
-#' @param dataList A data list of data sets
-#' @return A data list with PCA completed on the features
-#' @export
-run_pca <- function(dataList)
-{
-  dataList <- lapply(X = dataList, FUN = function(x) {
-    x <- Seurat::RunPCA(x, verbose = FALSE)
-  })
-  return(dataList)
-}
 
-
-#' Run Uniform Manifold Aproximation and Projection
-#'
-#' This functions runs the Seurat RunUMAP function on a list of data sets. This functions assumes that genes are in rows and
-#' cells are in columns. The default reduction is set to "pca" with the first 30 dimensions being accepted
-#'
-#' @param dataList A data list of data sets
-#' @return A data list with UMAP completed on the features
-#' @export
-run_umap <- function(dataList, reduction_choosen = "pca")
-{
-  dataList <- lapply(X = dataList, FUN = function(x) {
-    x <- Seurat::RunUMAP(x,reduction = reduction_choosen, dims = 1:30)
-  })
-  return(dataList)
-}
 
 #' Complete Clustering Steps
 #'
