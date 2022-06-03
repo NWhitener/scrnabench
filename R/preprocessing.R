@@ -40,14 +40,14 @@ run_gficf <-function(dataList)
   {
     stop("A data list of datasets is required to apply GFICF to datasets")
   }
-    for (i in range(1:length(names(data.list))))
+    for (i in range(1:length(names(dataList))))
     {
-      data.list[[i]] <- Seurat::CreateSeuratObject(counts = data.list[[i]])
-      data.list[[i]]$RNA@data <- gficf::gficf(M=data.list[[i]]$RNA@counts,
+      dataList[[i]] <- Seurat::CreateSeuratObject(counts = dataList[[i]])
+      dataList[[i]]$RNA@data <- gficf::gficf(M=dataList[[i]]$RNA@counts,
                                               normalize=TRUE, storeRaw=FALSE)$gficf
-      data.list[[i]]$RNA@counts <- data.list[[i]]$RNA@data[rownames(data.list[[i]]$RNA@data),]
+      dataList[[i]]$RNA@counts <- dataList[[i]]$RNA@data[rownames(dataList[[i]]$RNA@data),]
     }
-    return(data.list)
+    return(dataList)
 }
 
 #' Runs the Log Transformation

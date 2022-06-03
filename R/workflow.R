@@ -1,14 +1,13 @@
 complete_kmeans <- function(dataList)
 {
   dataList <- extract_datasets(idx)
-
   dataList <- preprocess(dataList)
   dataList <- annotate_datasets(dataList)
   dataList <- run_log(dataList)
   dataList <- select_hvg(dataList)
   dataList <- scale_data(dataList)
   dataList <- run_pca(dataList)
-  dataList <-run_kmeans(dataList)
+  dataList <- run_kmeans(dataList)
 
 }
 
@@ -143,6 +142,66 @@ run_seurat <- function(dataList)
   })
   return(dataList)
 }
+
+
+log_workflow <- function(idx)
+{
+  data.list <- extract_datasets(idx)
+  #data.list <- extract_common_genes(data.list)
+  data.list <- preprocess(data.list)
+  data.list <- annotate_datasets(data.list)
+  data.list <- run_log(data.list)
+  data.list <- select_hvg(data.list)
+  data.list <- scale_data(data.list)
+  data.list <- run_pca(data.list)
+  data.list <- run_umap(data.list)
+  data.list <- run_clustering(data.list)
+  result <- cbind(data.list[[1]]@meta.data$ID[1],
+                  length(data.list[[1]]@meta.data$seurat_clusters),
+                  length(unique(data.list[[1]]@meta.data$seurat_clusters)))
+  return(result)
+}
+
+gficf_workflow <- function(idx)
+{
+  data.list <- extract_datasets(idx)
+  #data.list <- extract_common_genes(data.list)
+  data.list <- run_gficf(data.list)
+  #data.list <- preprocess(data.list)
+  data.list <- annotate_datasets(data.list)
+  data.list <- select_hvg(data.list)
+  data.list <- run_pca(data.list)
+  data.list <- run_umap(data.list)
+  data.list <- run_clustering(data.list)
+  result <- cbind(data.list[[1]]@meta.data$ID[1],
+                  length(data.list[[1]]@meta.data$seurat_clusters),
+                  length(unique(data.list[[1]]@meta.data$seurat_clusters)))
+  return(result)
+}
+
+
+test_log_workflow <- function()
+{
+  results = cbind('idx', 'ncells', 'nclust_log')
+  for (idx in datasets)
+  {
+    results <- rbind(results, log_workflow(idx))
+  }
+  return(results)
+}
+
+test_gficf_workflow <- function()
+{
+  results = cbind('idx', 'ncells', 'nclust_gficf')
+  for (idx in datasets)
+  {
+    results <- rbind(results, gficf_workflow(idx))
+  }
+  return(results)
+}
+
+
+
 
 
 #' Build Seurat Pipeline with the Columns Permuted
