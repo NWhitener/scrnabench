@@ -1,9 +1,9 @@
 Package: benchmarking
-Title: What the Package Does (One Line, Title Case)
+Title: Benchmarking Tools FOr Single Cell RNA Sequencing Datasets
 Version: 0.0.0.9000
 Authors@R: 
     person("Nathan", "Whitener", , "whitennp@wfu.edu", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Description: A benchmarking tools to test downstream analysis on benchmark datasets. 'benchmarking' aims to provide all the tools necessary to test down stream analysis methods for scRNA-seq datasets, either on a set of benchmark data, or on the users own datasets 
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
 Encoding: UTF-8
