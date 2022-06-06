@@ -22,11 +22,11 @@ complete_kmeans <- function(dataList, seed = 1)
 #' @param dataList A data list of data sets to integrate using the cca protocol
 #' @return data.combined A data list of the combined data from the cca protocol
 #' @export
-run_cca <- function(dataList,seed = 1)
+run_cca <- function(idx,seed = 1)
 {
   set.seed(seed)
   dataList <- extract_datasets(idx)
-  dataList <- preprocess_data(dataList)
+  dataList <- preprocess(dataList)
   #dataList <- run_gficf(dataList)
   dataList <- run_log(dataList)
 
@@ -34,11 +34,11 @@ run_cca <- function(dataList,seed = 1)
     x <- select_hvg(x)
   })
 
-  features <- Suerat::SelectIntegrationFeatures(object.list = dataList)
+  features <- Seurat::SelectIntegrationFeatures(object.list = dataList)
   k.filter <- min(200, min(sapply(dataList, ncol)))
   data.anchors <- Seurat::FindIntegrationAnchors(object.list = dataList, anchor.features = features, k.filter=k.filter)
   data.combined <- Seurat::IntegrateData(anchorset = data.anchors)
-  DefaultAssay(data.combined) <- "integrated"
+  SeuratObject::DefaultAssay(data.combined) <- "integrated"
 
   data.combined <- scale_data(data.combined)
   data.combined <- run_pca(data.combined)
@@ -86,15 +86,15 @@ run_fastmnn <- function(idx, batch_name, seed =1)
   set.seed(seed)
   dataList <- extract_datasets(idx)
   dataList <- extract_common_genes(dataList)
-  dataList <- merge_datasets(dataList, intersect=TRUE)
-  dataList <- preprocess_data(dataList)
+  dataList <- merge_datasets(dataList)
+  dataList <- preprocess(dataList)
   dataList <- run_log(dataList) #LOG
   #dataList<- run_gficf(dataList)
   dataList <- select_hvg(dataList)
-  dataList <- SeuratWrapper::RunFastMNN(object.list = SplitObject(dataList, split.by = batch_name))
+  dataList <- SeuratWrapper::RunFastMNN(object.list = Seurat::SplitObject(dataList, split.by = batch_name))
   dataList <- run_umap(dataList)
   dataList <- run_cluster(dataList)
-  DefaultAssay(dataList) <- "mnn.reconstructed"
+  SeuratObject::DefaultAssay(dataList) <- "mnn.reconstructed"
   return(dataList)
 
 }
@@ -113,14 +113,14 @@ run_sctransform <- function(dataList, seed = 1)
 {
   set.seed(seed)
   dataList <- extract_datasets(idx)
-  dataList <- preprocess_data(dataList)
-  dataList <- lapply(X = dataList, FUN = SCTransform)
+  dataList <- preprocess(dataList)
+  dataList <- lapply(X = dataList, FUN = Seurat::SCTransform)
   features <- Seurat::SelectIntegrationFeatures(object.list = dataList, nfeatures=2000)
-  dataList <- Seurart::PrepSCTIntegration(object.list = dataList, anchor.features = features)
+  dataList <- Seurat::PrepSCTIntegration(object.list = dataList, anchor.features = features)
   k.filter <- min(200, min(sapply(dataList, ncol)))
   data.anchors <- Seurat::FindIntegrationAnchors(object.list = dataList, normalization.method = "SCT", anchor.features = features, k.filter = k.filter)
   data.combined <- Seurat::IntegrateData(anchorset = data.anchors, normalization.method = "SCT")
-  DefaultAssay(data.combined) <- "integrated"
+  SeuratObject::DefaultAssay(data.combined) <- "integrated"
   data.combined <- scale_data(data.combined)
   data.combined <- run_pca(data.combined)
   data.combined <- run_umap(data.combined)
@@ -143,10 +143,10 @@ run_seurat <- function(dataList, seed =1)
 {
   set.seed(seed)
   dataList <- lapply(X = dataList, FUN = function(x) {
-    x <- RunPCA(x, npcs = 30, verbose = FALSE)
-    x <- RunUMAP(x, reduction = "pca", dims = 1:30)
-    x <- FindNeighbors(x, reduction = "pca", dims = 1:30)
-    x <- FindClusters(x, resolution = 0.5)
+    x <- Seurat::RunPCA(x, npcs = 30, verbose = FALSE)
+    x <- Seurat::RunUMAP(x, reduction = "pca", dims = 1:30)
+    x <- Seurat::FindNeighbors(x, reduction = "pca", dims = 1:30)
+    x <- Seurat::FindClusters(x, resolution = 0.5)
   })
   return(dataList)
 }
@@ -200,7 +200,7 @@ gficf_workflow <- function(idx, seed = 1)
   data.list <- select_hvg(data.list)
   data.list <- run_pca(data.list)
   data.list <- run_umap(data.list)
-  data.list <- run_clustering(data.list)
+  data.list <- run_cluster(data.list)
   result <- cbind(data.list[[1]]@meta.data$ID[1],
                   length(data.list[[1]]@meta.data$seurat_clusters),
                   length(unique(data.list[[1]]@meta.data$seurat_clusters)))
@@ -259,7 +259,7 @@ build_seurat_columns <- function(idx, seed = 1)
   dataList2 <- extract_datasets(idx)
   dataList2 <- permute_columns(dataList2)
   dataList <- append(dataList, dataList2)
-  dataList <- preprocess_data(dataList)
+  dataList <- preprocess(dataList)
   dataList <- run_log(dataList)
   dataList <- run_seurat(dataList)
   x = merge(dataList[[1]]@meta.data, dataList[[2]]@meta.data, by="row.names", all=TRUE)
@@ -281,7 +281,7 @@ build_seurat_rows <- function(idx, seed = 1)
   dataList2 <- extract_datasets(idx)
   dataList2 <- permute_rows(dataList2)
   dataList <- append(dataList, dataList2)
-  dataList <- preprocess_data(dataList)
+  dataList <- preprocess(dataList)
   dataList <- run_log(dataList)
   dataList <- run_seurat(dataList)
   x = merge(dataList[[1]]@meta.data, dataList[[2]]@meta.data, by="row.names", all=TRUE)
@@ -400,22 +400,22 @@ run_duplicate_integrations <- function(idx, dup)
 write_output <- function(data, prefix)
 {
   print(prefix)
-  print(dim(as.data.frame(GetAssayData(data))[VariableFeatures(data),]))
+  print(dim(as.data.frame(Seurat::GetAssayData(data))[Seurat::VariableFeatures(data),]))
   path = paste("./", prefix, sep="")
 
-  write.csv(t(as.data.frame(GetAssayData(data))[VariableFeatures(data),]), paste(path, "_hvg.csv", sep=""), quote=F)
-  write.csv(Embeddings(data, 'umap'), paste(path, "_umap.csv", sep=""), quote=F)
+  write.csv(t(as.data.frame(Seurat::GetAssayData(data))[Seurat::VariableFeatures(data),]), paste(path, "_hvg.csv", sep=""), quote=F)
+  write.csv(Seurat::Embeddings(data, 'umap'), paste(path, "_umap.csv", sep=""), quote=F)
   if(prefix=='harmony')
   {
-    write.csv(Embeddings(data, 'harmony'), paste(path, "_harmonized.csv", sep=""), quote=F)
+    write.csv(Seurat::Embeddings(data, 'harmony'), paste(path, "_harmonized.csv", sep=""), quote=F)
   }
   else if (prefix == 'fastmnn')
   {
-    write.csv(Embeddings(data, 'mnn'), paste(path, "_harmonized.csv", sep=""), quote=F)
+    write.csv(Seurat::Embeddings(data, 'mnn'), paste(path, "_harmonized.csv", sep=""), quote=F)
   }
   else
   {
-    write.csv(Embeddings(data, 'pca'), paste(path, "_pca.csv", sep=""), quote=F)
+    write.csv(Seurat::Embeddings(data, 'pca'), paste(path, "_pca.csv", sep=""), quote=F)
   }
   write.csv(data@meta.data, paste(path, "_labels.csv", sep=""), quote=F)
 }

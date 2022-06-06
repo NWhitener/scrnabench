@@ -1,12 +1,12 @@
 run_harmony3 <- function(data, batch_name)
 {
-  data <- FindVariableFeatures(data, nfeatures = 2000) %>%
-    ScaleData() %>%
-    RunPCA(verbose = FALSE) %>%
-    RunHarmony(group.by.vars = batch_name) %>%
-    RunUMAP(reduction = "harmony", dims = 1:30) %>%
-    FindNeighbors(data, reduction = "harmony", dims = 1:30) %>%
-    FindClusters()
+  data <- Seurat::FindVariableFeatures(data, nfeatures = 2000) %>%
+    Seurat::ScaleData() %>%
+    Seurat::RunPCA(verbose = FALSE) %>%
+    Seurat::RunHarmony(group.by.vars = batch_name) %>%
+    Seurat::RunUMAP(reduction = "harmony", dims = 1:30) %>%
+    Seurat::FindNeighbors(data, reduction = "harmony", dims = 1:30) %>%
+    Seurat::FindClusters()
 }
 
 
@@ -16,12 +16,12 @@ run_workflow <- function(idx)
   # Harmony
   dataList <- extract_datasets(idx)
   dataList <- extract_common_genes(dataList)
-  dataList <- merge_datasets(dataList, intersect=TRUE)
+  dataList <- merge_datasets(dataList)
   #dataList <- run_gficf(dataList)
-  dataList <- preprocess_data(dataList)
+  dataList <- preprocess(dataList)
   dataList <- run_log(dataList) #LOG
 
-  data <- annotate_seurat_object(dataList[[1]])
+  data <- annotate_datasets(dataList[[1]])
   data <- run_harmony3(data, batch_column)
   #write_output(data, 'harmony')
 }
