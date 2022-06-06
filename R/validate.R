@@ -21,9 +21,11 @@ run_silhouette <- function(dataList, reduction_choosen = 'pca', method = 'kmeans
     }
     else if(method == "seurat")
     {
-      x = dataList[[i]]@meta.data$seurat_clusters
+      c = paste('seurat_clusters')
+      x = dataList[[i]][[c]]
+      as.numeric(x$seurat_clusters)
       y = Seurat::Embeddings(dataList[[i]], reduction = reduction_choosen)
-      z <- cluster::silhouette(x[,1],dist(y, "euclidean"))
+      z <- cluster::silhouette(x,dist(y, "euclidean"))
       x = summary(z)
       list_return = append(list_return, x$avg.width)
     }
@@ -57,17 +59,20 @@ run_dunn <- function(dataList, reduction_choosen,  method = 'kmeans'){
     }
     else if(method == "seurat")
     {
-      y = dataList[[i]]@meta.data$seurat_clusters
+      c = paste('seurat_clusters')
+      y = dataList[[i]][[c]]
+      y <- as.numeric(y$seurat_clusters)
       x = Seurat::Embeddings(dataList[[i]], reduction = reduction_choosen)
-      dunn = clValid::dunn(clusters = y[,1], Data = x)
+      dunn = clValid::dunn(clusters = y, Data = x)
       list_return = append(list_return, dunn)
       print(dunn)
     }
     else{
       stop("Invalid clustering method requested")
     }
-    return(list_return)
+
   }
+  return(list_return)
 }
 
 

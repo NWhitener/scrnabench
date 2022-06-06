@@ -193,8 +193,11 @@ run_tsne <- function(dataList, reduction_choosen = 'pca')
   {
     stop("A data list of datasets is required to apply the tSNE reduction to datasets")
   }
-  dataList <- lapply(X = dataList, FUN = function(x) {
-    x <- Seurat::RunTSNE(x, reduction = reduction_choosen, dims = 1:30)
-  })
+  for (i in (1:length(names(dataList)))) {
+    print(i)
+    print(nrow(dataList[[i]]))
+    print(ncol(dataList[[i]]))
+    dataList[[i]] <- Seurat::RunTSNE(dataList[[i]], reduction = reduction_choosen, dims = 1:30, perplexity = 15)
+  }
   return(dataList)
 }
