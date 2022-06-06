@@ -40,12 +40,15 @@ run_gficf <-function(dataList)
   {
     stop("A data list of datasets is required to apply GFICF to datasets")
   }
-    for (i in range(1:length(names(dataList))))
+    for (i in (1:length(names(dataList))))
     {
       dataList[[i]] <- Seurat::CreateSeuratObject(counts = dataList[[i]])
+      print("Created Object")
       dataList[[i]]$RNA@data <- gficf::gficf(M=dataList[[i]]$RNA@counts,
                                               normalize=TRUE, storeRaw=FALSE)$gficf
       dataList[[i]]$RNA@counts <- dataList[[i]]$RNA@data[rownames(dataList[[i]]$RNA@data),]
+      print(class(dataList[[i]]$RNA@data))
+      dataList[[i]] <- Seurat::SetAssayData(object=dataList[[i]],slot = 'scale.data', new.data = as.matrix(dataList[[i]]$RNA@data))
     }
     return(dataList)
 }
@@ -157,7 +160,9 @@ scale_data <- function(dataList)
 run_pca <- function(dataList)
 {
   dataList <- lapply(X = dataList, FUN = function(x) {
-    x <- Seurat::RunPCA(x, verbose = FALSE)
+    x <- Seurat::RunPCA(x, features = Seurat::VariableFeatures(object = x),
+                        npcs = 30, verbose = FALSE)
+
   })
   return(dataList)
 }
@@ -194,10 +199,8 @@ run_tsne <- function(dataList, reduction_choosen = 'pca')
     stop("A data list of datasets is required to apply the tSNE reduction to datasets")
   }
   for (i in (1:length(names(dataList)))) {
-    print(i)
-    print(nrow(dataList[[i]]))
-    print(ncol(dataList[[i]]))
-    dataList[[i]] <- Seurat::RunTSNE(dataList[[i]], reduction = reduction_choosen, dims = 1:30, perplexity = 15)
+    perplexity_set = sqrt(ncols(dataList[[i]]))
+    dataList[[i]] <- Seurat::RunTSNE(dataList[[i]], reduction = reduction_choosen, dims = 1:30, perplexity = perplexity_set)
   }
   return(dataList)
 }

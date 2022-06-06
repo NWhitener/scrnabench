@@ -163,19 +163,19 @@ run_seurat <- function(dataList, seed =1)
 log_workflow <- function(idx, seed = 1)
 {
   set.seed(seed)
-  data.list <- extract_datasets(idx)
-  #data.list <- extract_common_genes(data.list)
-  data.list <- preprocess(data.list)
-  data.list <- annotate_datasets(data.list)
-  data.list <- run_log(data.list)
-  data.list <- select_hvg(data.list)
-  data.list <- scale_data(data.list)
-  data.list <- run_pca(data.list)
-  data.list <- run_umap(data.list)
-  data.list <- run_cluster(data.list)
-  result <- cbind(data.list[[1]]@meta.data$ID[1],
-                  length(data.list[[1]]@meta.data$seurat_clusters),
-                  length(unique(data.list[[1]]@meta.data$seurat_clusters)))
+  dataList <- extract_datasets(idx)
+  #dataList <- extract_common_genes(dataList)
+  dataList <- preprocess(dataList)
+  dataList <- annotate_datasets(dataList)
+  dataList <- run_log(dataList)
+  dataList <- select_hvg(dataList)
+  dataList <- scale_data(dataList)
+  dataList <- run_pca(dataList)
+  dataList <- run_umap(dataList)
+  dataList <- run_cluster(dataList)
+  result <- cbind(dataList[[1]]@meta.data$ID[1],
+                  length(dataList[[1]]@meta.data$seurat_clusters),
+                  length(unique(dataList[[1]]@meta.data$seurat_clusters)))
   return(result)
 }
 
@@ -191,21 +191,22 @@ log_workflow <- function(idx, seed = 1)
 #' @export
 gficf_workflow <- function(idx, seed = 1)
 {
-  set.seed(seed)
-  data.list <- extract_datasets(idx)
-  #data.list <- extract_common_genes(data.list)
-  data.list <- run_gficf(data.list)
-  #data.list <- preprocess(data.list)
-  data.list <- annotate_datasets(data.list)
-  data.list <- select_hvg(data.list)
-  data.list <- run_pca(data.list)
-  data.list <- run_umap(data.list)
-  data.list <- run_cluster(data.list)
-  result <- cbind(data.list[[1]]@meta.data$ID[1],
-                  length(data.list[[1]]@meta.data$seurat_clusters),
-                  length(unique(data.list[[1]]@meta.data$seurat_clusters)))
-  return(result)
+    set.seed(seed)
+    dataList <- extract_datasets(idx)
+    #dataList <- extract_common_genes(dataList)
+    dataList <- run_gficf(dataList)
+    #dataList <- preprocess(dataList)
+    dataList <- annotate_datasets(dataList)
+    dataList <- select_hvg(dataList)
+    dataList <- run_pca(dataList)
+    dataList <- run_umap(dataList)
+    dataList <- run_cluster(dataList)
+    result <- cbind(dataList[[1]]@meta.data$ID[1],
+                    length(dataList[[1]]@meta.data$seurat_clusters),
+                    length(unique(dataList[[1]]@meta.data$seurat_clusters)))
+    return(result)
 }
+
 
 #' Test Log Workflow
 #'
