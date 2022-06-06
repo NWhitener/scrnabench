@@ -1,5 +1,6 @@
-complete_kmeans <- function(dataList)
+complete_kmeans <- function(dataList, seed = 1)
 {
+  set.seed(seed)
   dataList <- extract_datasets(idx)
   dataList <- preprocess(dataList)
   dataList <- annotate_datasets(dataList)
@@ -21,9 +22,9 @@ complete_kmeans <- function(dataList)
 #' @param dataList A data list of data sets to integrate using the cca protocol
 #' @return data.combined A data list of the combined data from the cca protocol
 #' @export
-run_cca <- function(dataList)
+run_cca <- function(dataList,seed = 1)
 {
-
+  set.seed(seed)
   dataList <- extract_datasets(idx)
   dataList <- preprocess_data(dataList)
   #dataList <- run_gficf(dataList)
@@ -55,10 +56,15 @@ run_cca <- function(dataList)
 #' @param dataList A data list of data sets to integrate using the harmony protocol
 #' @return data.combined A data list of the combined data from the harmony protocol
 #' @export
-run_harmony <- function(dataList, batch_name='SID')
+run_harmony <- function(dataList, batch_name='SID', seed = 1)
 {
   ##STOP ON LESS THAN 2 DATASETS
-
+  set.seed(seed)
+  if(length(dataList) < 2 )
+  {
+    stop("Only two dataset provided, more are required")
+    return(dataList)
+  }
   dataList <- lapply(X = dataList, FUN = function(x) {
     x <- harmony::RunHarmony(object = x, group.by.vars = batch_name)
   })
@@ -73,10 +79,11 @@ run_harmony <- function(dataList, batch_name='SID')
 #' @param dataList A data list of data sets to integrate using the fastmnn protocol
 #' @return data.combined A data list of the combined data from the fastmnn protocol
 #' @export
-run_fastmnn <- function(idx, batch_name)
+run_fastmnn <- function(idx, batch_name, seed =1)
 {
 
   ##REWRITE
+  set.seed(seed)
   dataList <- extract_datasets(idx)
   dataList <- extract_common_genes(dataList)
   dataList <- merge_datasets(dataList, intersect=TRUE)
@@ -102,9 +109,9 @@ run_fastmnn <- function(idx, batch_name)
 #' @param dataList A data list of data sets to integrate using the sctransform protocol
 #' @return data.combined A data list of the combined data from the sctransform protocol
 #' @export
-run_sctransform <- function(dataList)
+run_sctransform <- function(dataList, seed = 1)
 {
-
+  set.seed(seed)
   dataList <- extract_datasets(idx)
   dataList <- preprocess_data(dataList)
   dataList <- lapply(X = dataList, FUN = SCTransform)
@@ -132,8 +139,9 @@ run_sctransform <- function(dataList)
 #'
 #' @param dataList A data list of Data sets in the Gene in Row and Cell in Columns format
 #' @export
-run_seurat <- function(dataList)
+run_seurat <- function(dataList, seed =1)
 {
+  set.seed(seed)
   dataList <- lapply(X = dataList, FUN = function(x) {
     x <- RunPCA(x, npcs = 30, verbose = FALSE)
     x <- RunUMAP(x, reduction = "pca", dims = 1:30)
@@ -143,9 +151,18 @@ run_seurat <- function(dataList)
   return(dataList)
 }
 
-
-log_workflow <- function(idx)
+#' Log Workflow
+#'
+#' This workflow is designed to apply the log data transformation on the datasets
+#' and test it's ability to handle pca, umap, and clustering.
+#'
+#' @param idx The names of the datasets
+#' @param seed The random seed that you would like to use on the dataset
+#' @return a result list with the dataset ID and the cluster it belongs to
+#' @export
+log_workflow <- function(idx, seed = 1)
 {
+  set.seed(seed)
   data.list <- extract_datasets(idx)
   #data.list <- extract_common_genes(data.list)
   data.list <- preprocess(data.list)
@@ -162,8 +179,19 @@ log_workflow <- function(idx)
   return(result)
 }
 
-gficf_workflow <- function(idx)
+
+#' GFICF Workflow
+#'
+#' This workflow is designed to apply the GFICF data transformation on the datasets
+#' and test it's ability to handle pca, umap, and clustering.
+#'
+#' @param idx The names of the datasets
+#' @param seed The random seed that you would like to use on the dataset
+#' @return a result list with the dataset ID and the cluster it belongs to
+#' @export
+gficf_workflow <- function(idx, seed = 1)
 {
+  set.seed(seed)
   data.list <- extract_datasets(idx)
   #data.list <- extract_common_genes(data.list)
   data.list <- run_gficf(data.list)
@@ -179,7 +207,13 @@ gficf_workflow <- function(idx)
   return(result)
 }
 
-
+#' Test Log Workflow
+#'
+#' This function is designed to apply the log data transformation workflow on the datasets
+#' and test it's ability to handle pca, umap, and clustering.
+#'
+#' @param idx The names of the datasets
+#' @export
 test_log_workflow <- function()
 {
   results = cbind('idx', 'ncells', 'nclust_log')
@@ -189,7 +223,13 @@ test_log_workflow <- function()
   }
   return(results)
 }
-
+#' Test GFICF Workflow
+#'
+#' This function is designed to apply the GFICF data transformation workflow on the datasets
+#' and test it's ability to handle pca, umap, and clustering.
+#'
+#' @param idx The names of the datasets
+#' @export
 test_gficf_workflow <- function()
 {
   results = cbind('idx', 'ncells', 'nclust_gficf')

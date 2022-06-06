@@ -4,7 +4,7 @@
 \alias{run_seurat}
 \title{Runs the Seurat Pipeline}
 \usage{
-run_seurat(dataList)
+run_seurat(dataList, seed = 1)
 }
 \arguments{
 \item{dataList}{A data list of Data sets in the Gene in Row and Cell in Columns format}

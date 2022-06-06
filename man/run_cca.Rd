@@ -4,7 +4,7 @@
 \alias{run_cca}
 \title{Run CCA}
 \usage{
-run_cca(dataList)
+run_cca(dataList, seed = 1)
 }
 \arguments{
 \item{dataList}{A data list of data sets to integrate using the cca protocol}

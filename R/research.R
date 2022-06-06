@@ -104,20 +104,15 @@ permute_dataset_order <- function(dataList)
 #' @export
 run_kmeans <- function(dataList, k=10, reduction_choosen = 'pca')
 {
-  if(is.vector(dataList)== "FALSE")
-  {
-    stop("A data list of datasets is required to apply the cluster the datasets")
-  }
-
-  for (i in range(1:length(names(dataList))))
+  for (i in (1:length(names(dataList))))
   {
     clustData = Seurat::Embeddings(dataList[[i]], reduction = reduction_choosen)
     meta = dataList[[i]]@meta.data
-    meta[paste("kmeans_cluster_", reduction_choosen, sep = "")]<- stats::kmeans(clustData,  k, iter.max = 100)$cluster
-    print("completed clustering")
+    meta[paste("kmeans_cluster_", reduction_choosen, sep = "")]<- stats::kmeans(clustData,  k, iter.max = 1000)$cluster
+    print(i)
     metaFix <- subset(meta, select = c(paste("kmeans_cluster_", reduction_choosen, sep = "")))
     dataList[[i]] <- Seurat::AddMetaData(dataList[[i]], metaFix)
-    print(dataList[[i]])
+
   }
 
   return(dataList)

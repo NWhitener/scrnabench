@@ -4,7 +4,7 @@
 \alias{run_sctransform}
 \title{Run sctransform}
 \usage{
-run_sctransform(dataList)
+run_sctransform(dataList, seed = 1)
 }
 \arguments{
 \item{dataList}{A data list of data sets to integrate using the sctransform protocol}
