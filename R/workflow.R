@@ -172,7 +172,7 @@ log_workflow <- function(idx, seed = 1)
   data.list <- scale_data(data.list)
   data.list <- run_pca(data.list)
   data.list <- run_umap(data.list)
-  data.list <- run_clustering(data.list)
+  data.list <- run_cluster(data.list)
   result <- cbind(data.list[[1]]@meta.data$ID[1],
                   length(data.list[[1]]@meta.data$seurat_clusters),
                   length(unique(data.list[[1]]@meta.data$seurat_clusters)))
