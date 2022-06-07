@@ -4,10 +4,15 @@
 #' This function loads the data that is stored in the package for use in examples
 #'
 #' @export
-data_load <- function()
+data_load <- function(full = FALSE, path = '.')
 {
-
+  if(full == TRUE)
+  {
+    gene_counts <<- readRDS(inborutils::download_zenodo(doi = "10.5281/zenodo.6617997", path = path))
+  }
+  else{
   gene_counts <<- readRDS(system.file("extdata", "gene_counts_v6.RDS", package = "benchmarking", mustWork = TRUE))
+  }
   datasets <<- ls(gene_counts)
   return(datasets)
 
