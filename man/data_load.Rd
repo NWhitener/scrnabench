@@ -2,10 +2,15 @@
 % Please edit documentation in R/data.R
 \name{data_load}
 \alias{data_load}
-\title{Loads the stored data}
+\title{Loads the data}
 \usage{
-data_load(full = FALSE, path = ".")
+data_load(full = TRUE, path = ".")
+}
+\arguments{
+\item{full}{Use the full dataset or the small demo dataset}
+
+\item{path}{The path of the load location to use}
 }
 \description{
-This function loads the data that is stored in the package for use in examples
+This function loads the data that is used in the package for use in examples
 }

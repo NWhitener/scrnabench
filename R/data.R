@@ -1,23 +1,37 @@
 
-#' Loads the stored data
+#' Downloads the data
 #'
-#' This function loads the data that is stored in the package for use in examples
-#' @param full Download the full dataset or use the small demo dataset
+#' This function downloads the data that is used in the package for use in examples, and automatically loads the data for
+#' usage. Run this once when the data is not download, if the data is downloaded use the data_load function
 #' @param path The path of the download location to use
 #' @export
-data_load <- function(full = FALSE, path = '.')
+data_download <- function(path = '.')
+{
+  inborutils::download_zenodo(doi = "10.5281/zenodo.6617997", path = path)
+  gene_counts <<- readRDS(file = paste(path, "/gene_counts.RDS", sep = ''))
+  datasets <<- ls(gene_counts)
+  return(datasets)
+}
+
+
+#' Loads the data
+#'
+#' This function loads the data that is used in the package for use in examples
+#' @param full Use the full dataset or the small demo dataset
+#' @param path The path of the load location to use
+#' @export
+data_load <- function(full = TRUE, path = '.')
 {
   if(full == TRUE)
   {
-    inborutils::download_zenodo(doi = "10.5281/zenodo.6617997", path = path)
     gene_counts <<- readRDS(file = paste(path, "/gene_counts.RDS", sep = ''))
   }
   else{
-  gene_counts <<- readRDS(system.file("extdata", "gene_counts_v6.RDS", package = "benchmarking", mustWork = TRUE))
+    gene_counts <<- readRDS(system.file("extdata", "gene_counts_v6.RDS", package = "benchmarking", mustWork = TRUE))
+
   }
   datasets <<- ls(gene_counts)
   return(datasets)
-
 }
 
 #' Merge the Sparse data sets
