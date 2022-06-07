@@ -2,13 +2,15 @@
 #' Loads the stored data
 #'
 #' This function loads the data that is stored in the package for use in examples
-#'
+#' @param full Download the full dataset or use the small demo dataset
+#' @param path The path of the download location to use
 #' @export
 data_load <- function(full = FALSE, path = '.')
 {
   if(full == TRUE)
   {
-    gene_counts <<- readRDS(inborutils::download_zenodo(doi = "10.5281/zenodo.6617997", path = path))
+    inborutils::download_zenodo(doi = "10.5281/zenodo.6617997", path = path)
+    gene_counts <<- readRDS(file = paste(path, "/gene_counts.RDS", sep = ''))
   }
   else{
   gene_counts <<- readRDS(system.file("extdata", "gene_counts_v6.RDS", package = "benchmarking", mustWork = TRUE))
