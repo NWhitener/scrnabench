@@ -151,16 +151,16 @@ run_seurat <- function(dataList, seed =1)
   return(dataList)
 }
 
-#' Log Workflow
+#' Log Workflow Seurat
 #'
 #' This workflow is designed to apply the log data transformation on the datasets
-#' and test it's ability to handle pca, umap, and clustering.
+#' and test it's ability to handle pca, umap, and seurat clustering.
 #'
 #' @param idx The names of the datasets
 #' @param seed The random seed that you would like to use on the dataset
 #' @return a result list with the dataset ID and the cluster it belongs to
 #' @export
-log_workflow <- function(idx, seed = 1)
+log_workflow_seurat <- function(idx, seed = 1)
 {
   set.seed(seed)
   dataList <- extract_datasets(idx)
@@ -180,16 +180,16 @@ log_workflow <- function(idx, seed = 1)
 }
 
 
-#' GFICF Workflow
+#' GFICF Workflow Seurat
 #'
 #' This workflow is designed to apply the GFICF data transformation on the datasets
-#' and test it's ability to handle pca, umap, and clustering.
+#' and test it's ability to handle pca, umap, and seurat clustering.
 #'
 #' @param idx The names of the datasets
 #' @param seed The random seed that you would like to use on the dataset
 #' @return a result list with the dataset ID and the cluster it belongs to
 #' @export
-gficf_workflow <- function(idx, seed = 1)
+gficf_workflow_seurat <- function(idx, seed = 1)
 {
     set.seed(seed)
     dataList <- extract_datasets(idx)
@@ -208,6 +208,36 @@ gficf_workflow <- function(idx, seed = 1)
 }
 
 
+#' Log Workflow Kmeans
+#'
+#' This workflow is designed to apply the log data transformation on the datasets
+#' and test it's ability to handle pca, umap, and kmeans clustering.
+#'
+#' @param idx The names of the datasets
+#' @param seed The random seed that you would like to use on the dataset
+#' @return a result list with the dataset ID and the cluster it belongs to
+#' @export
+log_workflow_kmeans <- function(idx, seed = 1)
+{
+  set.seed(seed)
+  dataList <- extract_datasets(idx)
+  #dataList <- extract_common_genes(dataList)
+  dataList <- preprocess(dataList)
+  dataList <- annotate_datasets(dataList)
+  dataList <- run_log(dataList)
+  dataList <- select_hvg(dataList)
+  dataList <- scale_data(dataList)
+  dataList <- run_pca(dataList)
+  dataList <- run_umap(dataList)
+  dataList <- run_kmeans(dataList, "pca")
+  dataList <- run_kmeans(dataList, "umap")
+  result <- cbind(dataList[[1]]@meta.data$ID[1],
+                  length(dataList[[1]]@meta.data$kmeans_clusters_pca),
+                  length(unique(dataList[[1]]@meta.data$kmeans_clusters_pca)),
+                  length(dataList[[1]]@meta.data$kmeans_clusters_umap),
+                  length(unique(dataList[[1]]@meta.data$kmeans_clusters_umap)) )
+  return(result)
+}
 #' Test Log Workflow
 #'
 #' This function is designed to apply the log data transformation workflow on the datasets
@@ -220,7 +250,7 @@ test_log_workflow <- function()
   results = cbind('idx', 'ncells', 'nclust_log')
   for (idx in datasets)
   {
-    results <- rbind(results, log_workflow(idx))
+    results <- rbind(results, log_workflow_kmeans(idx))
   }
   return(results)
 }
@@ -236,7 +266,7 @@ test_gficf_workflow <- function()
   results = cbind('idx', 'ncells', 'nclust_gficf')
   for (idx in datasets)
   {
-    results <- rbind(results, gficf_workflow(idx))
+    results <- rbind(results, gficf_workflow_kmeans(idx))
   }
   return(results)
 }
