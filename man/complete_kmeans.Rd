@@ -4,7 +4,7 @@
 \alias{complete_kmeans}
 \title{COmpletes the KMeans Process}
 \usage{
-complete_kmeans(dataList, seed = 1)
+complete_kmeans(datasets, seed = 1)
 }
 \description{
 COmpletes the KMeans Process
