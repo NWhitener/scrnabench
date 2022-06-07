@@ -11,13 +11,15 @@ run_silhouette <- function(dataList, reduction_choosen = 'pca', method = 'kmeans
   list_return = NULL
   for (i in (1:length(names(dataList))))
   {
+    temp_list= NULL
+    temp_list = cbind(temp_list, dataList[[i]]@meta.data$ID[1])
     if(method == "kmeans"){
      c = paste("kmeans_cluster_", reduction_choosen, sep ="")
       x = dataList[[i]][[c]]
       y = Seurat::Embeddings(dataList[[i]], reduction = reduction_choosen)
       z <- cluster::silhouette(x[,1],dist(y, "euclidean"))
       x = summary(z)
-      list_return = append(list_return,x$avg.width, dataList[[i]]@meta.data$ID[i])
+      temp_list = cbind(temp_list,  x$avg.width)
     }
     else if(method == "seurat")
     {
@@ -27,12 +29,13 @@ run_silhouette <- function(dataList, reduction_choosen = 'pca', method = 'kmeans
       y = Seurat::Embeddings(dataList[[i]], reduction = reduction_choosen)
       z <- cluster::silhouette(x,dist(y, "euclidean"))
       x = summary(z)
-      list_return = append(list_return, x$avg.width,dataList[[i]]@meta.data$ID[i])
+      temp_list = cbind(temp_list, x$avg.width)
     }
     else{
       stop("Invalid clustering method requested")
     }
-  }
+    list_return = rbind(list_return, temp_list)
+    }
   return(list_return)
 }
 
@@ -49,13 +52,15 @@ run_dunn <- function(dataList, reduction_choosen,  method = 'kmeans'){
   list_return = NULL
   for (i in (1:length(names(dataList))))
   {
+    temp_list= NULL
+    temp_list = cbind(temp_list, dataList[[i]]@meta.data$ID[1])
     if(method == 'kmeans'){
     c = paste("kmeans_cluster_", reduction_choosen, sep ="")
     y = dataList[[i]][[c]]
     x = Seurat::Embeddings(dataList[[i]], reduction = reduction_choosen)
     dunn = clValid::dunn(clusters = y[,1], Data = x)
-    list_return = append(list_return, dunn,dataList[[i]]@meta.data$ID[i])
-    print(dunn)
+    temp_list = cbind(temp_list, dunn)
+
     }
     else if(method == "seurat")
     {
@@ -64,13 +69,12 @@ run_dunn <- function(dataList, reduction_choosen,  method = 'kmeans'){
       y <- as.numeric(y$seurat_clusters)
       x = Seurat::Embeddings(dataList[[i]], reduction = reduction_choosen)
       dunn = clValid::dunn(clusters = y, Data = x)
-      list_return = append(list_return, dunn,dataList[[i]]@meta.data$ID[i])
-      print(dunn)
+      temp_list = cbind(temp_list, dunn)
     }
     else{
       stop("Invalid clustering method requested")
     }
-
+    list_return = rbind(list_return, temp_list)
   }
   return(list_return)
 }

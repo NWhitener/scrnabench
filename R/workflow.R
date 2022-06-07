@@ -1,17 +1,62 @@
-complete_kmeans <- function(dataList, seed = 1)
+#' COmpletes the KMeans Process
+#'
+#' @export
+complete_kmeans <- function(datasets, seed = 1)
 {
   set.seed(seed)
-  dataList <- extract_datasets(idx)
+  dataList <- extract_datasets(datasets)
+  #dataList <- extract_common_genes(dataList)
+  #dataList <- merge_datasets(dataList)
   dataList <- preprocess(dataList)
   dataList <- annotate_datasets(dataList)
   dataList <- run_log(dataList)
   dataList <- select_hvg(dataList)
   dataList <- scale_data(dataList)
   dataList <- run_pca(dataList)
-  dataList <- run_kmeans(dataList)
-
+  dataList <- run_umap(dataList)
+  dataList <- run_tsne(dataList)
+  dataList <- run_kmeans(dataList, reduction_choosen = 'pca')
+  dataList <- run_kmeans(dataList, reduction_choosen = 'umap')
+  dataList <- run_kmeans(dataList, reduction_choosen = 'tsne')
+  x = run_silhouette(dataList, 'pca')
+  y = run_silhouette(dataList, 'tsne')
+  z = run_silhouette(dataList, 'umap')
+  w = run_dunn(dataList, 'pca')
+  r = run_dunn(dataList, 'tsne')
+  f = run_dunn(dataList, 'umap')
+  results_table = NULL
+  results_table = cbind(results_table, x, y[,2],z[,2],w[,2],r[,2],f[,2])
+  colnames(results_table) = c("ID", "Silhouette_PCA", "Silhouette_UMAP", "Silhouette_TSNE", "Dunn_PCA", "Dunn_UMAP", "Dunn_TSNE")
+  write.table(results_table, file = "/Users/nathanwhitener/kmeans.csv", sep = ',')
+  return(results_table)
 }
 
+
+complete_seurat <-function(datasets, seed = 1)
+{
+  set.seed(seed)
+  dataList <- extract_datasets(datasets)
+  #dataList <- extract_common_genes(dataList)
+  #dataList <- merge_datasets(dataList)
+  dataList <- preprocess(dataList)
+  dataList <- annotate_datasets(dataList)
+  dataList <- run_log(dataList)
+  dataList <- select_hvg(dataList)
+  dataList <- scale_data(dataList)
+  dataList <- run_pca(dataList)
+  dataList <- run_umap(dataList)
+  dataList <- run_tsne(dataList)
+  dataList <- run_cluster(dataList)
+  x = run_silhouette(dataList, reduction_choosen = "pca", method = "seurat")
+  y = run_dunn(dataList, reduction_choosen = 'pca', method = 'seurat')
+  results_table = NULL
+  results_table = cbind(results_table, x, y[,2])
+  print("Here")
+  print(results_table)
+  colnames(results_table) = c("ID", "Silhouette_PCA", "Dunn_PCA")
+  write.table(results_table, file = "/Users/nathanwhitener/seurat.csv", sep = ',')
+  return(results_table)
+}
 
 #' Run CCA
 #'
@@ -221,21 +266,31 @@ log_workflow_kmeans <- function(idx, seed = 1)
 {
   set.seed(seed)
   dataList <- extract_datasets(idx)
+  print("Extracted")
   #dataList <- extract_common_genes(dataList)
   dataList <- preprocess(dataList)
+  print("Preprocessed")
   dataList <- annotate_datasets(dataList)
+  print("Annotated")
   dataList <- run_log(dataList)
+  print("Log Transformed")
   dataList <- select_hvg(dataList)
+  print("HVG Selected")
   dataList <- scale_data(dataList)
+  print("Data Scaled")
   dataList <- run_pca(dataList)
+  print("PCA Completed")
   dataList <- run_umap(dataList)
-  dataList <- run_kmeans(dataList, "pca")
-  dataList <- run_kmeans(dataList, "umap")
+  print("UMAP Completed")
+  dataList <- run_kmeans(dataList, reduction_choosen = "pca")
+  print("KMeans PCA Run")
+  dataList <- run_kmeans(dataList, reduction_choosen = "umap")
+  print("KMeans UMAP run")
+  print(length(unique(dataList[[1]]@meta.data$kmeans_clusters_pca)))
   result <- cbind(dataList[[1]]@meta.data$ID[1],
                   length(dataList[[1]]@meta.data$kmeans_clusters_pca),
                   length(unique(dataList[[1]]@meta.data$kmeans_clusters_pca)),
-                  length(dataList[[1]]@meta.data$kmeans_clusters_umap),
-                  length(unique(dataList[[1]]@meta.data$kmeans_clusters_umap)) )
+                  length(unique(dataList[[1]]@meta.data$kmeans_clusters_umap)))
   return(result)
 }
 #' Test Log Workflow
@@ -247,7 +302,7 @@ log_workflow_kmeans <- function(idx, seed = 1)
 #' @export
 test_log_workflow <- function()
 {
-  results = cbind('idx', 'ncells', 'nclust_log')
+  results = cbind('idx', 'ncells', 'nclust_kmeans_pca_log', 'nclust_kmeans_umap_log')
   for (idx in datasets)
   {
     results <- rbind(results, log_workflow_kmeans(idx))
@@ -266,7 +321,7 @@ test_gficf_workflow <- function()
   results = cbind('idx', 'ncells', 'nclust_gficf')
   for (idx in datasets)
   {
-    results <- rbind(results, gficf_workflow_kmeans(idx))
+    results <- rbind(results, gficf_workflow_seurat(idx))
   }
   return(results)
 }

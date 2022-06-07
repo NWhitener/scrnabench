@@ -199,7 +199,7 @@ run_tsne <- function(dataList, reduction_choosen = 'pca')
     stop("A data list of datasets is required to apply the tSNE reduction to datasets")
   }
   for (i in (1:length(names(dataList)))) {
-    perplexity_set = sqrt(ncols(dataList[[i]]))
+    perplexity_set = sqrt(ncol(dataList[[i]]))
     dataList[[i]] <- Seurat::RunTSNE(dataList[[i]], reduction = reduction_choosen, dims = 1:30, perplexity = perplexity_set)
   }
   return(dataList)

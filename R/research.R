@@ -108,7 +108,7 @@ run_kmeans <- function(dataList, k=10, reduction_choosen = 'pca')
   {
     clustData = Seurat::Embeddings(dataList[[i]], reduction = reduction_choosen)
     meta = dataList[[i]]@meta.data
-    meta[paste("kmeans_cluster_", reduction_choosen, sep = "")]<- stats::kmeans(clustData,  k, iter.max = 1000)$cluster
+    meta[paste("kmeans_cluster_", reduction_choosen, sep = "")]<- stats::kmeans(clustData,  k, iter.max = 100)$cluster
     print(i)
     metaFix <- subset(meta, select = c(paste("kmeans_cluster_", reduction_choosen, sep = "")))
     dataList[[i]] <- Seurat::AddMetaData(dataList[[i]], metaFix)

@@ -27,8 +27,7 @@ data_load <- function(full = TRUE, path = '.')
     gene_counts <<- readRDS(file = paste(path, "/gene_counts.RDS", sep = ''))
   }
   else{
-    gene_counts <<- readRDS(system.file("extdata", "gene_counts_v6.RDS", package = "benchmarking", mustWork = TRUE))
-
+    gene_counts <<- readRDS(system.file("extdata", "gene_counts_v6.RDS", package = "scrnabench", mustWork = TRUE))
   }
   datasets <<- ls(gene_counts)
   return(datasets)
