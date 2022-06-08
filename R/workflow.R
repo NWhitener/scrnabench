@@ -99,18 +99,15 @@ run_cca <- function(idx,seed = 1)
 #' @param dataList A data list of data sets to integrate using the harmony protocol
 #' @return data.combined A data list of the combined data from the harmony protocol
 #' @export
-run_harmony <- function(dataList, batch_name='SID', seed = 1)
+run_harmony <- function(dataList, batch_name='ID', seed = 1)
 {
-  ##STOP ON LESS THAN 2 DATASETS
+
   set.seed(seed)
-  if(length(dataList) < 2 )
-  {
-    stop("Only two dataset provided, more are required")
-    return(dataList)
-  }
-  dataList <- lapply(X = dataList, FUN = function(x) {
-    x <- harmony::RunHarmony(object = x, group.by.vars = batch_name)
-  })
+  for (k in (1:length(names(dataList)))){
+    print(k)
+    dataList[[k]] <- harmony::RunHarmony(object = dataList[[k]], group.by.vars = batch_name)
+
+          }
   return(dataList)
 }
 
@@ -122,7 +119,7 @@ run_harmony <- function(dataList, batch_name='SID', seed = 1)
 #' @param dataList A data list of data sets to integrate using the fastmnn protocol
 #' @return data.combined A data list of the combined data from the fastmnn protocol
 #' @export
-run_fastmnn <- function(idx, batch_name, seed =1)
+run_fastmnn <- function(idx, batch_name = "ID", seed =1)
 {
 
   ##REWRITE
@@ -131,10 +128,11 @@ run_fastmnn <- function(idx, batch_name, seed =1)
   dataList <- extract_common_genes(dataList)
   dataList <- merge_datasets(dataList)
   dataList <- preprocess(dataList)
+  dataList <- annotate_datasets(dataList)
   dataList <- run_log(dataList) #LOG
   #dataList<- run_gficf(dataList)
   dataList <- select_hvg(dataList)
-  dataList <- SeuratWrapper::RunFastMNN(object.list = Seurat::SplitObject(dataList, split.by = batch_name))
+  dataList[[1]] <- SeuratWrapper::RunFastMNN(object.list = Seurat::SplitObject(dataList[[1]], split.by = batch_name))
   dataList <- run_umap(dataList)
   dataList <- run_cluster(dataList)
   SeuratObject::DefaultAssay(dataList) <- "mnn.reconstructed"

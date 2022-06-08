@@ -44,16 +44,6 @@ data_load <- function(full = TRUE, path = '.')
 #' @export
 merge_datasets <- function(dataList)
 {
-
-  if(is.list(dataList)== "FALSE")
-  {
-    stop("A data list of datasets is required to merge datasets")
-  }
-  if(length(dataList) == 1)
-  {
-    warning("Only one dataset provided, returning the original dataset")
-    return(dataList)
-  }
   cnnew <- character()
   rnnew <- character()
   x <- vector()
@@ -77,7 +67,9 @@ merge_datasets <- function(dataList)
     x <- c(x,ind[,3])
   }
   merged <- Matrix::sparseMatrix(i=i,j=j,x=x,dims=c(length(rnnew),length(cnnew)),dimnames=list(rnnew,cnnew))
-  return(list(merged))
+  merged<-list(merged)
+  names(merged)<-c("Integrated")
+  return(merged)
 }
 
 

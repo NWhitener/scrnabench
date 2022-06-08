@@ -19,9 +19,9 @@ run_workflow <- function(idx)
   dataList <- merge_datasets(dataList)
   #dataList <- run_gficf(dataList)
   dataList <- preprocess(dataList)
-  dataList <- run_log(dataList) #LOG
-
   data <- annotate_datasets(dataList[[1]])
+  dataList <- run_log(dataList) #LO
+  dataList <- run_
   data <- run_harmony3(data, batch_column)
   #write_output(data, 'harmony')
 }
