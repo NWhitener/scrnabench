@@ -47,12 +47,12 @@ complete_seurat <-function(datasets, seed = 1)
   dataList <- run_umap(dataList)
   dataList <- run_tsne(dataList)
   dataList <- run_cluster(dataList)
-  x = run_silhouette(dataList, reduction_choosen = "pca", method = "seurat")
-  y = run_dunn(dataList, reduction_choosen = 'pca', method = 'seurat')
+  x = run_silhouette(dataList, reduction_choosen = "tsne", method = "seurat")
+  y = run_dunn(dataList, reduction_choosen = 'tsne', method = 'seurat')
   results_table = NULL
   results_table = cbind(results_table, x, y[,2])
-  colnames(results_table) = c("ID", "Silhouette_PCA", "Dunn_PCA")
-  write.table(results_table, file = "/Users/nathanwhitener/seurat.csv", sep = ',', row.names = F, col.names = T)
+  colnames(results_table) = c("ID", "Silhouette_tsne", "Dunn_tsne")
+  write.table(results_table, file = "/Users/nathanwhitener/seurat_tsne.csv", sep = ',', row.names = F, col.names = T)
   return(results_table)
 }
 
@@ -422,19 +422,19 @@ run_integration <- function(idx)
 {
   # Harmony
   data <- run_harmony(idx, batch_name = "SID")
-  write_output(data[1], 'harmony')
+  #write_output(data[1], 'harmony')
 
  #FastMnn
   data <- run_fastmnn(idx, batch_column)
-  write_output(data, 'fastmnn')
+  #write_output(data, 'fastmnn')
 
   # CCA
   data <- run_cca(idx)
-  write_output(data, 'cca')
+  #write_output(data, 'cca')
 
   # ScTransform
   data <- run_sctransform(idx)
-  write_output(data, 'sctransform')
+  #write_output(data, 'sctransform')
 }
 
 #Work Out Bug In Duplicate Dataset

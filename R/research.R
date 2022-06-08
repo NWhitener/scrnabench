@@ -67,11 +67,11 @@ permute_columns <- function(dataList)
 #' @param dataList A data list of data sets
 #' @return A data list with clustering completed completed on the features
 #' @export
-run_cluster <- function(dataList, reduction_choosen = "pca")
+run_cluster <- function(dataList, reduction_choosen = "pca", resolution_given = 0.5)
 {
   dataList <- lapply(X = dataList, FUN = function(x) {
     x <- Seurat::FindNeighbors(x, reduction = reduction_choosen, dims = 1:30)
-    x <- Seurat::FindClusters(x, resolution = 0.5)
+    x <- Seurat::FindClusters(x, resolution = resolution_given)
   })
   return(dataList)
 }

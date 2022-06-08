@@ -29,7 +29,8 @@ run_silhouette <- function(dataList, reduction_choosen = 'pca', method = 'kmeans
       y = Seurat::Embeddings(dataList[[i]], reduction = reduction_choosen)
       z <- cluster::silhouette(x, dist(y, "euclidean"))
       q = summary(z)
-      print(i, q)
+      print(i)
+      print(class(q))
       temp_list = cbind(temp_list, q$avg.width)
     }
     else{
