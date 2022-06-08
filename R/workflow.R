@@ -27,7 +27,7 @@ complete_kmeans <- function(datasets, seed = 1)
   results_table = NULL
   results_table = cbind(results_table, x, y[,2],z[,2],w[,2],r[,2],f[,2])
   colnames(results_table) = c("ID", "Silhouette_PCA", "Silhouette_UMAP", "Silhouette_TSNE", "Dunn_PCA", "Dunn_UMAP", "Dunn_TSNE")
-  #write.table(results_table, file = "/Users/nathanwhitener/kmeans.csv", sep = ',')
+  write.table(results_table, file = "/Users/nathanwhitener/kmeans.csv", sep = ',', row.names = F, col.names = T)
   return(results_table)
 }
 
@@ -51,10 +51,8 @@ complete_seurat <-function(datasets, seed = 1)
   y = run_dunn(dataList, reduction_choosen = 'pca', method = 'seurat')
   results_table = NULL
   results_table = cbind(results_table, x, y[,2])
-  print("Here")
-  print(results_table)
   colnames(results_table) = c("ID", "Silhouette_PCA", "Dunn_PCA")
-  write.table(results_table, file = "/Users/nathanwhitener/seurat.csv", sep = ',')
+  write.table(results_table, file = "/Users/nathanwhitener/seurat.csv", sep = ',', row.names = F, col.names = T)
   return(results_table)
 }
 

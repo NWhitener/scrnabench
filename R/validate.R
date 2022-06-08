@@ -25,11 +25,12 @@ run_silhouette <- function(dataList, reduction_choosen = 'pca', method = 'kmeans
     {
       c = paste('seurat_clusters')
       x = dataList[[i]][[c]]
-      as.numeric(x$seurat_clusters)
+      x = as.numeric(x$seurat_clusters)
       y = Seurat::Embeddings(dataList[[i]], reduction = reduction_choosen)
-      z <- cluster::silhouette(x,dist(y, "euclidean"))
-      x = summary(z)
-      temp_list = cbind(temp_list, x$avg.width)
+      z <- cluster::silhouette(x, dist(y, "euclidean"))
+      q = summary(z)
+      print(i)
+      temp_list = cbind(temp_list, q$avg.width)
     }
     else{
       stop("Invalid clustering method requested")
