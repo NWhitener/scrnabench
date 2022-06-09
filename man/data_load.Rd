@@ -4,12 +4,12 @@
 \alias{data_load}
 \title{Loads the data}
 \usage{
-data_load(full = TRUE, path = ".")
+data_load(demo = FALSE, path = ".")
 }
 \arguments{
-\item{full}{Use the full dataset or the small demo dataset}
-
 \item{path}{The path of the load location to use}
+
+\item{full}{Use the full dataset or the small demo dataset}
 }
 \description{
 This function loads the data that is used in the package for use in examples

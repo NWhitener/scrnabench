@@ -4,7 +4,7 @@
 \alias{run_harmony}
 \title{Run Harmony}
 \usage{
-run_harmony(dataList, batch_name = "SID", seed = 1)
+run_harmony(dataList, batch_name = "ID", seed = 1)
 }
 \arguments{
 \item{dataList}{A data list of data sets to integrate using the harmony protocol}

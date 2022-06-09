@@ -4,7 +4,7 @@
 \alias{run_cluster}
 \title{Complete Clustering Steps}
 \usage{
-run_cluster(dataList, reduction_choosen = "pca")
+run_cluster(dataList, reduction_choosen = "pca", resolution_given = 0.5)
 }
 \arguments{
 \item{dataList}{A data list of data sets}
