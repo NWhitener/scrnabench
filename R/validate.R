@@ -27,20 +27,17 @@ run_silhouette <- function(dataList, reduction_choosen = 'pca', method = 'kmeans
       x = dataList[[i]][[c]]
       x = as.numeric(x$seurat_clusters)
       y = Seurat::Embeddings(dataList[[i]], reduction = reduction_choosen)
-      if(length(unique(x) <= 2))
+      if(length(unique(x)) <= 2)
          {
-          f = paste("Dataset ", dataset[i], " has only one cluster. Consider changing the clustering parameters", sep ='')
+          f = paste("Dataset ", datasets[i], " has only one cluster. Consider changing the clustering parameters", sep ='')
           warning(f)
           suppressWarnings(min)
           temp = NA
           temp_list = cbind(temp_list, temp)
-
-      }
+          }
       else if(length(unique(x))>2) {
       z <- cluster::silhouette(x, dist(y, "euclidean"))
       q = summary(z)
-      print(i)
-      print(class(q))
       temp_list = cbind(temp_list, q$avg.width)
       }
     }
@@ -81,9 +78,9 @@ run_dunn <- function(dataList, reduction_choosen,  method = 'kmeans'){
       y = dataList[[i]][[c]]
       y <- as.numeric(y$seurat_clusters)
       x = Seurat::Embeddings(dataList[[i]], reduction = reduction_choosen)
-      if(length(unique(x) <= 2))
+      if(length(unique(x)) <= 2)
       {
-        f = paste("Dataset ", dataset[i], " has only one cluster. Consider changing the clustering parameters", sep ='')
+        f = paste("Dataset ", datasets[i], " has only one cluster. Consider changing the clustering parameters", sep ='')
         warning(f)
         temp = NA
         temp_list = cbind(temp_list, temp)
