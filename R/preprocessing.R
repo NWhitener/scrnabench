@@ -93,7 +93,7 @@ preprocess <- function(dataList)
   dataList <- lapply(X = dataList, function(x)
   {
     x <- Seurat::CreateSeuratObject(counts = x, min.cells = 3, min.features = 200)
-    if(length(as.numceric(dim(x@meta.data))) != 1 )
+    if(length(as.numeric(dim(x@meta.data))) != 1 )
     {
     x[["percent.mt"]] <- Seurat::PercentageFeatureSet(x, pattern = "^MT-")
     Total_mRNAs <- x[["nCount_RNA"]]$nCount_RNA
