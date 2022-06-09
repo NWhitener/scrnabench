@@ -1,5 +1,5 @@
 Package: scrnabench
-Title: Benchmarking Tools FOr Single Cell RNA Sequencing Datasets
+Title: Benchmarking Tools For Single Cell RNA Sequencing Datasets
 Version: 0.0.0.9000
 Authors@R: 
     person("Nathan", "Whitener", , "whitennp@wfu.edu", role = c("aut", "cre"))
