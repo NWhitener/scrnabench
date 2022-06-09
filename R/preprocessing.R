@@ -93,6 +93,8 @@ preprocess <- function(dataList)
   dataList <- lapply(X = dataList, function(x)
   {
     x <- Seurat::CreateSeuratObject(counts = x, min.cells = 3, min.features = 200)
+    if(length(as.numceric(dim(x@meta.data))) != 1 )
+    {
     x[["percent.mt"]] <- Seurat::PercentageFeatureSet(x, pattern = "^MT-")
     Total_mRNAs <- x[["nCount_RNA"]]$nCount_RNA
     mupper_bound <- 10^(mean(log10(Total_mRNAs)) + 2*sd(log10(Total_mRNAs)))
@@ -102,6 +104,10 @@ preprocess <- function(dataList)
     glower_bound <- 10^(mean(log10(Total_Genes)) - 2*sd(log10(Total_Genes)))
     x <- subset(x = x, subset = nFeature_RNA > glower_bound & nFeature_RNA < gupper_bound &
                   nCount_RNA > mlower_bound & nCount_RNA < mupper_bound & percent.mt < 10)
+    }
+    else{
+      print("No Metadata to add to the seurat object")
+    }
   })
 
   return(dataList)
