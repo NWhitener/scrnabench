@@ -9,7 +9,7 @@ data_download <- function(path = '.')
 {
   inborutils::download_zenodo(doi = "10.5281/zenodo.6617997", path = path)
   geneCounts <<- readRDS(file = paste(path, "/gene_counts.RDS", sep = ''))
-  datasets <<- ls(geneCounts)
+  datasets <- ls(geneCounts)
   return(datasets)
 }
 
@@ -25,13 +25,13 @@ data_load <- function(demo = FALSE, path = '.')
   ## Check the Download Path
   if(demo)
   {
-    geneCounts <<- readRDS(system.file("extdata", "gene_counts_v6.RDS", package = "scrnabench", mustWork = TRUE))
+    geneCounts <<- readRDS(system.file("extdata", "gene_counts_demo.RDS", package = "scrnabench", mustWork = TRUE))
 
   }
   else{
     geneCounts <<- readRDS(file = paste(path, "/gene_counts.RDS", sep = ''))
     }
-  datasets <<- ls(geneCounts)
+  datasets <- ls(geneCounts)
   return(datasets)
 }
 
@@ -52,10 +52,10 @@ merge_datasets <- function(dataList)
   i <- numeric()
   j <- numeric()
 
-  for (M in dataList) {
+  for (data in dataList) {
 
-    cnold <- colnames(M)
-    rnold <- rownames(M)
+    cnold <- colnames(data)
+    rnold <- rownames(data)
 
     cnnew <- union(cnnew,cnold)
     rnnew <- union(rnnew,rnold)
@@ -63,7 +63,7 @@ merge_datasets <- function(dataList)
     cindnew <- match(cnold,cnnew)
     rindnew <- match(rnold,rnnew)
 
-    ind <- Matrix::summary(M)
+    ind <- Matrix::summary(data)
     i <- c(i,rindnew[ind[,1]])
     j <- c(j,cindnew[ind[,2]])
     x <- c(x,ind[,3])
@@ -82,21 +82,31 @@ merge_datasets <- function(dataList)
 #' This function displays a short summary of each data set in the data list provided. Can be used to gain quick insights into the
 #' information that is stored in the data
 #'
-#' @param dataList A list of data sets that you would like to view
+#' @param dataList A list of names of data sets that you would like to view
 #' @export
-view_data <- function(idx)
+view_data <- function(datasets)
 {
 
-  if(!is.vector(idx))
+
+  # Show the dataset name, number of genes, number of cells
+  if(!is.vector(datasets))
   {
     stop("A list of names of the datasets is required to view datasets")
   }
-  for (i in 1:length(idx))
+  table = NULL
+  for (name in datasets)
   {
-    str(extract_datasets(idx[i]))
+    rows <- as.numeric(nrow(geneCounts[[name]]))
+    cols <- as.numeric(ncol(geneCounts[[name]]))
+    table <- rbind(table,cbind(name, rows, cols))
+
 
   }
-}
+  colnames(table)<-c("Dataset Name","Number of Genes", 'Number of Cells')
+  table
+  as.data.frame(table)
+
+  }
 
 #' Extract Datasets
 #'
@@ -136,15 +146,13 @@ extract_datasets <- function(names)
 #' @export
 annotate_datasets <- function(dataList)
 {
-  if(is.list(dataList)== "FALSE")
+  if(is.list(dataList))
   {
-    stop("A data list of datasets is required to annotate datasets")
-  }
-  dataList <- lapply(dataList, function(x)
-  {
-    cols = colnames(x)
-    for (i in (1:length(cols)))
+    dataList <- lapply(dataList, function(x)
     {
+      cols = colnames(x)
+      for (i in (1:length(cols)))
+      {
       col <- cols[i]
       col <- stringr::str_split(col, "-")[[1]][1]
       x@meta.data$ID[i] <- col
@@ -171,17 +179,20 @@ annotate_datasets <- function(dataList)
         x@meta.data$CELL_LINE[i] <- ifelse(chunks[[1]][3] == "A", 'HCC1395', 'HCC1395BL')
         x@meta.data$PREPROCESS[i] <- chunks[[1]][4]
       }
+     }
+      x@meta.data$SID <- rep(1, length(x@meta.data$ID))
+      x@meta.data$orig.ident <- x@meta.data$CELL_LINE
+      x <- x
+      })
+    for (i in range(1, length(dataList)))
+    {
+        dataList[[i]]@meta.data$SID = rep(i, length(dataList[[i]]@meta.data$SID))
     }
-    x@meta.data$SID <- rep(1, length(x@meta.data$ID))
-    x@meta.data$orig.ident <- x@meta.data$CELL_LINE
-    x <- x
-  })
-
-  for (i in range(1, length(dataList)))
-  {
-    dataList[[i]]@meta.data$SID = rep(i, length(dataList[[i]]@meta.data$SID))
   }
 
+  else{
+    stop("A data list of datasets is required to annotate datasets")
+  }
   return(dataList)
 }
 
