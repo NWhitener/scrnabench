@@ -1,9 +1,10 @@
-#' COmpletes the KMeans Process
+#' Completes the KMeans Process
 #'
 #' @export
-complete_kmeans <- function(datasets, seed = 1)
+complete_kmeans <- function(datasets, seed = 1, path = '.')
 {
   set.seed(seed)
+  file = paste(path, "/kmeans_clusters.csv", sep = '')
   dataList <- extract_datasets(datasets)
   #dataList <- extract_common_genes(dataList)
   #dataList <- merge_datasets(dataList)
@@ -27,14 +28,17 @@ complete_kmeans <- function(datasets, seed = 1)
   results_table = NULL
   results_table = cbind(results_table, x, y[,2],z[,2],w[,2],r[,2],f[,2])
   colnames(results_table) = c("ID", "Silhouette_PCA", "Silhouette_UMAP", "Silhouette_TSNE", "Dunn_PCA", "Dunn_UMAP", "Dunn_TSNE")
-  write.table(results_table, file = "/Users/nathanwhitener/kmeans.csv", sep = ',', row.names = F, col.names = T)
+  write.table(results_table, file = file, sep = ',', row.names = F, col.names = T)
   return(results_table)
 }
 
-
-complete_seurat <-function(datasets, seed = 1)
+#' Completes the Seurat Process
+#'
+#' @export
+complete_seurat <-function(datasets, seed = 1, path, reduction = 'pca')
 {
   set.seed(seed)
+  file = paste(path, "/seurat_clusters_", reduction , ".csv", sep = '')
   dataList <- extract_datasets(datasets)
   #dataList <- extract_common_genes(dataList)
   #dataList <- merge_datasets(dataList)
@@ -47,12 +51,12 @@ complete_seurat <-function(datasets, seed = 1)
   dataList <- run_umap(dataList)
   dataList <- run_tsne(dataList)
   dataList <- run_cluster(dataList)
-  x = run_silhouette(dataList, reduction_choosen = "tsne", method = "seurat")
+  x = run_silhouette(dataList, reduction_choosen = reduction, method = "seurat")
   y = run_dunn(dataList, reduction_choosen = 'tsne', method = 'seurat')
   results_table = NULL
   results_table = cbind(results_table, x, y[,2])
-  colnames(results_table) = c("ID", "Silhouette_tsne", "Dunn_tsne")
-  write.table(results_table, file = "/Users/nathanwhitener/seurat_tsne.csv", sep = ',', row.names = F, col.names = T)
+  colnames(results_table) = c("ID", "Silhouette", "Dunn")
+  write.table(results_table, file = file, sep = ',', row.names = F, col.names = T)
   return(results_table)
 }
 
