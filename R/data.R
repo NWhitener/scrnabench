@@ -84,25 +84,22 @@ merge_datasets <- function(dataList)
 #'
 #' @param dataList A list of names of data sets that you would like to view
 #' @export
-view_data <- function(datasets)
+view_data <- function(dataList)
 {
 
 
   # Show the dataset name, number of genes, number of cells
-  if(!is.vector(datasets))
-  {
-    stop("A list of names of the datasets is required to view datasets")
-  }
+
   table = NULL
-  for (name in datasets)
+  for (i in 1:length(names(dataList)))
   {
-    rows <- as.numeric(nrow(geneCounts[[name]]))
-    cols <- as.numeric(ncol(geneCounts[[name]]))
+    rows <- as.numeric(nrow(dataList[[i]]))
+    cols <- as.numeric(ncol(dataList[[i]]))
     table <- rbind(table,cbind(name, rows, cols))
 
 
   }
-  colnames(table)<-c("Dataset Name","Number of Genes", 'Number of Cells')
+  colnames(table) <- c("Dataset Name","Number of Genes", 'Number of Cells')
   table
   as.data.frame(table)
 
