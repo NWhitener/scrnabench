@@ -8,8 +8,8 @@
 data_download <- function(path = '.')
 {
   inborutils::download_zenodo(doi = "10.5281/zenodo.6617997", path = path)
-  gene_counts <<- readRDS(file = paste(path, "/gene_counts.RDS", sep = ''))
-  datasets <<- ls(gene_counts)
+  geneCounts <<- readRDS(file = paste(path, "/gene_counts.RDS", sep = ''))
+  datasets <<- ls(geneCounts)
   return(datasets)
 }
 
@@ -20,16 +20,18 @@ data_download <- function(path = '.')
 #' @param full Use the full dataset or the small demo dataset
 #' @param path The path of the load location to use
 #' @export
-data_load <- function(full = TRUE, path = '.')
+data_load <- function(demo = FALSE, path = '.')
 {
-  if(full == TRUE)
+  ## Check the Download Path
+  if(demo)
   {
-    gene_counts <<- readRDS(file = paste(path, "/gene_counts.RDS", sep = ''))
+    geneCounts <<- readRDS(system.file("extdata", "gene_counts_v6.RDS", package = "scrnabench", mustWork = TRUE))
+
   }
   else{
-    gene_counts <<- readRDS(system.file("extdata", "gene_counts_v6.RDS", package = "scrnabench", mustWork = TRUE))
-  }
-  datasets <<- ls(gene_counts)
+    geneCounts <<- readRDS(file = paste(path, "/gene_counts.RDS", sep = ''))
+    }
+  datasets <<- ls(geneCounts)
   return(datasets)
 }
 
@@ -110,7 +112,7 @@ extract_datasets <- function(names)
   {
     stop("A list of names of the datasets is required to extract datasets")
   }
-  dataList <- gene_counts[names]
+  dataList <- geneCounts[names]
   for (name in names)
   {
     dataList[[name]] <- as.matrix(dataList[[name]])

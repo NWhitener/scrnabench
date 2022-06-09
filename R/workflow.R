@@ -405,6 +405,10 @@ run_seurat_rows <- function()
 }
 
 
+complete_harmony <- function()
+
+
+
 #' Run Integration  (Need a better name)
 #'
 #' This functions completes an integration pipeline, using
