@@ -42,12 +42,10 @@ run_gficf <-function(dataList)
   }
     for (i in (1:length(names(dataList))))
     {
+      model <- TfIdf$new()
+      gficf <- model$fit_transform(dataList[[i]])
       dataList[[i]] <- Seurat::CreateSeuratObject(counts = dataList[[i]])
-      print("Created Object")
-      dataList[[i]]$RNA@data <- gficf::gficf(M=dataList[[i]]$RNA@counts,
-                                              normalize=TRUE, storeRaw=FALSE)$gficf
-      dataList[[i]]$RNA@counts <- dataList[[i]]$RNA@data[rownames(dataList[[i]]$RNA@data),]
-      print(class(dataList[[i]]$RNA@data))
+      dataList[[i]]$RNA@data <- gficf
       dataList[[i]] <- Seurat::SetAssayData(object=dataList[[i]],slot = 'scale.data', new.data = as.matrix(dataList[[i]]$RNA@data))
     }
     return(dataList)
