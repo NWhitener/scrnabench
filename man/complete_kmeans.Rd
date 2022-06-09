@@ -2,10 +2,10 @@
 % Please edit documentation in R/workflow.R
 \name{complete_kmeans}
 \alias{complete_kmeans}
-\title{COmpletes the KMeans Process}
+\title{Completes the KMeans Process}
 \usage{
-complete_kmeans(datasets, seed = 1)
+complete_kmeans(datasets, seed = 1, path = ".")
 }
 \description{
-COmpletes the KMeans Process
+Completes the KMeans Process
 }

@@ -2,6 +2,7 @@
 
 export(annotate_datasets)
 export(complete_kmeans)
+export(complete_seurat)
 export(create_kmeans_plot)
 export(create_seurat_plot)
 export(data_download)
