@@ -93,7 +93,7 @@ view_data <- function(dataList)
   table = NULL
   for (i in 1:length(names(dataList)))
   {
-    name = names(dataList[[i]])
+    name = names(dataList[i])
     rows <- as.numeric(nrow(dataList[[i]]))
     cols <- as.numeric(ncol(dataList[[i]]))
     table <- rbind(table,cbind(name, rows, cols))
@@ -101,7 +101,6 @@ view_data <- function(dataList)
 
   }
   colnames(table) <- c("Dataset Name","Number of Genes", 'Number of Cells')
-  table
   as.data.frame(table)
 
   }
