@@ -4,7 +4,7 @@
 \alias{view_data}
 \title{View Data}
 \usage{
-view_data(datasets)
+view_data(dataList)
 }
 \arguments{
 \item{dataList}{A list of names of data sets that you would like to view}
