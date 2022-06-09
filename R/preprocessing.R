@@ -105,9 +105,7 @@ preprocess <- function(dataList)
     x <- subset(x = x, subset = nFeature_RNA > glower_bound & nFeature_RNA < gupper_bound &
                   nCount_RNA > mlower_bound & nCount_RNA < mupper_bound & percent.mt < 10)
     }
-    else{
-      print("No Metadata to add to the seurat object")
-    }
+
   })
 
   return(dataList)
