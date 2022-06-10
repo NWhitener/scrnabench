@@ -1,6 +1,6 @@
 #' Visualization method for the Kmeans Clustering
 #'
-#' Produces a plot of the Kmeans clustering, based on the dimensionality reduction method choosen
+#' Produces a plot of the Kmeans clustering, based on the dimensionality reduction method chosen. The plot is a Seurat DimPlot
 #'
 #' @param data An individual data object that you want to visualize
 #' @param reduction_choosen The dimensionality reduction method choosen
@@ -13,7 +13,7 @@ create_kmeans_plot <- function(data, reduction_choosen = 'pca'){
 
 #' Visualization method for the Seurat Clustering
 #'
-#' Produces a plot of the Seurat clustering, based on the dimensionality reduction method choosen
+#' Produces a plot of the Seurat clustering, based on the dimensionality reduction method chosen. The plot is a Seurat DimPlot
 #'
 #' @param data An individual data object that you want to visualize
 #' @param reduction_choosen The dimensionality reduction method choosen
