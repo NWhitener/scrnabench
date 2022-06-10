@@ -53,7 +53,26 @@ permute_columns <- function(dataList)
   return(dataList)
 }
 
-
+#' Runs the Seurat Pipeline
+#'
+#' This function completes the Seurat Pipeline on a list of data. This process starts with finding the variable features (genes), then
+#' scaling the data, running PCA, UMPA, and then find clusters.  This step can be done to test your benchamrk data sets
+#' or for down stream analysis. For more information on the Seurat Pipeline
+#' please see https://satijalab.org/seurat/index.html
+#'
+#' @param dataList A data list of Data sets in the Gene in Row and Cell in Columns format
+#' @export
+run_seurat <- function(dataList, seed =1)
+{
+  set.seed(seed)
+  dataList <- lapply(X = dataList, FUN = function(x) {
+    x <- Seurat::RunPCA(x, npcs = 30, verbose = FALSE)
+    x <- Seurat::RunUMAP(x, reduction = "pca", dims = 1:30)
+    x <- Seurat::FindNeighbors(x, reduction = "pca", dims = 1:30)
+    x <- Seurat::FindClusters(x, resolution = 0.5)
+  })
+  return(dataList)
+}
 
 
 
@@ -106,7 +125,7 @@ run_kmeans <- function(dataList, k=10, reduction_choosen = 'pca')
 {
   for (i in (1:length(names(dataList))))
   {
-    clustData = Seurat::Embeddings(dataList[[i]], reduction = reduction_choosen)
+    clustData = dataList[[i]]@reductions$pca
     meta = dataList[[i]]@meta.data
     meta[paste("kmeans_cluster_", reduction_choosen, sep = "")]<- stats::kmeans(clustData,  k, iter.max = 100)$cluster
     print(i)

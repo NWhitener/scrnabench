@@ -23,14 +23,19 @@ data_download <- function(path = '.')
 data_load <- function(demo = FALSE, path = '.')
 {
   ## Check the Download Path
+  path_full = paste(path, "/gene_counts.RDS", sep = '')
   if(demo)
   {
     geneCounts <<- readRDS(system.file("extdata", "gene_counts_demo.RDS", package = "scrnabench", mustWork = TRUE))
 
   }
+  else if(file.exists(path_full)){
+
+    geneCounts <<- readRDS(file = path_full)
+  }
   else{
-    geneCounts <<- readRDS(file = paste(path, "/gene_counts.RDS", sep = ''))
-    }
+    stop("Please Provide a Valid File Path, or use the data_download() function to download the data")
+  }
   datasets <- ls(geneCounts)
   return(datasets)
 }

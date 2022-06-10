@@ -2,7 +2,9 @@
 
 export(annotate_datasets)
 export(complete_kmeans)
+export(complete_kmeans_gficf)
 export(complete_seurat)
+export(complete_seurat_gficf)
 export(create_kmeans_plot)
 export(create_seurat_plot)
 export(data_download)

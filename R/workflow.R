@@ -1,13 +1,17 @@
 #' Completes the KMeans Process
 #'
+#' This function completes the entire kmeans workflow procedure for the log data transformation. This workflow handles data transformation,
+#' dimensionality reduction, and clustering. The results will be stored in a csv file called kmeans_clusters.csv
+#'
+#' @param datasets The names of the datasets for the completion of the workflow
+#' @param seed The seed of randomization for reproducibility, defaults to 1
+#' @param path The file path for saving the results of the workflow
 #' @export
 complete_kmeans <- function(datasets, seed = 1, path = '.')
 {
   set.seed(seed)
   file = paste(path, "/kmeans_clusters.csv", sep = '')
   dataList <- extract_datasets(datasets)
-  #dataList <- extract_common_genes(dataList)
-  #dataList <- merge_datasets(dataList)
   dataList <- preprocess(dataList)
   dataList <- annotate_datasets(dataList)
   dataList <- run_log(dataList)
@@ -34,14 +38,18 @@ complete_kmeans <- function(datasets, seed = 1, path = '.')
 
 #' Completes the Seurat Process
 #'
+#' This function completes the entire kmeans workflow procedure for the log data transformation. This workflow handles data transformation,
+#' dimensionality reduction, and clustering. The results will be stored in a csv file called seurat_clusters.csv
+#'
+#' @param datasets The names of the datasets for the completion of the workflow
+#' @param seed The seed of randomization for reproducibility, defaults to 1
+#' @param path The file path for saving the results of the workflow
 #' @export
 complete_seurat <-function(datasets, seed = 1, path, reduction = 'pca')
 {
   set.seed(seed)
-  file = paste(path, "/seurat_clusters_", reduction , ".csv", sep = '')
+  file = paste(path, "/seurat_clusters.csv", sep = '')
   dataList <- extract_datasets(datasets)
-  #dataList <- extract_common_genes(dataList)
-  #dataList <- merge_datasets(dataList)
   dataList <- preprocess(dataList)
   dataList <- annotate_datasets(dataList)
   dataList <- run_log(dataList)
@@ -50,9 +58,9 @@ complete_seurat <-function(datasets, seed = 1, path, reduction = 'pca')
   dataList <- run_pca(dataList)
   dataList <- run_umap(dataList)
   dataList <- run_tsne(dataList)
-  dataList <- run_cluster(dataList)
+  dataList <- run_cluster(dataList, reduction_choosen = reduction)
   x = run_silhouette(dataList, reduction_choosen = reduction, method = "seurat")
-  y = run_dunn(dataList, reduction_choosen = 'tsne', method = 'seurat')
+  y = run_dunn(dataList, reduction_choosen = reduction, method = 'seurat')
   results_table = NULL
   results_table = cbind(results_table, x, y[,2])
   colnames(results_table) = c("ID", "Silhouette", "Dunn")
@@ -60,20 +68,86 @@ complete_seurat <-function(datasets, seed = 1, path, reduction = 'pca')
   return(results_table)
 }
 
+#' Completes the KMeans Process on GFICF data
+#'
+#' This function completes the entire kmeans workflow procedure for the GFICF data transformation. This workflow handles data transformation,
+#' dimensionality reduction, and clustering. The results will be stored in a csv file called kmeans_clusters_gficf.csv
+#'
+#' @param datasets The names of the datasets for the completion of the workflow
+#' @param seed The seed of randomization for reproducibility, defaults to 1
+#' @param path The file path for saving the results of the workflow
+#' @export
+complete_kmeans_gficf <- function(datasets, seed = 1, path = '.')
+{
+  set.seed(seed)
+  file = paste(path, "/kmeans_clusters_gficf.csv", sep = '')
+  dataList <- extract_datasets(datasets)
+  dataList <- run_gficf(dataList)
+  dataList <- annotate_datasets(dataList)
+  dataList <- select_hvg(dataList)
+  dataList <- run_pca(dataList)
+  dataList <- run_umap(dataList)
+  dataList <- run_tsne(dataList)
+  dataList <- run_kmeans(dataList, reduction_choosen = 'pca')
+  dataList <- run_kmeans(dataList, reduction_choosen = 'umap')
+  dataList <- run_kmeans(dataList, reduction_choosen = 'tsne')
+  x = run_silhouette(dataList, 'pca')
+  y = run_silhouette(dataList, 'tsne')
+  z = run_silhouette(dataList, 'umap')
+  w = run_dunn(dataList, 'pca')
+  r = run_dunn(dataList, 'tsne')
+  f = run_dunn(dataList, 'umap')
+  results_table = NULL
+  results_table = cbind(results_table, x, y[,2],z[,2],w[,2],r[,2],f[,2])
+  colnames(results_table) = c("ID", "Silhouette_PCA", "Silhouette_UMAP", "Silhouette_TSNE", "Dunn_PCA", "Dunn_UMAP", "Dunn_TSNE")
+  write.table(results_table, file = file, sep = ',', row.names = F, col.names = T)
+  return(results_table)
+}
+
+#' Completes the Seurat Process on GFICF data
+#'
+#' This function completes the entire Seurat workflow procedure for the GFICF data transformation. This workflow handles data transformation,
+#' dimensionality reduction, and clustering. The results will be stored in a csv file called seurat_clusters_gficf.csv
+#'
+#' @param datasets The names of the datasets for the completion of the workflow
+#' @param seed The seed of randomization for reproducibility, defaults to 1
+#' @param path The file path for saving the results of the workflow
+#' @export
+complete_seurat_gficf <- function(datasets, seed = 1, path, reduction = 'pca')
+{
+  set.seed(seed)
+  file = paste(path, "/seurat_clusters_gficf.csv", sep = '')
+  dataList <- extract_datasets(datasets)
+  dataList <- run_gficf(dataList)
+  dataList <- annotate_datasets(dataList)
+  dataList <- select_hvg(dataList)
+  dataList <- run_pca(dataList)
+  dataList <- run_umap(dataList)
+  dataList <- run_tsne(dataList)
+  dataList <- run_cluster(dataList, reduction_choosen = reduction)
+  x = run_silhouette(dataList, reduction_choosen = reduction, method = "seurat")
+  y = run_dunn(dataList, reduction_choosen = reduction, method = 'seurat')
+  results_table = NULL
+  results_table = cbind(results_table, x, y[,2])
+  colnames(results_table) = c("ID", "Silhouette", "Dunn")
+  write.table(results_table, file = file, sep = ',' , row.names = F, col.names = T)
+  return(results_table)
+}
+
+
 #' Log Workflow Seurat
 #'
 #' This workflow is designed to apply the log data transformation on the datasets
 #' and test it's ability to handle pca, umap, and seurat clustering.
 #'
-#' @param idx The names of the datasets
+#' @param datasets The names of the datasets
 #' @param seed The random seed that you would like to use on the dataset
 #' @return a result list with the dataset ID and the cluster it belongs to
 #' @export
-log_workflow_seurat <- function(idx, seed = 1)
+log_workflow_seurat <- function(datasets, seed = 1)
 {
   set.seed(seed)
-  dataList <- extract_datasets(idx)
-  #dataList <- extract_common_genes(dataList)
+  dataList <- extract_datasets(datasets)
   dataList <- preprocess(dataList)
   dataList <- annotate_datasets(dataList)
   dataList <- run_log(dataList)
@@ -94,17 +168,15 @@ log_workflow_seurat <- function(idx, seed = 1)
 #' This workflow is designed to apply the GFICF data transformation on the datasets
 #' and test it's ability to handle pca, umap, and seurat clustering.
 #'
-#' @param idx The names of the datasets
+#' @param datasets The names of the datasets
 #' @param seed The random seed that you would like to use on the dataset
 #' @return a result list with the dataset ID and the cluster it belongs to
 #' @export
-gficf_workflow_seurat <- function(idx, seed = 1)
+gficf_workflow_seurat <- function(datasets, seed = 1)
 {
     set.seed(seed)
-    dataList <- extract_datasets(idx)
-    #dataList <- extract_common_genes(dataList)
+    dataList <- extract_datasets(datasets)
     dataList <- run_gficf(dataList)
-    #dataList <- preprocess(dataList)
     dataList <- annotate_datasets(dataList)
     dataList <- select_hvg(dataList)
     dataList <- run_pca(dataList)
@@ -117,39 +189,54 @@ gficf_workflow_seurat <- function(idx, seed = 1)
 }
 
 
+#' GFICF Workflow Kmeans
+#'
+#' This workflow is designed to apply the GFICF data transformation on the datasets
+#' and test it's ability to handle pca, umap, and kmeans clustering.
+#'
+#' @param datasets The names of the datasets
+#' @param seed The random seed that you would like to use on the dataset
+#' @return a result list with the dataset ID and the cluster it belongs to
+#' @export
+gficf_workflow_seurat <- function(datasets, seed = 1)
+{
+  set.seed(seed)
+  dataList <- extract_datasets(datasets)
+  dataList <- run_gficf(dataList)
+  dataList <- annotate_datasets(dataList)
+  dataList <- select_hvg(dataList)
+  dataList <- run_pca(dataList)
+  dataList <- run_umap(dataList)
+  dataList <- run_kmeans(dataList, 'pca')
+  dataList <- run_kmeans(dataList, 'tsne')
+  result <- cbind(dataList[[1]]@meta.data$ID[1],
+                  length(dataList[[1]]@meta.data$seurat_clusters),
+                  length(unique(dataList[[1]]@meta.data$seurat_clusters)))
+  return(result)
+}
+
 #' Log Workflow Kmeans
 #'
 #' This workflow is designed to apply the log data transformation on the datasets
 #' and test it's ability to handle pca, umap, and kmeans clustering.
 #'
-#' @param idx The names of the datasets
+#' @param datasets The names of the datasets
 #' @param seed The random seed that you would like to use on the dataset
 #' @return a result list with the dataset ID and the cluster it belongs to
 #' @export
-log_workflow_kmeans <- function(idx, seed = 1)
+log_workflow_kmeans <- function(datasets, seed = 1)
 {
   set.seed(seed)
-  dataList <- extract_datasets(idx)
-  print("Extracted")
-  #dataList <- extract_common_genes(dataList)
+  dataList <- extract_datasets(datasets)
   dataList <- preprocess(dataList)
-  print("Preprocessed")
   dataList <- annotate_datasets(dataList)
-  print("Annotated")
   dataList <- run_log(dataList)
-  print("Log Transformed")
   dataList <- select_hvg(dataList)
-  print("HVG Selected")
   dataList <- scale_data(dataList)
-  print("Data Scaled")
   dataList <- run_pca(dataList)
-  print("PCA Completed")
   dataList <- run_umap(dataList)
-  print("UMAP Completed")
   dataList <- run_kmeans(dataList, reduction_choosen = "pca")
-  print("KMeans PCA Run")
   dataList <- run_kmeans(dataList, reduction_choosen = "umap")
-  print("KMeans UMAP run")
   print(length(unique(dataList[[1]]@meta.data$kmeans_clusters_pca)))
   result <- cbind(dataList[[1]]@meta.data$ID[1],
                   length(dataList[[1]]@meta.data$kmeans_clusters_pca),
@@ -162,14 +249,14 @@ log_workflow_kmeans <- function(idx, seed = 1)
 #' This function is designed to apply the log data transformation workflow on the datasets
 #' and test it's ability to handle pca, umap, and clustering.
 #'
-#' @param idx The names of the datasets
+#' @param datasets The names of the datasets
 #' @export
 test_log_workflow <- function()
 {
-  results = cbind('idx', 'ncells', 'nclust_kmeans_pca_log', 'nclust_kmeans_umap_log')
-  for (idx in datasets)
+  results = cbind('datasets', 'ncells', 'nclust_kmeans_pca_log', 'nclust_kmeans_umap_log')
+  for (datasets in datasets)
   {
-    results <- rbind(results, log_workflow_kmeans(idx))
+    results <- rbind(results, log_workflow_kmeans(datasets))
   }
   return(results)
 }
@@ -178,20 +265,81 @@ test_log_workflow <- function()
 #' This function is designed to apply the GFICF data transformation workflow on the datasets
 #' and test it's ability to handle pca, umap, and clustering.
 #'
-#' @param idx The names of the datasets
+#' @param datasets The names of the datasets
 #' @export
 test_gficf_workflow <- function()
 {
-  results = cbind('idx', 'ncells', 'nclust_gficf')
-  for (idx in datasets)
+  results = cbind('datasets', 'ncells', 'nclust_gficf')
+  for (datasets in datasets)
   {
-    results <- rbind(results, gficf_workflow_seurat(idx))
+    results <- rbind(results, gficf_workflow_seurat(datasets))
   }
   return(results)
 }
 
+run_harmony_workflow <- function(datasets, seed = 1)
+{
+  set.seed(seed)
+  dataList = extract_datasets(datasets)
+  dataList = extract_common_genes(dataList)
+  dataList = merge_datasets(dataList)
+  dataList = preprocess(dataList)
+  dataList = annotate_datasets(dataList)
+  dataList = run_log(dataList)
+  dataList = select_hvg(dataList)
+  dataList = run_pca(dataList)
+  dataList = run_harmony(dataList)
+  dataList = run_kmeans(dataList, reduction_choosen = 'harmony')
+  dataList = run_silhouette(dataList, reduction_choosen = "harmony")
+}
+
+run_fastmnn_workflow <- function(datasets, seed = 1)
+{
+  ##REWRITE
+  dataList <- extract_datasets(datasets)
+  dataList <- extract_common_genes(dataList)
+  dataList <- merge_datasets(dataList)
+  dataList <- preprocess(dataList)
+  dataList <- annotate_datasets(dataList)
+  dataList <- run_log(dataList)
+  dataList <- select_hvg(dataList)
+  dataList <- run_fastmnn(dataList)
+  dataList <- run_umap(dataList)
+  dataList <- run_cluster(dataList)
+  return(dataList)
+}
 
 
+run_cca_workflow <- function(datasets, seed = 1)
+{
+  set.seed(seed)
+  dataList <- extract_datasets(datasets)
+  dataList <- preprocess(dataList)
+  dataList <- annotate_datasets(dataList)
+  dataList <- run_log(dataList)
+  dataList <- select_hvg(dataList)
+  dataList <- run_cca(dataList)
+  dataList <- scale_data(dataList)
+  dataList <- run_pca(dataList)
+  dataList <- run_umap(dataList)
+  dataList <- run_cluster(dataList)
+  return(dataList)
+}
+
+
+run_sctransform_workflow <- function(datasets, seed = 1)
+{
+  set.seed(seed)
+  dataList <- extracrt_datasets(dataList)
+  dataList <- preprocess(dataList)
+  dataList <- annotate_datasets(dataList)
+  dataList <- run_sctransform(dataList)
+  dataList <- scale_data(dataList)
+  dataList <- run_pca(dataList)
+  dataList <- run_umap(dataList)
+  dataList <- run_cluster(dataList)
+  return(dataList)
+}
 
 
 #' Build Seurat Pipeline with the Columns Permuted
@@ -200,13 +348,13 @@ test_gficf_workflow <- function()
 #' with permuted columns. This allows the testing of the algorithmic stability of the Seurat Pipeline for the specified data list. The
 #' Normalized information Distance is returned. If there is true algorithmic stability this score would be 1
 #'
-#' @param idx A data set with genes as rows and cells as columns
+#' @param datasets A data set with genes as rows and cells as columns
 #' @return Adjusted Rand Index
-build_seurat_columns <- function(idx, seed = 1)
+build_seurat_columns <- function(datasets, seed = 1)
 {
   set.seed(seed)
-  dataList <- extract_datasets(idx)
-  dataList2 <- extract_datasets(idx)
+  dataList <- extract_datasets(datasets)
+  dataList2 <- extract_datasets(datasets)
   dataList2 <- permute_columns(dataList2)
   dataList <- append(dataList, dataList2)
   dataList <- preprocess(dataList)
@@ -222,13 +370,13 @@ build_seurat_columns <- function(idx, seed = 1)
 #' with permuted rows. This allows the testing of the algorithmic stability of the Seurat Pipeline for the specified data list. The
 #' Normalized information Distance is returned. If there is true algorithmic stability this score would be 1
 #'
-#' @param idx A data set with genes as rows and cells as columns
+#' @param datasets A data set with genes as rows and cells as columns
 #' @return Adjusted Rand Index
-build_seurat_rows <- function(idx, seed = 1)
+build_seurat_rows <- function(datasets, seed = 1)
 {
   set.seed(seed)
-  dataList <- extract_datasets(idx)
-  dataList2 <- extract_datasets(idx)
+  dataList <- extract_datasets(datasets)
+  dataList2 <- extract_datasets(datasets)
   dataList2 <- permute_rows(dataList2)
   dataList <- append(dataList, dataList2)
   dataList <- preprocess(dataList)
@@ -241,16 +389,16 @@ build_seurat_rows <- function(idx, seed = 1)
 #' Run the Seurat Pipeline with column Permutations
 #'
 #' This function runs the built Seurat pipeline with column permutations on a data list. The results are appened into
-#' the rows of a new matrix, with the idx and the ARI recorded
-#' @return a results matrix with ARI and idx number
+#' the rows of a new matrix, with the datasets and the ARI recorded
+#' @return a results matrix with ARI and datasets number
 #' @export
 run_seurat_columns <- function()
 {
-  results = cbind('idx', 'ARI')
-  for (idx in datasets)
+  results = cbind('datasets', 'ARI')
+  for (datasets in datasets)
   {
-    result <- build_seurat_columns(idx)
-    results <- rbind(results, cbind(idx, result))
+    result <- build_seurat_columns(datasets)
+    results <- rbind(results, cbind(datasets, result))
   }
   return(results)
 }
@@ -258,16 +406,16 @@ run_seurat_columns <- function()
 #' Run the Seurat Pipeline with row Permutations
 #'
 #' This function runs the built Seurat pipeline with row permutations on a data list. The results are appended into
-#' the rows of a new matrix, with the idx and the ARI recorded
-#' @return a results matrix with ARI and idx number
+#' the rows of a new matrix, with the datasets and the ARI recorded
+#' @return a results matrix with ARI and datasets number
 #' @export
 run_seurat_rows <- function()
 {
-  results = cbind('idx', 'ARI')
-  for (idx in datasets)
+  results = cbind('datasets', 'ARI')
+  for (datasets in datasets)
   {
-    result <- build_seurat_rows(idx)
-    results <- rbind(results, cbind(idx, result))
+    result <- build_seurat_rows(datasets)
+    results <- rbind(results, cbind(datasets, result))
   }
   return(results)
 }
@@ -285,29 +433,29 @@ run_seurat_rows <- function()
 #' for more information on these pipeline structures. Each of these integration will write the integrated data set to a file
 #' in the current directory
 #'
-#' @param idx A list of data set names that you would like to integrate with
+#' @param datasets A list of data set names that you would like to integrate with
 #' the 4 pipelines
 #' @export
-run_integration <- function(idx)
+run_integration <- function(datasets)
 {
   # Harmony
-  data <- run_harmony(idx, batch_name = "SID")
+  data <- run_harmony(datasets, batch_name = "ID")
   #write_output(data[1], 'harmony')
 
  #FastMnn
-  data <- run_fastmnn(idx, batch_column)
+  data <- run_fastmnn(datasets, batch_column)
   #write_output(data, 'fastmnn')
 
   # CCA
-  data <- run_cca(idx)
+  data <- run_cca(datasets)
   #write_output(data, 'cca')
 
   # ScTransform
-  data <- run_sctransform(idx)
+  data <- run_sctransform(datasets)
   #write_output(data, 'sctransform')
 }
 
-#Work Out Bug In Duplicate Dataset
+
 #' Run Integration Duplicated (Need a better name)
 #'
 #' This functions completes an integration pipeline on a dupilcated set of the original data, using
@@ -316,29 +464,29 @@ run_integration <- function(idx)
 #' for more information on these pipeline structures. Each of these integration will write the integrated data set to a file
 #' in the current directory
 #'
-#' @param idx A list of data set names that you would like to integrate with
+#' @param datasets A list of data set names that you would like to integrate with
 #' the 4 pipelines
 #' @param dup The number of duplications that would like to execute
 #' @export
-run_duplicate_integrations <- function(idx, dup)
+run_duplicate_integrations <- function(datasets, dup)
 {
   # Harmony
-  dataList <- duplicate_datasets(idx, dup)
+  dataList <- duplicate_datasets(datasets, dup)
   data <- run_harmony(data, batch_column)
   write_output(data, 'harmony')
 
   # FastMNN
-  dataList <- duplicate_datasets(idx, dup)
+  dataList <- duplicate_datasets(datasets, dup)
   data <- run_fastmnn(data, batch_column)
   write_output(data, 'fastmnn')
 
   # CCA
-  dataList <- duplicate_datasets(idx, dup)
+  dataList <- duplicate_datasets(datasets, dup)
   data <- run_cca(dataList)
   write_output(data, 'cca')
 
   # ScTransform
-  dataList <- duplicate_datasets(idx, dup)
+  dataList <- duplicate_datasets(datasets, dup)
   data <- run_sctransform(dataList)
 
   write_output(data, 'sctransform')

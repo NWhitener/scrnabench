@@ -3,16 +3,14 @@
 #' This function takes a data set and returns the genes that are "common" in the data set. It assumes that the row names
 #' are the gene names.
 #'
-#' @param data A scRNA-seq data object( Seurat) with the rows as genes and the cells as objects
+#' @param data A scRNA-seq data object (Seurat) with the rows as genes and the cells as objects
 #' @return A list of the common genes in the data object
 #' @export
 extract_common_genes <- function(dataList)
 {
-  ###Error Handling/warning
-  if(is.list(dataList)== "FALSE")
+
+  if(is.list(dataList)== "TRUE")
   {
-    stop("A data list of datasets is required to extract common genes")
-  }
   if(length(dataList) == 1)
   {
     warning("Only one dataset provided, returning the original dataset")
@@ -21,14 +19,17 @@ extract_common_genes <- function(dataList)
   common_gene_names <- Reduce(intersect, lapply(dataList, row.names))
   dataList <- lapply(dataList, function(x)
   { x[row.names(x) %in% common_gene_names,] })
+  }
+  else{
+    stop("A data list of datasets is required to extract common genes")
+  }
   return(dataList)
 }
 
 #' Runs the GFICF Transformations
 #'
-#' This function completes the Gene Frequency Inverse Cell Frequency data transformation on a list of data. This step can be done to
-#' create and use GFICF data for further downstream data analysis and computations. For more information on the GFICF calculation
-#' please see https://github.com/dibbelab/gficf
+#' This function completes the Gene Frequency Inverse Cell Frequency data transformation on a list of data. This is step is complete by
+#' using the text2vec protocol for completing TF-IDF on the cell data, creating GF-ICF Scores
 #'
 #' @param dataList A data list of Data sets in the Gene in Row and Cell in Columns format
 #' @return A data list with GFICF scores of Each Gene Cell Relationship
@@ -83,11 +84,8 @@ run_log <- function(dataList)
 #' @export
 preprocess <- function(dataList)
 {
-  if(is.list(dataList)== "FALSE")
+  if(is.list(dataList) == "TRUE")
   {
-    stop("A data list of datasets is required to preprocess datasets")
-  }
-
   dataList <- lapply(X = dataList, function(x)
   {
     x <- Seurat::CreateSeuratObject(counts = x, min.cells = 3, min.features = 200)
@@ -105,6 +103,10 @@ preprocess <- function(dataList)
     }
 
   })
+  }
+  else{
+    stop("A data list of datasets is required to preprocess datasets")
+  }
 
   return(dataList)
 }
@@ -119,13 +121,16 @@ preprocess <- function(dataList)
 #' @export
 select_hvg <- function(dataList)
 {
-  if(is.list(dataList)== "FALSE")
+  if(is.list(dataList)== "TRUE")
   {
-    stop("A data list of datasets is required to select the Highly Variable Genes of a dataset")
-  }
+
   dataList <- lapply(X = dataList, FUN = function(x) {
     x <- Seurat::FindVariableFeatures(x, selection.method = "vst", nfeatures = 2000)
   })
+  }
+  else{
+    stop("A data list of datasets is required to select the Highly Variable Genes of a dataset")
+  }
   return(dataList)
 }
 
@@ -140,13 +145,16 @@ select_hvg <- function(dataList)
 scale_data <- function(dataList)
 {
 
-  if(is.list(dataList)== "FALSE")
+  if(is.list(dataList)== "TRUE")
   {
-    stop("A data list of datasets is required to scale datasets")
-  }
   dataList <- lapply(X = dataList, FUN = function(x) {
     x <- Seurat::ScaleData(x)
   })
+  }
+  else
+  {
+    stop("A data list of datasets is required to scale datasets")
+  }
   return(dataList)
 }
 
@@ -161,11 +169,17 @@ scale_data <- function(dataList)
 #' @export
 run_pca <- function(dataList)
 {
+  if(is.list(dataList)== "TRUE")
+  {
   dataList <- lapply(X = dataList, FUN = function(x) {
     x <- Seurat::RunPCA(x, features = Seurat::VariableFeatures(object = x),
                         npcs = 30, verbose = FALSE)
 
-  })
+  })}
+  else
+  {
+    stop("A data list of datasets is required to scale datasets")
+  }
   return(dataList)
 }
 
@@ -180,9 +194,15 @@ run_pca <- function(dataList)
 #' @export
 run_umap <- function(dataList, reduction_choosen = "pca")
 {
+  if(is.list(dataList)== "TRUE")
+  {
   dataList <- lapply(X = dataList, FUN = function(x) {
     x <- Seurat::RunUMAP(x,reduction = reduction_choosen, dims = 1:30)
-  })
+  })}
+  else
+  {
+    stop("A data list of datasets is required to scale datasets")
+  }
   return(dataList)
 }
 
@@ -196,13 +216,16 @@ run_umap <- function(dataList, reduction_choosen = "pca")
 #' @export
 run_tsne <- function(dataList, reduction_choosen = 'pca')
 {
-  if(is.list(dataList)== "FALSE")
+  if(is.list(dataList)== "TRUE")
   {
-    stop("A data list of datasets is required to apply the tSNE reduction to datasets")
-  }
   for (i in (1:length(names(dataList)))) {
     perplexity_set <- sqrt(ncol(dataList[[i]]))
-    dataList[[i]] <- Seurat::RunTSNE(dataList[[i]], reduction = reduction_choosen, dims = 1:30, perplexity = perplexity_set)
+    dataList[[i]] <- Seurat::RunTSNE(dataList[[i]], reduction = reduction_choosen, dims = 1:30, perplexity = perplexity_set, check_duplicates = FALSE)
+  }
+  }
+  else
+  {
+    stop("A data list of datasets is required to scale datasets")
   }
   return(dataList)
 }
