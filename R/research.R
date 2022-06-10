@@ -1,6 +1,4 @@
 
-#Data Dependent
-
 #' Duplicate Datasets
 #'
 #' This function duplicates a dataset a variable number of times. This function is to be used in
@@ -53,47 +51,11 @@ permute_columns <- function(dataList)
   return(dataList)
 }
 
-#' Runs the Seurat Pipeline
-#'
-#' This function completes the Seurat Pipeline on a list of data. This process starts with finding the variable features (genes), then
-#' scaling the data, running PCA, UMPA, and then find clusters.  This step can be done to test your benchamrk data sets
-#' or for down stream analysis. For more information on the Seurat Pipeline
-#' please see https://satijalab.org/seurat/index.html
-#'
-#' @param dataList A data list of Data sets in the Gene in Row and Cell in Columns format
-#' @export
-run_seurat <- function(dataList, seed =1)
-{
-  set.seed(seed)
-  dataList <- lapply(X = dataList, FUN = function(x) {
-    x <- Seurat::RunPCA(x, npcs = 30, verbose = FALSE)
-    x <- Seurat::RunUMAP(x, reduction = "pca", dims = 1:30)
-    x <- Seurat::FindNeighbors(x, reduction = "pca", dims = 1:30)
-    x <- Seurat::FindClusters(x, resolution = 0.5)
-  })
-  return(dataList)
-}
 
 
 
-#' Complete Clustering Steps
-#'
-#' This functions runs the Seurat FindNeighbors and FindCLusters function on a list of data sets.
-#' This functions assumes that genes are in rows and
-#'  cells are in columns. The FindNeighbors reduction is set to "pca" by default and uses the first 30 dimensions
-#'  The FindClusters resolution is set to 0.5
-#'
-#' @param dataList A data list of data sets
-#' @return A data list with clustering completed completed on the features
-#' @export
-run_cluster <- function(dataList, reduction_choosen = "pca", resolution_given = 0.5)
-{
-  dataList <- lapply(X = dataList, FUN = function(x) {
-    x <- Seurat::FindNeighbors(x, reduction = reduction_choosen, dims = 1:30)
-    x <- Seurat::FindClusters(x, resolution = resolution_given)
-  })
-  return(dataList)
-}
+
+
 
 
 #' Permute the Order fo the data sets
@@ -112,27 +74,4 @@ permute_dataset_order <- function(dataList)
 }
 
 
-#' Run Kmeans
-#'
-#' This function runs Kmeans Clustering. It uses the simple Kmeans algorithm with
-#' a max number of iterations set to be 100.
-#'
-#' @param dataList A list of datasets to apply the Kmeans algorithm too
-#' @param k The number of cluster centers to use, defaults to 10
-#' @return The dataList with kmeans clusters stored in the meta data
-#' @export
-run_kmeans <- function(dataList, k=10, reduction_choosen = 'pca')
-{
-  for (i in (1:length(names(dataList))))
-  {
-    clustData = dataList[[i]]@reductions$pca
-    meta = dataList[[i]]@meta.data
-    meta[paste("kmeans_cluster_", reduction_choosen, sep = "")]<- stats::kmeans(clustData,  k, iter.max = 100)$cluster
-    print(i)
-    metaFix <- subset(meta, select = c(paste("kmeans_cluster_", reduction_choosen, sep = "")))
-    dataList[[i]] <- Seurat::AddMetaData(dataList[[i]], metaFix)
 
-  }
-
-  return(dataList)
-}

@@ -7,7 +7,7 @@
 #' @param seed The seed of randomization for reproducibility, defaults to 1
 #' @param path The file path for saving the results of the workflow
 #' @export
-complete_kmeans <- function(datasets, seed = 1, path = '.')
+complete_kmeans <- function(datasets, seed = 1, path = '.', k = 10)
 {
   set.seed(seed)
   file = paste(path, "/kmeans_clusters.csv", sep = '')
@@ -20,18 +20,27 @@ complete_kmeans <- function(datasets, seed = 1, path = '.')
   dataList <- run_pca(dataList)
   dataList <- run_umap(dataList)
   dataList <- run_tsne(dataList)
-  dataList <- run_kmeans(dataList, reduction_choosen = 'pca')
-  dataList <- run_kmeans(dataList, reduction_choosen = 'umap')
-  dataList <- run_kmeans(dataList, reduction_choosen = 'tsne')
-  x = run_silhouette(dataList, 'pca')
-  y = run_silhouette(dataList, 'tsne')
-  z = run_silhouette(dataList, 'umap')
-  w = run_dunn(dataList, 'pca')
-  r = run_dunn(dataList, 'tsne')
-  f = run_dunn(dataList, 'umap')
+  dataList <- run_kmeans(dataList, reduction_choosen = 'pca', k)
+  dataList <- run_kmeans(dataList, reduction_choosen = 'umap', k)
+  dataList <- run_kmeans(dataList, reduction_choosen = 'tsne', k)
+  sil_pca = run_silhouette(dataList, 'pca')
+  sil_tsne = run_silhouette(dataList, 'tsne')
+  sil_umap = run_silhouette(dataList, 'umap')
+  dunn_pca = run_dunn(dataList, 'pca')
+  dunn_tsne = run_dunn(dataList, 'tsne')
+  dunn_umap = run_dunn(dataList, 'umap')
+  ncells = NULL
+  nclust = NULL
+  for(i in 1:length(names(dataList)))
+  {
+    ncels_value = length(dataList[[i]]@meta.data$kmeans_cluster_pca)
+    nclust_val = length(unique(dataList[[i]]@meta.data$kmeans_cluster_pca))
+    ncells = append(ncells,ncels_value)
+    nclust = append(nclust, nclust_val)
+  }
   results_table = NULL
-  results_table = cbind(results_table, x, y[,2],z[,2],w[,2],r[,2],f[,2])
-  colnames(results_table) = c("ID", "Silhouette_PCA", "Silhouette_UMAP", "Silhouette_TSNE", "Dunn_PCA", "Dunn_UMAP", "Dunn_TSNE")
+  results_table = cbind(results_table, sil_pca, sil_umap[,2],sil_tsne[,2],dunn_pca[,2],dunn_umap[,2],dunn_tsne[,2], ncells, nclust )
+  colnames(results_table) = c("ID", "Silhouette_PCA", "Silhouette_UMAP", "Silhouette_TSNE", "Dunn_PCA", "Dunn_UMAP", "Dunn_TSNE", "Number of Cells", "Number of Clusters")
   write.table(results_table, file = file, sep = ',', row.names = F, col.names = T)
   return(results_table)
 }
@@ -45,7 +54,7 @@ complete_kmeans <- function(datasets, seed = 1, path = '.')
 #' @param seed The seed of randomization for reproducibility, defaults to 1
 #' @param path The file path for saving the results of the workflow
 #' @export
-complete_seurat <-function(datasets, seed = 1, path, reduction = 'pca')
+complete_seurat <-function(datasets, seed = 1, path = '.', reduction = 'pca')
 {
   set.seed(seed)
   file = paste(path, "/seurat_clusters.csv", sep = '')
@@ -58,13 +67,22 @@ complete_seurat <-function(datasets, seed = 1, path, reduction = 'pca')
   dataList <- run_pca(dataList)
   dataList <- run_umap(dataList)
   dataList <- run_tsne(dataList)
-  dataList <- run_cluster(dataList, reduction_choosen = reduction)
-  x = run_silhouette(dataList, reduction_choosen = reduction, method = "seurat")
-  y = run_dunn(dataList, reduction_choosen = reduction, method = 'seurat')
+  dataList <- run_seurat_cluster(dataList, reduction_choosen = reduction)
+  sil_seurat = run_silhouette(dataList, reduction_choosen = reduction, method = "seurat")
+  dunn_seurat = run_dunn(dataList, reduction_choosen = reduction, method = 'seurat')
+  ncells = NULL
+  nclust = NULL
+  for(i in 1:length(names(dataList)))
+  {
+    ncels_value = length(dataList[[i]]@meta.data$seurat_cluster)
+    nclust_val = length(unique(dataList[[i]]@meta.data$seurat_cluster))
+    ncells = append(ncells,ncels_value)
+    nclust = append(nclust, nclust_val)
+  }
   results_table = NULL
-  results_table = cbind(results_table, x, y[,2])
-  colnames(results_table) = c("ID", "Silhouette", "Dunn")
-  write.table(results_table, file = file, sep = ',', row.names = F, col.names = T)
+  results_table = cbind(results_table, sil_seurat, dunn_seurat[,2])
+  colnames(results_table) = c("ID", "Silhouette", "Dunn", "Number of Cells", "Number of Clusters")
+  write.table(results_table, file = file, sep = ',' , row.names = F, col.names = T)
   return(results_table)
 }
 
@@ -82,7 +100,7 @@ complete_kmeans_gficf <- function(datasets, seed = 1, path = '.')
   set.seed(seed)
   file = paste(path, "/kmeans_clusters_gficf.csv", sep = '')
   dataList <- extract_datasets(datasets)
-  dataList <- run_gficf(dataList)
+  dataList <- run_tfidf(dataList)
   dataList <- annotate_datasets(dataList)
   dataList <- select_hvg(dataList)
   dataList <- run_pca(dataList)
@@ -91,15 +109,24 @@ complete_kmeans_gficf <- function(datasets, seed = 1, path = '.')
   dataList <- run_kmeans(dataList, reduction_choosen = 'pca')
   dataList <- run_kmeans(dataList, reduction_choosen = 'umap')
   dataList <- run_kmeans(dataList, reduction_choosen = 'tsne')
-  x = run_silhouette(dataList, 'pca')
-  y = run_silhouette(dataList, 'tsne')
-  z = run_silhouette(dataList, 'umap')
-  w = run_dunn(dataList, 'pca')
-  r = run_dunn(dataList, 'tsne')
-  f = run_dunn(dataList, 'umap')
+  sil_pca = run_silhouette(dataList, 'pca')
+  sil_tsne = run_silhouette(dataList, 'tsne')
+  sil_umap = run_silhouette(dataList, 'umap')
+  dunn_pca = run_dunn(dataList, 'pca')
+  dunn_tsne = run_dunn(dataList, 'tsne')
+  dunn_umap = run_dunn(dataList, 'umap')
+  ncells = NULL
+  nclust = NULL
+  for(i in 1:length(names(dataList)))
+  {
+    ncels_value = length(dataList[[i]]@meta.data$kmeans_cluster_pca)
+    nclust_val = length(unique(dataList[[i]]@meta.data$kmeans_cluster_pca))
+    ncells = append(ncells,ncels_value)
+    nclust = append(nclust, nclust_val)
+  }
   results_table = NULL
-  results_table = cbind(results_table, x, y[,2],z[,2],w[,2],r[,2],f[,2])
-  colnames(results_table) = c("ID", "Silhouette_PCA", "Silhouette_UMAP", "Silhouette_TSNE", "Dunn_PCA", "Dunn_UMAP", "Dunn_TSNE")
+  results_table = cbind(results_table, sil_pca, sil_umap[,2],sil_tsne[,2],dunn_pca[,2],dunn_umap[,2],dunn_tsne[,2], ncells, nclust )
+  colnames(results_table) = c("ID", "Silhouette_PCA", "Silhouette_UMAP", "Silhouette_TSNE", "Dunn_PCA", "Dunn_UMAP", "Dunn_TSNE", "Number of Cells", "Number of Clusters")
   write.table(results_table, file = file, sep = ',', row.names = F, col.names = T)
   return(results_table)
 }
@@ -113,23 +140,32 @@ complete_kmeans_gficf <- function(datasets, seed = 1, path = '.')
 #' @param seed The seed of randomization for reproducibility, defaults to 1
 #' @param path The file path for saving the results of the workflow
 #' @export
-complete_seurat_gficf <- function(datasets, seed = 1, path, reduction = 'pca')
+complete_seurat_gficf <- function(datasets, seed = 1, path = '.', reduction = 'pca')
 {
   set.seed(seed)
   file = paste(path, "/seurat_clusters_gficf.csv", sep = '')
   dataList <- extract_datasets(datasets)
-  dataList <- run_gficf(dataList)
+  dataList <- run_tfidf(dataList)
   dataList <- annotate_datasets(dataList)
   dataList <- select_hvg(dataList)
   dataList <- run_pca(dataList)
   dataList <- run_umap(dataList)
   dataList <- run_tsne(dataList)
-  dataList <- run_cluster(dataList, reduction_choosen = reduction)
-  x = run_silhouette(dataList, reduction_choosen = reduction, method = "seurat")
-  y = run_dunn(dataList, reduction_choosen = reduction, method = 'seurat')
+  dataList <- run_seurat_cluster(dataList, reduction_choosen = reduction)
+  sil_seurat = run_silhouette(dataList, reduction_choosen = reduction, method = "seurat")
+  dunn_seurat = run_dunn(dataList, reduction_choosen = reduction, method = 'seurat')
+  ncells = NULL
+  nclust = NULL
+  for(i in 1:length(names(dataList)))
+  {
+    ncels_value = length(dataList[[i]]@meta.data$seurat_cluster)
+    nclust_val = length(unique(dataList[[i]]@meta.data$seurat_cluster))
+    ncells = append(ncells,ncels_value)
+    nclust = append(nclust, nclust_val)
+  }
   results_table = NULL
-  results_table = cbind(results_table, x, y[,2])
-  colnames(results_table) = c("ID", "Silhouette", "Dunn")
+  results_table = cbind(results_table, sil_seurat, dunn_seurat[,2])
+  colnames(results_table) = c("ID", "Silhouette", "Dunn", "Number of Cells", "Number of Clusters")
   write.table(results_table, file = file, sep = ',' , row.names = F, col.names = T)
   return(results_table)
 }
@@ -155,7 +191,7 @@ log_workflow_seurat <- function(datasets, seed = 1)
   dataList <- scale_data(dataList)
   dataList <- run_pca(dataList)
   dataList <- run_umap(dataList)
-  dataList <- run_cluster(dataList)
+  dataList <- run_seurat_cluster(dataList)
   result <- cbind(dataList[[1]]@meta.data$ID[1],
                   length(dataList[[1]]@meta.data$seurat_clusters),
                   length(unique(dataList[[1]]@meta.data$seurat_clusters)))
@@ -176,12 +212,12 @@ gficf_workflow_seurat <- function(datasets, seed = 1)
 {
     set.seed(seed)
     dataList <- extract_datasets(datasets)
-    dataList <- run_gficf(dataList)
+    dataList <- run_tfidf(dataList)
     dataList <- annotate_datasets(dataList)
     dataList <- select_hvg(dataList)
     dataList <- run_pca(dataList)
     dataList <- run_umap(dataList)
-    dataList <- run_cluster(dataList)
+    dataList <- run_seurat_cluster(dataList)
     result <- cbind(dataList[[1]]@meta.data$ID[1],
                     length(dataList[[1]]@meta.data$seurat_clusters),
                     length(unique(dataList[[1]]@meta.data$seurat_clusters)))
@@ -202,7 +238,7 @@ gficf_workflow_seurat <- function(datasets, seed = 1)
 {
   set.seed(seed)
   dataList <- extract_datasets(datasets)
-  dataList <- run_gficf(dataList)
+  dataList <- run_tfidf(dataList)
   dataList <- annotate_datasets(dataList)
   dataList <- select_hvg(dataList)
   dataList <- run_pca(dataList)
@@ -305,7 +341,7 @@ run_fastmnn_workflow <- function(datasets, seed = 1)
   dataList <- select_hvg(dataList)
   dataList <- run_fastmnn(dataList)
   dataList <- run_umap(dataList)
-  dataList <- run_cluster(dataList)
+  dataList <- run_seurat_cluster(dataList)
   return(dataList)
 }
 
@@ -322,7 +358,7 @@ run_cca_workflow <- function(datasets, seed = 1)
   dataList <- scale_data(dataList)
   dataList <- run_pca(dataList)
   dataList <- run_umap(dataList)
-  dataList <- run_cluster(dataList)
+  dataList <- run_seurat_cluster(dataList)
   return(dataList)
 }
 
@@ -337,7 +373,7 @@ run_sctransform_workflow <- function(datasets, seed = 1)
   dataList <- scale_data(dataList)
   dataList <- run_pca(dataList)
   dataList <- run_umap(dataList)
-  dataList <- run_cluster(dataList)
+  dataList <- run_seurat_cluster(dataList)
   return(dataList)
 }
 
@@ -421,7 +457,26 @@ run_seurat_rows <- function()
 }
 
 
-
+#' Runs the Seurat Pipeline
+#'
+#' This function completes the Seurat Pipeline on a list of data. This process starts with finding the variable features (genes), then
+#' scaling the data, running PCA, UMPA, and then find clusters.  This step can be done to test your benchamrk data sets
+#' or for down stream analysis. For more information on the Seurat Pipeline
+#' please see https://satijalab.org/seurat/index.html
+#'
+#' @param dataList A data list of Data sets in the Gene in Row and Cell in Columns format
+#' @export
+run_seurat <- function(dataList, seed =1)
+{
+  set.seed(seed)
+  dataList <- lapply(X = dataList, FUN = function(x) {
+    x <- Seurat::RunPCA(x, npcs = 30, verbose = FALSE)
+    x <- Seurat::RunUMAP(x, reduction = "pca", dims = 1:30)
+    x <- Seurat::FindNeighbors(x, reduction = "pca", dims = 1:30)
+    x <- Seurat::FindClusters(x, resolution = 0.5)
+  })
+  return(dataList)
+}
 
 
 
