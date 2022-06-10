@@ -12,5 +12,5 @@ create_kmeans_plot(data, reduction_choosen = "pca")
 \item{reduction_choosen}{The dimensionality reduction method choosen}
 }
 \description{
-Produces a plot of the Kmeans clustering, based on the dimensionality reduction method choosen
+Produces a plot of the Kmeans clustering, based on the dimensionality reduction method chosen. The plot is a Seurat DimPlot
 }

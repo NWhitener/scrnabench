@@ -13,7 +13,6 @@ run_gficf(dataList)
 A data list with GFICF scores of Each Gene Cell Relationship
 }
 \description{
-This function completes the Gene Frequency Inverse Cell Frequency data transformation on a list of data. This step can be done to
-create and use GFICF data for further downstream data analysis and computations. For more information on the GFICF calculation
-please see https://github.com/dibbelab/gficf
+This function completes the Gene Frequency Inverse Cell Frequency data transformation on a list of data. This is step is complete by
+using the text2vec protocol for completing TF-IDF on the cell data, creating GF-ICF Scores
 }

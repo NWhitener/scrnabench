@@ -6,6 +6,14 @@
 \usage{
 complete_kmeans(datasets, seed = 1, path = ".")
 }
+\arguments{
+\item{datasets}{The names of the datasets for the completion of the workflow}
+
+\item{seed}{The seed of randomization for reproducibility, defaults to 1}
+
+\item{path}{The file path for saving the results of the workflow}
+}
 \description{
-Completes the KMeans Process
+This function completes the entire kmeans workflow procedure for the log data transformation. This workflow handles data transformation,
+dimensionality reduction, and clustering. The results will be stored in a csv file called kmeans_clusters.csv
 }

@@ -4,7 +4,7 @@
 \alias{run_sctransform}
 \title{Run sctransform}
 \usage{
-run_sctransform(dataList, seed = 1)
+run_sctransform(dataList)
 }
 \arguments{
 \item{dataList}{A data list of data sets to integrate using the sctransform protocol}
@@ -14,6 +14,6 @@ data.combined A data list of the combined data from the sctransform protocol
 }
 \description{
 This function runs the data integration protocol detailed in the Seurat "Using sctransform in Seurtat"
-found at https://satijalab.org/seurat/articles/sctransform_vignette.html . This function completes the entire
-protocol on either gficf or log transformed data.
+found at https://satijalab.org/seurat/articles/sctransform_vignette.html . This function completes the sctransform process on
+the datasets. Use run_sctransform_workflow() for the entire workflow process
 }

@@ -5,6 +5,8 @@
 \title{GFICF Workflow Seurat}
 \usage{
 gficf_workflow_seurat(idx, seed = 1)
+
+gficf_workflow_seurat(idx, seed = 1)
 }
 \arguments{
 \item{idx}{The names of the datasets}
@@ -13,8 +15,13 @@ gficf_workflow_seurat(idx, seed = 1)
 }
 \value{
 a result list with the dataset ID and the cluster it belongs to
+
+a result list with the dataset ID and the cluster it belongs to
 }
 \description{
 This workflow is designed to apply the GFICF data transformation on the datasets
 and test it's ability to handle pca, umap, and seurat clustering.
+
+This workflow is designed to apply the GFICF data transformation on the datasets
+and test it's ability to handle pca, umap, and kmeans clustering.
 }

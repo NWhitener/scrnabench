@@ -13,6 +13,6 @@ run_fastmnn(idx, batch_name = "ID", seed = 1)
 data.combined A data list of the combined data from the fastmnn protocol
 }
 \description{
-This function runs the data integration protocol detailed in the Seurat ## FIND VING. AND LINK . This function completes the entire
-protocol on either gficf or log transformed data.
+This function runs the data integration protocol detailed in the Seurat ## FIND VING. AND LINK . This function completes the fastmnn process on
+the datasets. Use run_fastmnn_workflow() for the entire workflow process
 }

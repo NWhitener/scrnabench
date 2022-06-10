@@ -4,7 +4,7 @@
 \alias{run_harmony}
 \title{Run Harmony}
 \usage{
-run_harmony(dataList, batch_name = "ID", seed = 1)
+run_harmony(dataList, batch_name = "ID")
 }
 \arguments{
 \item{dataList}{A data list of data sets to integrate using the harmony protocol}
@@ -13,6 +13,6 @@ run_harmony(dataList, batch_name = "ID", seed = 1)
 data.combined A data list of the combined data from the harmony protocol
 }
 \description{
-This function runs the data integration protocol detailed in the Seurat ## FIND VING. AND LINK . This function completes the entire
-protocol on either gficf or log transformed data.
+This function runs the data integration protocol detailed in the Seurat ## FIND VING. AND LINK . This function completes the harmonization process on
+the datasets. Use run_harmony_workflow() for the entire workflow process
 }
