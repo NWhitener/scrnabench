@@ -155,7 +155,8 @@ scale_data <- function(dataList)
   {
     for (i in (1:length(names(dataList))))
       {
-        dataList[[i]] <- Seurat::ScaleData(dataList[[i]])
+      print(i)
+      dataList[[i]] <- Seurat::ScaleData(dataList[[i]])
       }
   }
   else

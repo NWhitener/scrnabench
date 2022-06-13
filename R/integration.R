@@ -9,13 +9,14 @@
 #' @export
 run_cca <- function(dataList)
   {
-    features <- SelectIntegrationFeatures(object.list = dataList)
+    features <- Seurat::SelectIntegrationFeatures(object.list = dataList)
     k.filter <- min(200, min(sapply(dataList, ncol)))
-    data.anchors <- FindIntegrationAnchors(object.list = dataList, anchor.features = features, k.filter=k.filter)
-    data.combined <- IntegrateData(anchorset = data.anchors)
-    DefaultAssay(data.combined) <- "integrated"
-
-    return(list(data.combined))
+    data.anchors <- Seurat::FindIntegrationAnchors(object.list = dataList, anchor.features = features, k.filter=k.filter)
+    data.combined <- Seurat::IntegrateData(anchorset = data.anchors)
+    Seurat::DefaultAssay(data.combined) <- "integrated"
+    merged<-list(data.combined)
+    names(merged)<-c("Integrated")
+    return(merged)
 }
 
 #' Run Harmony
@@ -46,11 +47,12 @@ run_harmony <- function(dataList, batch_name='ID')
 #' @param dataList A data list of data sets to integrate using the fastmnn protocol
 #' @return data.combined A data list of the combined data from the fastmnn protocol
 #' @export
-run_fastmnn <- function(idx, batch_name = "ID", seed =1)
+run_fastmnn <- function(dataList, batch_name = "ID", seed =1)
 {
-  for (k in (1:length(names(dataList)))){
+  for (k in 1:length(names(dataList))){
     print(k)
-    dataList[[k]] <- SeuratWrapper::RunFastMNN(object.list = Seurat::SplitObject(dataList[[k]], split.by = batch_name))
+    print(class(dataList[[k]]))
+    dataList[[k]] <- SeuratWrappers::RunFastMNN(object.list = Seurat::SplitObject(dataList[[k]], split.by = "ID"))
 
   }
   return(dataList)
@@ -69,15 +71,17 @@ run_fastmnn <- function(idx, batch_name = "ID", seed =1)
 #' @export
 run_sctransform <- function(dataList)
 {
-  dataList <- lapply(X = dataList, FUN = SCTransform)
-  features <- SelectIntegrationFeatures(object.list = dataList, nfeatures=2000)
-  dataList <- PrepSCTIntegration(object.list = dataList, anchor.features = features)
+  dataList <- lapply(X = dataList, FUN = Seurat::SCTransform)
+  features <- Seurat::SelectIntegrationFeatures(object.list = dataList, nfeatures=2000)
+  dataList <- Seurat::PrepSCTIntegration(object.list = dataList, anchor.features = features)
   k.filter <- min(200, min(sapply(dataList, ncol)))
-  data.anchors <- FindIntegrationAnchors(object.list = dataList, normalization.method = "SCT", anchor.features = features, k.filter = k.filter)
-  data.combined <- IntegrateData(anchorset = data.anchors, normalization.method = "SCT")
-  DefaultAssay(data.combined) <- "integrated"
+  data.anchors <- Seurat::FindIntegrationAnchors(object.list = dataList, normalization.method = "SCT", anchor.features = features, k.filter = k.filter)
+  data.combined <- Seurat::IntegrateData(anchorset = data.anchors, normalization.method = "SCT")
+  Seurat::DefaultAssay(data.combined) <- "integrated"
+  merged<-list(data.combined)
+  names(merged)<-c("Integrated")
+  return(merged)
 
-  return(list(data.combined))
 }
 
 

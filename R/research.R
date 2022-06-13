@@ -1,4 +1,5 @@
 
+
 #' Duplicate Datasets
 #'
 #' This function duplicates a dataset a variable number of times. This function is to be used in
@@ -7,7 +8,7 @@
 #' @param names A list of dataset names that should be duplicated
 #' @param ndups The number of duplicates that are desired
 #' @return a dataList of the duplicated datasets
-duplicate_datasets <- function(dataList, duplicates=2)
+duplicate_datasets <- function(dataList, duplicates = 2)
 {
   names <- names(dataList)
   names <- rep(names, duplicates)
@@ -28,7 +29,7 @@ duplicate_datasets <- function(dataList, duplicates=2)
 permute_rows <- function(dataList)
 {
   for (i in (1:length(names(dataList)))) {
-    dataList[[i]] <- dataList[[i]][sample(1:nrow(dataList[[i]])),]
+    dataList[[i]] <- dataList[[i]][sample(1:nrow(dataList[[i]])), ]
   }
   return(dataList)
 }
@@ -46,7 +47,7 @@ permute_rows <- function(dataList)
 permute_columns <- function(dataList)
 {
   for (i in (1:length(names(dataList)))) {
-    dataList[[i]] <- dataList[[i]][,sample(1:ncol(dataList[[i]]))]
+    dataList[[i]] <- dataList[[i]][, sample(1:ncol(dataList[[i]]))]
   }
   return(dataList)
 }
@@ -62,10 +63,7 @@ permute_columns <- function(dataList)
 permute_dataset_order <- function(dataList)
 {
   for (i in (1:length(names(dataList)))) {
-  permutedList <- dataList[sample(length(dataList))]
-  return(permutedList)
+    permutedList <- dataList[sample(length(dataList))]
+    return(permutedList)
   }
 }
-
-
-
