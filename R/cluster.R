@@ -7,15 +7,15 @@
 #' @param k The number of cluster centers to use, defaults to 10
 #' @return The dataList with kmeans clusters stored in the meta data
 #' @export
-run_kmeans <- function(dataList, k=10, reduction_choosen = 'pca')
+run_kmeans <- function(dataList, k=10, reductionChoosen = 'pca')
 {
   for (i in (1:length(names(dataList))))
   {
-    clustData = Seurat::Embeddings(dataList[[i]], reduction = reduction_choosen)
+    clustData = Seurat::Embeddings(dataList[[i]], reduction = reductionChoosen)
     meta = dataList[[i]]@meta.data
-    meta[paste("kmeans_cluster_", reduction_choosen, sep = "")]<- stats::kmeans(clustData,  k, iter.max = 100)$cluster
+    meta[paste("kmeans_cluster_", reductionChoosen, sep = "")]<- stats::kmeans(clustData,  k, iter.max = 100)$cluster
     print(i)
-    metaFix <- subset(meta, select = c(paste("kmeans_cluster_", reduction_choosen, sep = "")))
+    metaFix <- subset(meta, select = c(paste("kmeans_cluster_", reductionChoosen, sep = "")))
     dataList[[i]] <- Seurat::AddMetaData(dataList[[i]], metaFix)
 
   }

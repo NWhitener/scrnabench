@@ -182,149 +182,14 @@ complete_seurat_gficf <- function(datasets, seed = 1, path = '.', reduction = 'p
   return(results_table)
 }
 
-
-#' Log Workflow Seurat
+#' Completes the Harmony Workflow on Log Data
 #'
-#' This workflow is designed to apply the log data transformation on the datasets
-#' and test it's ability to handle pca, umap, and seurat clustering.
+#' This function completes the harmony workflow procedure for the log data transformation for merging datasets. This workflow handles data transformation,
+#' dimensionality reduction, merging, and clustering.
 #'
-#' @param datasets The names of the datasets
-#' @param seed The random seed that you would like to use on the dataset
-#' @return a result list with the dataset ID and the cluster it belongs to
+#' @param datasets The names of the datasets for the completion of the workflow
+#' @param seed The seed of randomization for reproducibility, defaults to 1
 #' @export
-log_workflow_seurat <- function(datasets, seed = 1)
-{
-  set.seed(seed)
-  dataList <- extract_datasets(datasets)
-  dataList <- preprocess(dataList)
-  dataList <- annotate_datasets(dataList)
-  dataList <- run_log(dataList)
-  dataList <- select_hvg(dataList)
-  dataList <- scale_data(dataList)
-  dataList <- run_pca(dataList)
-  dataList <- run_umap(dataList)
-  dataList <- run_seurat_cluster(dataList)
-  result <- cbind(dataList[[1]]@meta.data$ID[1],
-                  length(dataList[[1]]@meta.data$seurat_clusters),
-                  length(unique(dataList[[1]]@meta.data$seurat_clusters)))
-  return(result)
-}
-
-
-#' GFICF Workflow Seurat
-#'
-#' This workflow is designed to apply the GFICF data transformation on the datasets
-#' and test it's ability to handle pca, umap, and seurat clustering.
-#'
-#' @param datasets The names of the datasets
-#' @param seed The random seed that you would like to use on the dataset
-#' @return a result list with the dataset ID and the cluster it belongs to
-#' @export
-gficf_workflow_seurat <- function(datasets, seed = 1)
-{
-    set.seed(seed)
-    dataList <- extract_datasets(datasets)
-    dataList <- run_tfidf(dataList)
-    dataList <- annotate_datasets(dataList)
-    dataList <- select_hvg(dataList)
-    dataList <- run_pca(dataList)
-    dataList <- run_umap(dataList)
-    dataList <- run_seurat_cluster(dataList)
-    result <- cbind(dataList[[1]]@meta.data$ID[1],
-                    length(dataList[[1]]@meta.data$seurat_clusters),
-                    length(unique(dataList[[1]]@meta.data$seurat_clusters)))
-    return(result)
-}
-
-
-#' GFICF Workflow Kmeans
-#'
-#' This workflow is designed to apply the GFICF data transformation on the datasets
-#' and test it's ability to handle pca, umap, and kmeans clustering.
-#'
-#' @param datasets The names of the datasets
-#' @param seed The random seed that you would like to use on the dataset
-#' @return a result list with the dataset ID and the cluster it belongs to
-#' @export
-gficf_workflow_seurat <- function(datasets, seed = 1)
-{
-  set.seed(seed)
-  dataList <- extract_datasets(datasets)
-  dataList <- run_tfidf(dataList)
-  dataList <- annotate_datasets(dataList)
-  dataList <- select_hvg(dataList)
-  dataList <- run_pca(dataList)
-  dataList <- run_umap(dataList)
-  dataList <- run_kmeans(dataList, 'pca')
-  dataList <- run_kmeans(dataList, 'tsne')
-  result <- cbind(dataList[[1]]@meta.data$ID[1],
-                  length(dataList[[1]]@meta.data$seurat_clusters),
-                  length(unique(dataList[[1]]@meta.data$seurat_clusters)))
-  return(result)
-}
-
-#' Log Workflow Kmeans
-#'
-#' This workflow is designed to apply the log data transformation on the datasets
-#' and test it's ability to handle pca, umap, and kmeans clustering.
-#'
-#' @param datasets The names of the datasets
-#' @param seed The random seed that you would like to use on the dataset
-#' @return a result list with the dataset ID and the cluster it belongs to
-#' @export
-log_workflow_kmeans <- function(datasets, seed = 1)
-{
-  set.seed(seed)
-  dataList <- extract_datasets(datasets)
-  dataList <- preprocess(dataList)
-  dataList <- annotate_datasets(dataList)
-  dataList <- run_log(dataList)
-  dataList <- select_hvg(dataList)
-  dataList <- scale_data(dataList)
-  dataList <- run_pca(dataList)
-  dataList <- run_umap(dataList)
-  dataList <- run_kmeans(dataList, reductionChoosen = "pca")
-  dataList <- run_kmeans(dataList, reductionChoosen = "umap")
-  print(length(unique(dataList[[1]]@meta.data$kmeans_clusters_pca)))
-  result <- cbind(dataList[[1]]@meta.data$ID[1],
-                  length(dataList[[1]]@meta.data$kmeans_clusters_pca),
-                  length(unique(dataList[[1]]@meta.data$kmeans_clusters_pca)),
-                  length(unique(dataList[[1]]@meta.data$kmeans_clusters_umap)))
-  return(result)
-}
-#' Test Log Workflow
-#'
-#' This function is designed to apply the log data transformation workflow on the datasets
-#' and test it's ability to handle pca, umap, and clustering.
-#'
-#' @param datasets The names of the datasets
-#' @export
-test_log_workflow <- function()
-{
-  results = cbind('datasets', 'ncells', 'nclust_kmeans_pca_log', 'nclust_kmeans_umap_log')
-  for (datasets in datasets)
-  {
-    results <- rbind(results, log_workflow_kmeans(datasets))
-  }
-  return(results)
-}
-#' Test GFICF Workflow
-#'
-#' This function is designed to apply the GFICF data transformation workflow on the datasets
-#' and test it's ability to handle pca, umap, and clustering.
-#'
-#' @param datasets The names of the datasets
-#' @export
-test_gficf_workflow <- function()
-{
-  results = cbind('datasets', 'ncells', 'nclust_gficf')
-  for (datasets in datasets)
-  {
-    results <- rbind(results, gficf_workflow_seurat(datasets))
-  }
-  return(results)
-}
-
 run_harmony_workflow <- function(datasets, seed = 1)
 {
   set.seed(seed)
@@ -335,12 +200,21 @@ run_harmony_workflow <- function(datasets, seed = 1)
   dataList = annotate_datasets(dataList)
   dataList = run_log(dataList)
   dataList = select_hvg(dataList)
+  dataList = scale_data(dataList)
   dataList = run_pca(dataList)
   dataList = run_harmony(dataList)
   dataList = run_kmeans(dataList, reductionChoosen = 'harmony')
   dataList = run_silhouette(dataList, reductionChoosen = "harmony")
+  retunr(dataList)
 }
-
+#' Completes the FastMNN Workflow on Log Data
+#'
+#' This function completes the FastMNN workflow procedure for the log data transformation for merging datasets. This workflow handles data transformation,
+#' dimensionality reduction, merging, and clustering.
+#'
+#' @param datasets The names of the datasets for the completion of the workflow
+#' @param seed The seed of randomization for reproducibility, defaults to 1
+#' @export
 run_fastmnn_workflow <- function(datasets, seed = 1)
 {
   ##REWRITE
@@ -357,7 +231,14 @@ run_fastmnn_workflow <- function(datasets, seed = 1)
   return(dataList)
 }
 
-
+#' Completes the CCA Workflow on Log Data
+#'
+#' This function completes the CCA workflow procedure for the log data transformation for merging datasets. This workflow handles data transformation,
+#' dimensionality reduction, merging, and clustering.
+#'
+#' @param datasets The names of the datasets for the completion of the workflow
+#' @param seed The seed of randomization for reproducibility, defaults to 1
+#' @export
 run_cca_workflow <- function(datasets, seed = 1)
 {
   set.seed(seed)
@@ -374,7 +255,14 @@ run_cca_workflow <- function(datasets, seed = 1)
   return(dataList)
 }
 
-
+#' Completes the SCtransform Workflow on Log Data
+#'
+#' This function completes the sctransform workflow procedure for the log data transformation for merging datasets. This workflow handles data transformation,
+#' dimensionality reduction, merging, and clustering.
+#'
+#' @param datasets The names of the datasets for the completion of the workflow
+#' @param seed The seed of randomization for reproducibility, defaults to 1
+#' @export
 run_sctransform_workflow <- function(datasets, seed = 1)
 {
   set.seed(seed)

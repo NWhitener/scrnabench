@@ -4,7 +4,7 @@
 \alias{run_kmeans}
 \title{Run Kmeans}
 \usage{
-run_kmeans(dataList, k = 10, reduction_choosen = "pca")
+run_kmeans(dataList, k = 10, reductionChoosen = "pca")
 }
 \arguments{
 \item{dataList}{A list of datasets to apply the Kmeans algorithm too}

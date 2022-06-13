@@ -4,12 +4,12 @@
 \alias{run_dunn}
 \title{Run Dunn}
 \usage{
-run_dunn(dataList, reduction_choosen, method = "kmeans")
+run_dunn(dataList, reductionChoosen, method = "kmeans")
 }
 \arguments{
 \item{dataList}{a data list of the data with clustering assignments}
 
-\item{reduction_choosen}{The dimensionality reduction type of the data to find the calculated scores}
+\item{reductionChoosen}{The dimensionality reduction type of the data to find the calculated scores}
 
 \item{method}{The clustering method used}
 }
