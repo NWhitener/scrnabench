@@ -7,7 +7,7 @@
 test_gficf_workflow()
 }
 \arguments{
-\item{idx}{The names of the datasets}
+\item{datasets}{The names of the datasets}
 }
 \description{
 This function is designed to apply the GFICF data transformation workflow on the datasets

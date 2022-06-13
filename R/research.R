@@ -27,9 +27,9 @@ duplicate_datasets <- function(dataList, duplicates=2)
 #' @export
 permute_rows <- function(dataList)
 {
-  dataList <- lapply(X = dataList, FUN = function(x) {
-    x <- x[sample(1:nrow(x)),]
-  })
+  for (i in (1:length(names(dataList)))) {
+    dataList[[i]] <- dataList[[i]][sample(1:nrow(dataList[[i]])),]
+  }
   return(dataList)
 }
 
@@ -45,17 +45,11 @@ permute_rows <- function(dataList)
 #' @export
 permute_columns <- function(dataList)
 {
-  dataList <- lapply(X = dataList, FUN = function(x) {
-    x <- x[,sample(1:ncol(x))]
-  })
+  for (i in (1:length(names(dataList)))) {
+    dataList[[i]] <- dataList[[i]][,sample(1:ncol(dataList[[i]]))]
+  }
   return(dataList)
 }
-
-
-
-
-
-
 
 
 #' Permute the Order fo the data sets
@@ -67,10 +61,10 @@ permute_columns <- function(dataList)
 #' @export
 permute_dataset_order <- function(dataList)
 {
-  dataList <- lapply(X = dataList, FUN = function(x) {
+  for (i in (1:length(names(dataList)))) {
   permutedList <- dataList[sample(length(dataList))]
   return(permutedList)
-  })
+  }
 }
 
 

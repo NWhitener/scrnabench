@@ -95,19 +95,19 @@ preprocess <- function(dataList)
 {
   if(is.list(dataList))
   {
-  dataList <- lapply(X = dataList, function(x)
-  {
-    x <- Seurat::CreateSeuratObject(counts = x, min.cells = 3, min.features = 200)
-    x[["percent.mt"]] <- Seurat::PercentageFeatureSet(x, pattern = "^MT-")
-    Total_mRNAs <- x[["nCount_RNA"]]$nCount_RNA
+    for (i in (1:length(names(dataList))))
+    {
+    dataList[[i]]<- Seurat::CreateSeuratObject(counts = dataList[[i]], min.cells = 3, min.features = 200)
+    dataList[[i]][["percent.mt"]] <- Seurat::PercentageFeatureSet(dataList[[i]], pattern = "^MT-")
+    Total_mRNAs <- dataList[[i]][["nCount_RNA"]]$nCount_RNA
     mupper_bound <- 10^(mean(log10(Total_mRNAs)) + 2*sd(log10(Total_mRNAs)))
     mlower_bound <- 10^(mean(log10(Total_mRNAs)) - 2*sd(log10(Total_mRNAs)))
-    Total_Genes <- x[["nFeature_RNA"]]$nFeature_RNA
+    Total_Genes <- dataList[[i]][["nFeature_RNA"]]$nFeature_RNA
     gupper_bound <- 10^(mean(log10(Total_Genes)) + 2*sd(log10(Total_Genes)))
     glower_bound <- 10^(mean(log10(Total_Genes)) - 2*sd(log10(Total_Genes)))
-    x <- subset(x = x, subset = nFeature_RNA > glower_bound & nFeature_RNA < gupper_bound &
+    dataList[[i]] <- subset(x = dataList[[i]], subset = nFeature_RNA > glower_bound & nFeature_RNA < gupper_bound &
                   nCount_RNA > mlower_bound & nCount_RNA < mupper_bound & percent.mt < 10)
-  })
+  }
   }
   else{
     stop("A data list of datasets is required to preprocess datasets")
@@ -200,7 +200,7 @@ run_pca <- function(dataList, numComponents = 30 )
 #' @param dataList A data list of data sets
 #' @return A data list with UMAP completed on the features
 #' @export
-run_umap <- function(dataList, reductioncChoosen = 'pca', numDimensions = 30)
+run_umap <- function(dataList, reductionChoosen = 'pca', numDimensions = 30)
 {
   if(is.list(dataList))
   {

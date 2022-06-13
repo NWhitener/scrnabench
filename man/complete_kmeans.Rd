@@ -4,7 +4,7 @@
 \alias{complete_kmeans}
 \title{Completes the KMeans Process}
 \usage{
-complete_kmeans(datasets, seed = 1, path = ".")
+complete_kmeans(datasets, seed = 1, path = ".", k = 10)
 }
 \arguments{
 \item{datasets}{The names of the datasets for the completion of the workflow}

@@ -2,9 +2,9 @@
 % Please edit documentation in R/preprocessing.R
 \name{run_umap}
 \alias{run_umap}
-\title{Run Uniform Manifold Aproximation and Projection}
+\title{Run Uniform Manifold Approximation and Projection}
 \usage{
-run_umap(dataList, reduction_choosen = "pca")
+run_umap(dataList, reductioncChoosen = "pca", numDimensions = 30)
 }
 \arguments{
 \item{dataList}{A data list of data sets}

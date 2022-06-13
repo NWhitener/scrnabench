@@ -4,10 +4,10 @@
 \alias{log_workflow_kmeans}
 \title{Log Workflow Kmeans}
 \usage{
-log_workflow_kmeans(idx, seed = 1)
+log_workflow_kmeans(datasets, seed = 1)
 }
 \arguments{
-\item{idx}{The names of the datasets}
+\item{datasets}{The names of the datasets}
 
 \item{seed}{The random seed that you would like to use on the dataset}
 }

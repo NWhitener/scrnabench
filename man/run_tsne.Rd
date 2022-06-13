@@ -4,7 +4,7 @@
 \alias{run_tsne}
 \title{Run tSNE}
 \usage{
-run_tsne(dataList, reduction_choosen = "pca")
+run_tsne(dataList, reductionChoosen = "pca", numDimensions = 30)
 }
 \arguments{
 \item{dataList}{A data list of data sets}

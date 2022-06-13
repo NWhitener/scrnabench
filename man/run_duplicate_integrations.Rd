@@ -4,10 +4,10 @@
 \alias{run_duplicate_integrations}
 \title{Run Integration Duplicated (Need a better name)}
 \usage{
-run_duplicate_integrations(idx, dup)
+run_duplicate_integrations(datasets, dup)
 }
 \arguments{
-\item{idx}{A list of data set names that you would like to integrate with
+\item{datasets}{A list of data set names that you would like to integrate with
 the 4 pipelines}
 
 \item{dup}{The number of duplications that would like to execute}

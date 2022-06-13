@@ -4,12 +4,12 @@
 \alias{gficf_workflow_seurat}
 \title{GFICF Workflow Seurat}
 \usage{
-gficf_workflow_seurat(idx, seed = 1)
+gficf_workflow_seurat(datasets, seed = 1)
 
-gficf_workflow_seurat(idx, seed = 1)
+gficf_workflow_seurat(datasets, seed = 1)
 }
 \arguments{
-\item{idx}{The names of the datasets}
+\item{datasets}{The names of the datasets}
 
 \item{seed}{The random seed that you would like to use on the dataset}
 }

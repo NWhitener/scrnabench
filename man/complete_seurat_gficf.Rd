@@ -4,7 +4,7 @@
 \alias{complete_seurat_gficf}
 \title{Completes the Seurat Process on GFICF data}
 \usage{
-complete_seurat_gficf(datasets, seed = 1, path, reduction = "pca")
+complete_seurat_gficf(datasets, seed = 1, path = ".", reduction = "pca")
 }
 \arguments{
 \item{datasets}{The names of the datasets for the completion of the workflow}

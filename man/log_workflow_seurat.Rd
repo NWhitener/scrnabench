@@ -4,10 +4,10 @@
 \alias{log_workflow_seurat}
 \title{Log Workflow Seurat}
 \usage{
-log_workflow_seurat(idx, seed = 1)
+log_workflow_seurat(datasets, seed = 1)
 }
 \arguments{
-\item{idx}{The names of the datasets}
+\item{datasets}{The names of the datasets}
 
 \item{seed}{The random seed that you would like to use on the dataset}
 }

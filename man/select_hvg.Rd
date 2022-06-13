@@ -4,7 +4,7 @@
 \alias{select_hvg}
 \title{Select Highly Variable Genes}
 \usage{
-select_hvg(dataList)
+select_hvg(dataList, numFeatures = 2000)
 }
 \arguments{
 \item{dataList}{A list of data sets that you wouuld like the variable genes of}

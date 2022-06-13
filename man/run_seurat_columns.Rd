@@ -7,9 +7,9 @@
 run_seurat_columns()
 }
 \value{
-a results matrix with ARI and idx number
+a results matrix with ARI and datasets number
 }
 \description{
 This function runs the built Seurat pipeline with column permutations on a data list. The results are appened into
-the rows of a new matrix, with the idx and the ARI recorded
+the rows of a new matrix, with the datasets and the ARI recorded
 }

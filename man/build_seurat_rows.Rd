@@ -4,10 +4,10 @@
 \alias{build_seurat_rows}
 \title{Build Seurat Pipeline with the Rows Permuted}
 \usage{
-build_seurat_rows(idx, seed = 1)
+build_seurat_rows(datasets, seed = 1)
 }
 \arguments{
-\item{idx}{A data set with genes as rows and cells as columns}
+\item{datasets}{A data set with genes as rows and cells as columns}
 }
 \value{
 Adjusted Rand Index

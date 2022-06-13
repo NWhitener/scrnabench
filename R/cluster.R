@@ -33,11 +33,11 @@ run_kmeans <- function(dataList, k=10, reduction_choosen = 'pca')
 #' @param dataList A data list of data sets
 #' @return A data list with clustering completed completed on the features
 #' @export
-run_seurat_cluster <- function(dataList, reduction_choosen = "pca", resolution_given = 0.5)
+run_seurat_cluster <- function(dataList, reductionChoosen = "pca", resolutionGiven = 0.5)
 {
-  dataList <- lapply(X = dataList, FUN = function(x) {
-    x <- Seurat::FindNeighbors(x, reduction = reduction_choosen, dims = 1:30)
-    x <- Seurat::FindClusters(x, resolution = resolution_given)
-  })
+  for (i in (1:length(names(dataList)))){
+    dataList[[i]] <- Seurat::FindNeighbors(dataList[[i]], reduction = reductionChoosen, dims = 1:30)
+    dataList[[i]]<- Seurat::FindClusters(dataList[[i]], resolution = resolutionGiven)
+  }
   return(dataList)
 }

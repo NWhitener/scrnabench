@@ -4,10 +4,10 @@
 \alias{run_integration}
 \title{Run Integration  (Need a better name)}
 \usage{
-run_integration(idx)
+run_integration(datasets)
 }
 \arguments{
-\item{idx}{A list of data set names that you would like to integrate with
+\item{datasets}{A list of data set names that you would like to integrate with
 the 4 pipelines}
 }
 \description{
