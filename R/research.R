@@ -6,6 +6,7 @@
 #' @param names A list of dataset names that should be duplicated
 #' @param ndups The number of duplicates that are desired
 #' @return a dataList of the duplicated datasets
+#' @export
 duplicate_datasets <- function(dataList, duplicates = 2)
 {
   names <- names(dataList)
