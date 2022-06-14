@@ -8,45 +8,36 @@
 #' @export
 run_silhouette <- function(dataList, reductionChoosen = 'pca', method = 'kmeans')
 {
-  list_return = NULL
+  result = NULL
   for (i in (1:length(names(dataList))))
   {
-    temp_list= NULL
-    temp_list = cbind(temp_list, dataList[[i]]@meta.data$ID[1])
     if(method == "kmeans"){
-     c = paste("kmeans_cluster_", reductionChoosen, sep ="")
-      x = dataList[[i]][[c]]
-      y = Seurat::Embeddings(dataList[[i]], reduction = reductionChoosen)
-      z <- cluster::silhouette(x[,1],dist(y, "euclidean"))
-      x = summary(z)
-      temp_list = cbind(temp_list,  x$avg.width)
+      reductionType <- paste("kmeans_cluster_", reductionChoosen, sep ="")
+      clusters <- dataList[[i]][[reductionType]][,1]
+
     }
     else if(method == "seurat")
     {
-      c = paste('seurat_clusters')
-      x = dataList[[i]][[c]]
-      x = as.numeric(x$seurat_clusters)
-      y = Seurat::Embeddings(dataList[[i]], reduction = reductionChoosen)
-      if(length(unique(x)) <= 2)
-         {
-          f = paste("Dataset ", datasets[i], " has only one cluster. Consider changing the clustering parameters", sep ='')
-          warning(f)
-          suppressWarnings(min)
-          temp = NA
-          temp_list = cbind(temp_list, temp)
-          }
-      else if(length(unique(x))>2) {
-      z <- cluster::silhouette(x, dist(y, "euclidean"))
-      q = summary(z)
-      temp_list = cbind(temp_list, q$avg.width)
-      }
+      reductionType = paste('seurat_clusters')
+      clusters <- as.numeric(dataList[[i]][[reductionType]]$seurat_clusters)
     }
     else{
       stop("Invalid clustering method requested")
     }
-    list_return = rbind(list_return, temp_list)
+    if(length((unique(clusters))) < 2)
+         {
+          warningMessage = paste("Dataset ", datasets[i], " has only one cluster. Consider changing the clustering parameters", sep ='')
+          warning(warningMessage)
+          datasetResult = cbind(dataList[[i]]@meta.data$ID[1], NA)
+          }
+      else {
+        cellEmbeddings <- Seurat::Embeddings(dataList[[i]], reduction = reductionChoosen)
+        silhouetteScores <- summary(cluster::silhouette(clusters, dist(cellEmbeddings, "euclidean")))
+        datasetResult = cbind(dataList[[i]]@meta.data$ID[1],  silhouetteScores$avg.width)
+      }
+    result = rbind(result, datasetResult)
     }
-  return(list_return)
+  return(result)
 }
 
 #' Run Dunn
@@ -58,44 +49,36 @@ run_silhouette <- function(dataList, reductionChoosen = 'pca', method = 'kmeans'
 #' @param method The clustering method used
 #' @export
 run_dunn <- function(dataList, reductionChoosen,  method = 'kmeans'){
-
-  list_return = NULL
+  result = NULL
   for (i in (1:length(names(dataList))))
   {
-    temp_list= NULL
-    temp_list = cbind(temp_list, dataList[[i]]@meta.data$ID[1])
-    if(method == 'kmeans'){
-    c = paste("kmeans_cluster_", reductionChoosen, sep ="")
-    y = dataList[[i]][[c]]
-    x = Seurat::Embeddings(dataList[[i]], reduction = reductionChoosen)
-    dunn = clValid::dunn(clusters = y[,1], Data = x)
-    temp_list = cbind(temp_list, dunn)
+    if(method == "kmeans"){
+      reductionType <- paste("kmeans_cluster_", reductionChoosen, sep ="")
+      clusters <- dataList[[i]][[reductionType]][,1]
 
     }
     else if(method == "seurat")
     {
-      c = paste('seurat_clusters')
-      y = dataList[[i]][[c]]
-      y <- as.numeric(y$seurat_clusters)
-      x = Seurat::Embeddings(dataList[[i]], reduction = reductionChoosen)
-      if(length(unique(x)) <= 2)
-      {
-        f = paste("Dataset ", datasets[i], " has only one cluster. Consider changing the clustering parameters", sep ='')
-        warning(f)
-        temp = NA
-        temp_list = cbind(temp_list, temp)
-
-      }
-      else if(length(unique(x))>=2){
-      dunn = clValid::dunn(clusters = y, Data = x)
-      temp_list = cbind(temp_list, dunn)}
+      reductionType = paste('seurat_clusters')
+      clusters <- as.numeric(dataList[[i]][[reductionType]]$seurat_clusters)
     }
     else{
       stop("Invalid clustering method requested")
     }
-    list_return = rbind(list_return, temp_list)
+    if(length((unique(clusters))) < 2)
+    {
+      warningMessage = paste("Dataset ", datasets[i], " has only one cluster. Consider changing the clustering parameters", sep ='')
+      warning(warningMessage)
+      datasetResult = cbind(dataList[[i]]@meta.data$ID[1], NA)
+    }
+    else {
+      cellEmbeddings <- Seurat::Embeddings(dataList[[i]], reduction = reductionChoosen)
+      dunn = clValid::dunn(clusters = clusters, Data = cellEmbeddings)
+      datasetResult = cbind(dataList[[i]]@meta.data$ID[1],  dunn)
+    }
+    result = rbind(result, datasetResult)
   }
-  return(list_return)
+  return(result)
 }
 
 
