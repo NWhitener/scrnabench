@@ -175,7 +175,7 @@ scale_data <- function(dataList)
 #' @param dataList A data list of data sets
 #' @return A data list with PCA completed on the features
 #' @export
-run_pca <- function(dataList, numComponents = 30 )
+run_pca <- function(dataList, numComponents = 30)
 {
   if(is.list(dataList))
   {

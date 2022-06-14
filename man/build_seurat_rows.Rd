@@ -10,7 +10,7 @@ build_seurat_rows(datasets, seed = 1)
 \item{datasets}{A data set with genes as rows and cells as columns}
 }
 \value{
-Adjusted Rand Index
+Adjusted Rand Index of the Datasets clusters
 }
 \description{
 This functions builds the Seurat Pipeline, with experimental condition. The initial data set is appended with a the same data list,

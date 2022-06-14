@@ -217,7 +217,6 @@ run_harmony_workflow <- function(datasets, seed = 1)
 #' @export
 run_fastmnn_workflow <- function(datasets, seed = 1)
 {
-  ##REWRITE
   dataList <- extract_datasets(datasets)
   dataList <- extract_common_genes(dataList)
   dataList <- merge_datasets(dataList)
@@ -225,11 +224,9 @@ run_fastmnn_workflow <- function(datasets, seed = 1)
   dataList <- annotate_datasets(dataList)
   dataList <- run_log(dataList)
   dataList <- select_hvg(dataList)
-  dataList <- scale_data(dataList)
-  dataList <- run_pca(dataList)
   dataList <- run_fastmnn(dataList)
-  dataList <- run_umap(dataList)
-  dataList <- run_seurat_cluster(dataList)
+  dataList <- run_umap(dataList, reductionChoosen = 'mnn')
+  dataList <- run_seurat_cluster(dataList, reductionChoosen = 'mnn')
   return(dataList)
 }
 
@@ -287,7 +284,7 @@ run_sctransform_workflow <- function(datasets, seed = 1)
 #' Normalized information Distance is returned. If there is true algorithmic stability this score would be 1
 #'
 #' @param datasets A data set with genes as rows and cells as columns
-#' @return Adjusted Rand Index
+#' @return Adjusted Rand Index of the Dataset's clustering
 build_seurat_columns <- function(datasets, seed = 1)
 {
   set.seed(seed)
@@ -309,7 +306,7 @@ build_seurat_columns <- function(datasets, seed = 1)
 #' Normalized information Distance is returned. If there is true algorithmic stability this score would be 1
 #'
 #' @param datasets A data set with genes as rows and cells as columns
-#' @return Adjusted Rand Index
+#' @return Adjusted Rand Index of the Datasets clusters
 build_seurat_rows <- function(datasets, seed = 1)
 {
   set.seed(seed)
@@ -380,74 +377,6 @@ run_seurat <- function(dataList, seed =1)
   return(dataList)
 }
 
-
-
-#' Run Integration  (Need a better name)
-#'
-#' This functions completes an integration pipeline, using
-#' 4 integration techniques. It implements the Harmony, FastMNN, CCA, and scTranform integration techniques.
-#' These are implemented via the Seurat and Harmony packages. See ?run_harmony, ?run_cca, ?run_fastmnn, and ?run_sctransform
-#' for more information on these pipeline structures. Each of these integration will write the integrated data set to a file
-#' in the current directory
-#'
-#' @param datasets A list of data set names that you would like to integrate with
-#' the 4 pipelines
-#' @export
-run_integration <- function(datasets)
-{
-  # Harmony
-  data <- run_harmony(datasets, batch_name = "ID")
-  #write_output(data[1], 'harmony')
-
- #FastMnn
-  data <- run_fastmnn(datasets, batch_column)
-  #write_output(data, 'fastmnn')
-
-  # CCA
-  data <- run_cca(datasets)
-  #write_output(data, 'cca')
-
-  # ScTransform
-  data <- run_sctransform(datasets)
-  #write_output(data, 'sctransform')
-}
-
-
-#' Run Integration Duplicated (Need a better name)
-#'
-#' This functions completes an integration pipeline on a dupilcated set of the original data, using
-#' 4 integration techniques. It implements the Harmony, FastMNN, CCA, and scTranform integration techniques.
-#' These are implemented via the Seurat and Harmony packages. See ?run_harmony, ?run_cca, ?run_fastmnn, and ?run_sctransform
-#' for more information on these pipeline structures. Each of these integration will write the integrated data set to a file
-#' in the current directory
-#'
-#' @param datasets A list of data set names that you would like to integrate with
-#' the 4 pipelines
-#' @param dup The number of duplications that would like to execute
-#' @export
-run_duplicate_integrations <- function(datasets, dup)
-{
-  # Harmony
-  dataList <- duplicate_datasets(datasets, dup)
-  data <- run_harmony(data, batch_column)
-  write_output(data, 'harmony')
-
-  # FastMNN
-  dataList <- duplicate_datasets(datasets, dup)
-  data <- run_fastmnn(data, batch_column)
-  write_output(data, 'fastmnn')
-
-  # CCA
-  dataList <- duplicate_datasets(datasets, dup)
-  data <- run_cca(dataList)
-  write_output(data, 'cca')
-
-  # ScTransform
-  dataList <- duplicate_datasets(datasets, dup)
-  data <- run_sctransform(dataList)
-
-  write_output(data, 'sctransform')
-}
 
 #' Write Output
 #'
