@@ -3,15 +3,21 @@
 #' This function duplicates a dataset a variable number of times. This function is to be used in
 #' research situations.
 #'
-#' @param names A list of dataset names that should be duplicated
-#' @param ndups The number of duplicates that are desired
+#' @param dataList A list of dataset names that should be duplicated
+#' @param duplicates The number of duplicates that are desired
 #' @return a dataList of the duplicated datasets
 #' @export
 duplicate_datasets <- function(dataList, duplicates = 2)
 {
+  if(is.list(dataList)){
   names <- names(dataList)
   names <- rep(names, duplicates)
   dataList <- extract_datasets(names)
+  }
+  else
+  {
+    stop("A data list of datasets is required to duplicate datasets")
+  }
   return(dataList)
 }
 
@@ -27,8 +33,13 @@ duplicate_datasets <- function(dataList, duplicates = 2)
 #' @export
 permute_rows <- function(dataList)
 {
+  if(is.list(dataList)){
   for (i in (1:length(names(dataList)))) {
     dataList[[i]] <- dataList[[i]][sample(1:nrow(dataList[[i]])), ]
+  }}
+  else
+  {
+    stop("A data list of datasets is required to permute datasets rows")
   }
   return(dataList)
 }
@@ -45,8 +56,13 @@ permute_rows <- function(dataList)
 #' @export
 permute_columns <- function(dataList)
 {
+  if(is.list(dataList)){
   for (i in (1:length(names(dataList)))) {
     dataList[[i]] <- dataList[[i]][, sample(1:ncol(dataList[[i]]))]
+  }}
+  else
+  {
+    stop("A data list of datasets is required to permute datasets columns")
   }
   return(dataList)
 }
@@ -61,8 +77,14 @@ permute_columns <- function(dataList)
 #' @export
 permute_dataset_order <- function(dataList)
 {
+  if(is.list(dataList)){
   for (i in (1:length(names(dataList)))) {
     permutedList <- dataList[sample(length(dataList))]
     return(permutedList)
-  }
+  }}
+  else
+    {
+      stop("A data list of datasets is required to permute datasets order")
+    }
+
 }

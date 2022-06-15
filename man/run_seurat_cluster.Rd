@@ -13,7 +13,7 @@ run_seurat_cluster(dataList, reductionChoosen = "pca", resolutionGiven = 0.5)
 A data list with clustering completed completed on the features
 }
 \description{
-This functions runs the Seurat FindNeighbors and FindCLusters function on a list of data sets.
+This functions runs the Seurat FindNeighbors and FindClusters function on a list of data sets.
 This functions assumes that genes are in rows and
 cells are in columns. The FindNeighbors reduction is set to "pca" by default and uses the first 30 dimensions
 The FindClusters resolution is set to 0.5

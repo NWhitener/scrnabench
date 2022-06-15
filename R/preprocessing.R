@@ -175,14 +175,14 @@ scale_data <- function(dataList)
 #' @param dataList A data list of data sets
 #' @return A data list with PCA completed on the features
 #' @export
-run_pca <- function(dataList, numComponents = 30)
+run_pca <- function(dataList, numComponents = 10)
 {
   if(is.list(dataList))
   {
     for (i in (1:length(names(dataList))))
       {
         dataList[[i]] <- Seurat::RunPCA(dataList[[i]], features = Seurat::VariableFeatures(object = dataList[[i]]),
-                        npcs = numComponents, verbose = FALSE, rev.pca = FALSE)
+                        npcs = numComponents, verbose = FALSE)
       }
     }
   else
@@ -201,7 +201,7 @@ run_pca <- function(dataList, numComponents = 30)
 #' @param dataList A data list of data sets
 #' @return A data list with UMAP completed on the features
 #' @export
-run_umap <- function(dataList, reductionChoosen = 'pca', numDimensions = 30)
+run_umap <- function(dataList, reductionChoosen = 'pca', numDimensions = 10)
 {
   if(is.list(dataList))
   {
@@ -224,7 +224,7 @@ run_umap <- function(dataList, reductionChoosen = 'pca', numDimensions = 30)
 #' @param dataList A data list of data sets
 #' @return A data list with tSNE completed on the features
 #' @export
-run_tsne <- function(dataList, reductionChoosen = 'pca', numDimensions = 30)
+run_tsne <- function(dataList, reductionChoosen = 'pca', numDimensions = 10)
 {
   if(is.list(dataList))
   {

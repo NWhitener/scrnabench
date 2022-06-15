@@ -4,7 +4,7 @@
 \alias{run_pca}
 \title{Run Principle Component Analysis}
 \usage{
-run_pca(dataList, numComponents = 30)
+run_pca(dataList, numComponents = 10)
 }
 \arguments{
 \item{dataList}{A data list of data sets}

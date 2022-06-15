@@ -36,7 +36,7 @@ run_kmeans <- function(dataList, k=10, reductionChoosen = 'pca')
 run_seurat_cluster <- function(dataList, reductionChoosen = "pca", resolutionGiven = 0.5)
 {
   for (i in (1:length(names(dataList)))){
-    dataList[[i]] <- Seurat::FindNeighbors(dataList[[i]], reduction = reductionChoosen, dims = 1:30)
+    dataList[[i]] <- Seurat::FindNeighbors(dataList[[i]], reduction = reductionChoosen, dims = 1:10)
     dataList[[i]]<- Seurat::FindClusters(dataList[[i]], resolution = resolutionGiven)
   }
   return(dataList)

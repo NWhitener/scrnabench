@@ -7,9 +7,9 @@
 duplicate_datasets(dataList, duplicates = 2)
 }
 \arguments{
-\item{names}{A list of dataset names that should be duplicated}
+\item{dataList}{A list of dataset names that should be duplicated}
 
-\item{ndups}{The number of duplicates that are desired}
+\item{duplicates}{The number of duplicates that are desired}
 }
 \value{
 a dataList of the duplicated datasets
