@@ -182,7 +182,7 @@ run_pca <- function(dataList, numComponents = 30)
     for (i in (1:length(names(dataList))))
       {
         dataList[[i]] <- Seurat::RunPCA(dataList[[i]], features = Seurat::VariableFeatures(object = dataList[[i]]),
-                        npcs = numComponents, verbose = FALSE)
+                        npcs = numComponents, verbose = FALSE, rev.pca = FALSE)
       }
     }
   else
