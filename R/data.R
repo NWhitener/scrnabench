@@ -26,7 +26,7 @@ data_load <- function(demo = FALSE, path = '.')
   path_full = paste(path, "/gene_counts.RDS", sep = '')
   if(demo)
   {
-    geneCounts <<- readRDS(system.file("extdata", "gene_counts_demo.RDS", package = "scrnabench", mustWork = TRUE))
+    geneCounts <<- readRDS(system.file("extdata", "gene_counts_demo_v2.RDS", package = "scrnabench", mustWork = TRUE))
 
   }
   else if(file.exists(path_full)){
