@@ -9,6 +9,9 @@
 #' @export
 run_cca <- function(dataList)
   {
+
+  if(is.list(dataList))
+  {
     features <- Seurat::SelectIntegrationFeatures(object.list = dataList)
     k.filter <- min(200, min(sapply(dataList, ncol)))
     data.anchors <- Seurat::FindIntegrationAnchors(object.list = dataList, anchor.features = features, k.filter=k.filter)
@@ -17,7 +20,12 @@ run_cca <- function(dataList)
     merged<-list(data.combined)
     names(merged)<-c("Integrated")
     return(merged)
-}
+  }
+  else
+  {
+    stop("A data list of datasets is required to  run cca on the datasets")
+  }
+  }
 
 #' Run Harmony
 #'
@@ -27,16 +35,22 @@ run_cca <- function(dataList)
 #' @param dataList A data list of data sets to integrate using the harmony protocol
 #' @return data.combined A data list of the combined data from the harmony protocol
 #' @export
-run_harmony <- function(dataList, batch_name='ID')
+run_harmony <- function(dataList, batchName='ID')
 {
 
-
+  if(is.list(dataList))
+  {
   for (k in (1:length(names(dataList)))){
     print(k)
-    dataList[[k]] <- harmony::RunHarmony(object = dataList[[k]], group.by.vars = batch_name)
+    dataList[[k]] <- harmony::RunHarmony(object = dataList[[k]], group.by.vars = batchName)
 
   }
   return(dataList)
+  }
+  else
+  {
+    stop("A data list of datasets is required to run harmony on the datasets")
+  }
 }
 
 #' Run fastmnn
@@ -47,15 +61,23 @@ run_harmony <- function(dataList, batch_name='ID')
 #' @param dataList A data list of data sets to integrate using the fastmnn protocol
 #' @return data.combined A data list of the combined data from the fastmnn protocol
 #' @export
-run_fastmnn <- function(dataList, batch_name = "ID", seed =1)
+run_fastmnn <- function(dataList, batchName = "ID", seed =1)
 {
+
+  if(is.list(dataList))
+  {
   for (k in 1:length(names(dataList))){
     print(k)
     print(class(dataList[[k]]))
-    dataList[[k]] <- SeuratWrappers::RunFastMNN(object.list = Seurat::SplitObject(dataList[[k]], split.by = "ID"))
+    dataList[[k]] <- SeuratWrappers::RunFastMNN(object.list = Seurat::SplitObject(dataList[[k]], split.by = batchName))
 
   }
-  return(dataList)
+  return(dataList)}
+  else
+  {
+    stop("A data list of datasets is required to run fastmnn on the datasets")
+  }
+
 
 }
 
@@ -71,6 +93,9 @@ run_fastmnn <- function(dataList, batch_name = "ID", seed =1)
 #' @export
 run_sctransform <- function(dataList)
 {
+
+  if(is.list(dataList))
+  {
   dataList <- lapply(X = dataList, FUN = Seurat::SCTransform)
   features <- Seurat::SelectIntegrationFeatures(object.list = dataList, nfeatures=2000)
   dataList <- Seurat::PrepSCTIntegration(object.list = dataList, anchor.features = features)
@@ -81,6 +106,12 @@ run_sctransform <- function(dataList)
   merged<-list(data.combined)
   names(merged)<-c("Integrated")
   return(merged)
+  }
+  else
+  {
+    stop("A data list of datasets is required to run sctransform on the datasets")
+  }
+
 
 }
 

@@ -9,6 +9,9 @@
 #' @export
 run_kmeans <- function(dataList, k=10, reductionChoosen = 'pca')
 {
+
+  if(is.list(dataList))
+  {
   for (i in (1:length(names(dataList))))
   {
     clustData = Seurat::Embeddings(dataList[[i]], reduction = reductionChoosen)
@@ -19,8 +22,13 @@ run_kmeans <- function(dataList, k=10, reductionChoosen = 'pca')
     dataList[[i]] <- Seurat::AddMetaData(dataList[[i]], metaFix)
 
   }
+    return(dataList)
+  }
+  else
+    {
+      stop("A data list of datasets is required to kmeans cluster datasets")
+    }
 
-  return(dataList)
 }
 
 #' Complete Clustering Steps
@@ -35,9 +43,18 @@ run_kmeans <- function(dataList, k=10, reductionChoosen = 'pca')
 #' @export
 run_seurat_cluster <- function(dataList, reductionChoosen = "pca", resolutionGiven = 0.5)
 {
+
+
+  if(is.list(dataList))
+  {
   for (i in (1:length(names(dataList)))){
     dataList[[i]] <- Seurat::FindNeighbors(dataList[[i]], reduction = reductionChoosen, dims = 1:10)
     dataList[[i]]<- Seurat::FindClusters(dataList[[i]], resolution = resolutionGiven)
   }
   return(dataList)
-}
+  }
+  else
+  {
+    stop("A data list of datasets is required to use seurat clustering on the datasets")
+  }
+  }
