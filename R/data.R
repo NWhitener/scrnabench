@@ -5,7 +5,7 @@
 #' usage. Run this once when the data is not download, if the data is downloaded use the data_load function
 #' @param path The path of the download location to use
 #' @export
-data_download <- function(path = '.')
+download_data <- function(path = '.')
 {
   inborutils::download_zenodo(doi = "10.5281/zenodo.6617997", path = path)
   geneCounts <<- readRDS(file = paste(path, "/gene_counts.RDS", sep = ''))
@@ -20,7 +20,7 @@ data_download <- function(path = '.')
 #' @param full Use the full dataset or the small demo dataset
 #' @param path The path of the load location to use
 #' @export
-data_load <- function(demo = FALSE, path = '.')
+load_data <- function(demo = FALSE, path = '.')
 {
   ## Check the Download Path
   path_full = paste(path, "/gene_counts.RDS", sep = '')

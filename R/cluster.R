@@ -10,13 +10,15 @@
 run_kmeans <- function(dataList, k=10, reductionChoosen = 'pca')
 {
 
+  ##REFACTOR TO THE ADD ANNOTATION FUNCTION
+
   if(is.list(dataList))
   {
   for (i in (1:length(names(dataList))))
   {
     clustData = Seurat::Embeddings(dataList[[i]], reduction = reductionChoosen)
     meta = dataList[[i]]@meta.data
-    meta[paste("kmeans_cluster_", reductionChoosen, sep = "")]<- stats::kmeans(clustData,  k, iter.max = 100)$cluster
+    meta[paste("kmeans_cluster_", reductionChoosen, sep = "")] <- stats::kmeans(clustData,  k, iter.max = 100)$cluster
     print(i)
     metaFix <- subset(meta, select = c(paste("kmeans_cluster_", reductionChoosen, sep = "")))
     dataList[[i]] <- Seurat::AddMetaData(dataList[[i]], metaFix)
@@ -47,15 +49,22 @@ run_kmeans <- function(dataList, k=10, reductionChoosen = 'pca')
 run_seurat_cluster <- function(dataList, reductionChoosen = "pca", resolutionGiven = 0.5, numComponents = 10)
 {
 
-
+## rewrite, go through objects find clusters
   if(is.list(dataList))
   {
   for (i in (1:length(names(dataList)))){
     dataList[[i]] <- Seurat::FindNeighbors(dataList[[i]], reduction = reductionChoosen, dims=1:numComponents)
     dataList[[i]]<- Seurat::FindClusters(dataList[[i]], resolution = resolutionGiven)
+    ##Find clusters
+    ##store them into list of lists
+
   }
+
+## call add annotation
   return(dataList)
-  }
+
+
+    }
   else
   {
     stop("A data list of datasets is required to use seurat clustering on the datasets")

@@ -1,3 +1,7 @@
+
+###REREVIEW
+
+
 #' Run Silhouette
 #'
 #' This function calculates the average silhouette width of the clustering assignments made on the datasets provided
@@ -8,6 +12,8 @@
 #' @export
 run_silhouette <- function(dataList, reductionChoosen = 'pca', method = 'kmeans')
 {
+  ##Address the merge for dataset naming
+
   result = NULL
   for (i in (1:length(names(dataList))))
   {
@@ -28,12 +34,12 @@ run_silhouette <- function(dataList, reductionChoosen = 'pca', method = 'kmeans'
          {
           warningMessage = paste("Dataset ", datasets[i], " has only one cluster. Consider changing the clustering parameters", sep ='')
           warning(warningMessage)
-          datasetResult = cbind(dataList[[i]]@meta.data$ID[1], NA)
+          datasetResult = cbind(names(dataList[i]), NA)
           }
       else {
         cellEmbeddings <- Seurat::Embeddings(dataList[[i]], reduction = reductionChoosen)
         silhouetteScores <- summary(cluster::silhouette(clusters, dist(cellEmbeddings, "euclidean")))
-        datasetResult = cbind(dataList[[i]]@meta.data$ID[1],  silhouetteScores$avg.width)
+        datasetResult = cbind(names(dataList[i]),  silhouetteScores$avg.width)
       }
     result = rbind(result, datasetResult)
     }

@@ -230,7 +230,7 @@ run_tsne <- function(dataList, reductionChoosen = 'pca', numDimensions = 10)
   {
   for (i in (1:length(names(dataList)))) {
     perplexity_set <- sqrt(ncol(dataList[[i]]))
-    dataList[[i]] <- Seurat::RunTSNE(dataList[[i]], reduction = reductionChoosen, dims = 1:numDimensions, perplexity = perplexity_set, check_duplicates = FALSE)
+    dataList[[i]] <- Seurat::RunTSNE(dataList[[i]], reduction = reductionChoosen, dims = 1:numDimensions,  perplexity = perplexity_set, check_duplicates = FALSE)
   }
   }
   else

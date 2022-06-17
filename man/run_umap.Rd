@@ -4,7 +4,7 @@
 \alias{run_umap}
 \title{Run Uniform Manifold Approximation and Projection}
 \usage{
-run_umap(dataList, reductionChoosen = "pca", numDimensions = 10)
+run_umap(dataList, reductionChoosen = "pca", numDimensions = 2)
 }
 \arguments{
 \item{dataList}{A data list of data sets}

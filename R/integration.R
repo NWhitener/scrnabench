@@ -8,24 +8,23 @@
 #' @return data.combined A data list of the combined data from the cca protocol
 #' @export
 run_cca <- function(dataList)
-  {
+{
 
   if(is.list(dataList))
   {
     features <- Seurat::SelectIntegrationFeatures(object.list = dataList)
     kFilter <- min(200, min(sapply(dataList, ncol)))
     dataAnchors <- Seurat::FindIntegrationAnchors(object.list = dataList, anchor.features = features, k.filter=kFilter)
-    dataCombined <- Seurat::IntegrateData(anchorset = dataAnchors)
-    Seurat::DefaultAssay(dataCombined) <- "integrated"
-    merged<-list(dataCombined)
-    names(merged)<-c("Integrated")
-    return(merged)
+    dataCombined <- list(Seurat::IntegrateData(anchorset = dataAnchors))
+    names(dataCombined) <- c("Integrated")
+
   }
   else
   {
     stop("A data list of datasets is required to  run cca on the datasets")
   }
-  }
+  return(dataCombined)
+}
 
 #' Run Harmony
 #'
@@ -35,22 +34,20 @@ run_cca <- function(dataList)
 #' @param dataList A data list of data sets to integrate using the harmony protocol
 #' @return data.combined A data list of the combined data from the harmony protocol
 #' @export
-run_harmony <- function(dataList, batchName='ID')
+run_harmony <- function(dataList, batchName = 'ID')
 {
 
   if(is.list(dataList))
   {
-  for (k in (1:length(names(dataList)))){
-    print(k)
-    dataList[[k]] <- harmony::RunHarmony(object = dataList[[k]], group.by.vars = batchName)
-
+  for (i in (1:length(names(dataList)))){
+    dataList[[i]] <- harmony::RunHarmony(object = dataList[[i]], group.by.vars = batchName)
   }
-  return(dataList)
   }
   else
   {
     stop("A data list of datasets is required to run harmony on the datasets")
   }
+  return(dataList)
 }
 
 #' Run fastmnn
@@ -61,23 +58,21 @@ run_harmony <- function(dataList, batchName='ID')
 #' @param dataList A data list of data sets to integrate using the fastmnn protocol
 #' @return data.combined A data list of the combined data from the fastmnn protocol
 #' @export
-run_fastmnn <- function(dataList, batchName = "ID", seed =1)
+run_fastmnn <- function(dataList, batchName = "ID")
 {
 
   if(is.list(dataList))
   {
-  for (k in 1:length(names(dataList))){
-    print(k)
-    print(class(dataList[[k]]))
-    dataList[[k]] <- SeuratWrappers::RunFastMNN(object.list = Seurat::SplitObject(dataList[[k]], split.by = batchName))
+  for (i in 1:length(names(dataList))){
+    dataList[[i]] <- SeuratWrappers::RunFastMNN(object.list = Seurat::SplitObject(dataList[[i]], split.by = batchName))
 
   }
-  return(dataList)}
+  }
   else
   {
     stop("A data list of datasets is required to run fastmnn on the datasets")
   }
-
+  return(dataList)
 
 }
 
@@ -91,27 +86,24 @@ run_fastmnn <- function(dataList, batchName = "ID", seed =1)
 #' @param dataList A data list of data sets to integrate using the sctransform protocol
 #' @return data.combined A data list of the combined data from the sctransform protocol
 #' @export
-run_sctransform <- function(dataList)
+run_sctransform <- function(dataList, numFeatures = 2000)
 {
 
   if(is.list(dataList))
   {
   dataList <- lapply(X = dataList, FUN = Seurat::SCTransform)
-  features <- Seurat::SelectIntegrationFeatures(object.list = dataList, nfeatures=2000)
+  features <- Seurat::SelectIntegrationFeatures(object.list = dataList, nfeatures=numFeatures)
   dataList <- Seurat::PrepSCTIntegration(object.list = dataList, anchor.features = features)
   kFilter <- min(200, min(sapply(dataList, ncol)))
   dataAnchors <- Seurat::FindIntegrationAnchors(object.list = dataList, normalization.method = "SCT", anchor.features = features, k.filter = kFilter)
-  dataCombined <- Seurat::IntegrateData(anchorset = dataAnchors, normalization.method = "SCT")
-  Seurat::DefaultAssay(dataCombined) <- "integrated"
-  merged<-list(dataCombined)
-  names(merged)<-c("Integrated")
-  return(merged)
+  dataCombined <- list(Seurat::IntegrateData(anchorset = dataAnchors, normalization.method = "SCT"))
+  names(dataCombined)<-c("Integrated")
   }
   else
   {
     stop("A data list of datasets is required to run sctransform on the datasets")
   }
-
+  return(dataCombined)
 
 }
 

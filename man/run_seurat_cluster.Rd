@@ -4,7 +4,12 @@
 \alias{run_seurat_cluster}
 \title{Complete Clustering Steps}
 \usage{
-run_seurat_cluster(dataList, reductionChoosen = "pca", resolutionGiven = 0.5)
+run_seurat_cluster(
+  dataList,
+  reductionChoosen = "pca",
+  resolutionGiven = 0.5,
+  numComponents = 2
+)
 }
 \arguments{
 \item{dataList}{A data list of data sets}
@@ -12,6 +17,8 @@ run_seurat_cluster(dataList, reductionChoosen = "pca", resolutionGiven = 0.5)
 \item{reductionChoosen}{The dimensionality reduction type that is wanted}
 
 \item{resolutionGiven}{the resolution of the seurat clustering method}
+
+\item{numComponents}{the number of components to use}
 }
 \value{
 A data list with clustering completed completed on the features
