@@ -198,3 +198,17 @@ annotate_datasets <- function(dataList)
   return(dataList)
 }
 
+add_clustering_annotation <- function(dataList, memberships, clusteringName)
+{
+
+  for (i in range(1, length(dataList)))
+  {
+    meta = dataList[[i]]@meta.data
+    meta[paste(clusteringName, sep = "")] <- memberships
+  }
+
+
+
+
+
+}

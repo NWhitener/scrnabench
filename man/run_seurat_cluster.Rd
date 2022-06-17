@@ -8,6 +8,10 @@ run_seurat_cluster(dataList, reductionChoosen = "pca", resolutionGiven = 0.5)
 }
 \arguments{
 \item{dataList}{A data list of data sets}
+
+\item{reductionChoosen}{The dimensionality reduction type that is wanted}
+
+\item{resolutionGiven}{the resolution of the seurat clustering method}
 }
 \value{
 A data list with clustering completed completed on the features

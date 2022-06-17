@@ -4,7 +4,7 @@
 \alias{complete_seurat}
 \title{Completes the Seurat Process}
 \usage{
-complete_seurat(datasets, seed = 1, path = ".", reduction = "pca")
+complete_seurat(datasets, seed = 1, path = ".")
 }
 \arguments{
 \item{datasets}{The names of the datasets for the completion of the workflow}

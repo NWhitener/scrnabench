@@ -23,12 +23,12 @@ complete_kmeans <- function(datasets, seed = 1, path = '.', k = 10)
   dataList <- run_kmeans(dataList, reductionChoosen = 'pca', k)
   dataList <- run_kmeans(dataList, reductionChoosen = 'umap', k)
   dataList <- run_kmeans(dataList, reductionChoosen = 'tsne', k)
-  sil_pca = run_silhouette(dataList, 'pca')
-  sil_tsne = run_silhouette(dataList, 'tsne')
-  sil_umap = run_silhouette(dataList, 'umap')
-  dunn_pca = run_dunn(dataList, 'pca')
-  dunn_tsne = run_dunn(dataList, 'tsne')
-  dunn_umap = run_dunn(dataList, 'umap')
+  silPca = run_silhouette(dataList, 'pca')
+  silTsne = run_silhouette(dataList, 'tsne')
+  silUmap = run_silhouette(dataList, 'umap')
+  dunnPca = run_dunn(dataList, 'pca')
+  dunnTsne = run_dunn(dataList, 'tsne')
+  dunnUmap = run_dunn(dataList, 'umap')
   ncells = NULL
   nclust = NULL
   for(i in 1:length(names(dataList)))
@@ -39,8 +39,8 @@ complete_kmeans <- function(datasets, seed = 1, path = '.', k = 10)
     nclust = append(nclust, nclust_val)
   }
   results_table = NULL
-  results_table = cbind(results_table, sil_pca, sil_umap[,2],sil_tsne[,2],dunn_pca[,2],dunn_umap[,2],dunn_tsne[,2], ncells, nclust )
-  colnames(results_table) = c("ID", "Silhouette_PCA", "Silhouette_UMAP", "Silhouette_TSNE", "Dunn_PCA", "Dunn_UMAP", "Dunn_TSNE", "Number of Cells", "Number of Clusters")
+  results_table = cbind(results_table, silPca, silUmap[,2],silTsne[,2],dunnPca[,2],dunnUmap[,2],dunnTsne[,2], ncells, nclust )
+  colnames(results_table) = c("ID", "Silhouette PCA", "Silhouette UMAP", "Silhouette TSNE", "Dunn PCA", "Dunn UMAP", "Dunn TSNE", "Number of Cells", "Number of Clusters")
   write.table(results_table, file = file, sep = ',', row.names = F, col.names = T)
   return(results_table)
 }
@@ -54,7 +54,7 @@ complete_kmeans <- function(datasets, seed = 1, path = '.', k = 10)
 #' @param seed The seed of randomization for reproducibility, defaults to 1
 #' @param path The file path for saving the results of the workflow
 #' @export
-complete_seurat <-function(datasets, seed = 1, path = '.', reduction = 'pca')
+complete_seurat <-function(datasets, seed = 1, path = '.')
 {
   set.seed(seed)
   file = paste(path, "/seurat_clusters.csv", sep = '')
@@ -64,12 +64,18 @@ complete_seurat <-function(datasets, seed = 1, path = '.', reduction = 'pca')
   dataList <- run_log(dataList)
   dataList <- select_hvg(dataList)
   dataList <- scale_data(dataList)
-  dataList <- run_pca(dataList)
-  dataList <- run_umap(dataList)
-  dataList <- run_tsne(dataList)
-  dataList <- run_seurat_cluster(dataList, reductionChoosen = reduction)
-  sil_seurat = run_silhouette(dataList, reductionChoosen = reduction, method = "seurat")
-  dunn_seurat = run_dunn(dataList, reductionChoosen = reduction, method = 'seurat')
+  dataList <- run_pca(dataList, numComponents = 10)
+  dataList <- run_umap(dataList, numDimensions = 10)
+  dataList <- run_tsne(dataList,numDimensions = 10)
+  dataList <- run_seurat_cluster(dataList, reductionChoosen = 'pca', numComponents = 10)
+  silSeuratPca = run_silhouette(dataList, reductionChoosen = 'pca', method = "seurat")
+  dunnSeuratPca = run_dunn(dataList, reductionChoosen = 'pca', method = 'seurat')
+  dataList <- run_seurat_cluster(dataList, reductionChoosen = 'umap',numComponents = 10)
+  silSeuratUmap = run_silhouette(dataList, reductionChoosen = 'umap', method = "seurat")
+  dunnSeuratUmap = run_dunn(dataList, reductionChoosen = 'umap', method = 'seurat')
+  dataList <- run_seurat_cluster(dataList, reductionChoosen = 'tsne',numComponents = 10)
+  silSeuratTsne = run_silhouette(dataList, reductionChoosen = 'tsne', method = "seurat")
+  dunnSeuratTsne = run_dunn(dataList, reductionChoosen = 'tsne', method = 'seurat')
   ncells = NULL
   nclust = NULL
   for(i in 1:length(names(dataList)))
@@ -80,8 +86,8 @@ complete_seurat <-function(datasets, seed = 1, path = '.', reduction = 'pca')
     nclust = append(nclust, nclust_val)
   }
   results_table = NULL
-  results_table = cbind(results_table, sil_seurat, dunn_seurat[,2], ncells, nclust)
-  colnames(results_table) = c("ID", "Silhouette", "Dunn", "Number of Cells", "Number of Clusters")
+  results_table = cbind(results_table, silSeuratPca, silSeuratUmap[,2], silSeuratTsne[,2],dunnSeuratPca[,2],dunnSeuratUmap[,2], dunnSeuratTsne[,2],ncells, nclust)
+  colnames(results_table) = c("ID", "Silhouette PCA", "Silhouette UMAP", "Silhouette TSNE", "Dunn PCA", "Dunn UMAP", "Dunn TSNE", "Number of Cells", "Number of Clusters")
   write.table(results_table, file = file, sep = ',' , row.names = F, col.names = T)
   return(results_table)
 }
@@ -109,12 +115,12 @@ complete_kmeans_gficf <- function(datasets, seed = 1, path = '.')
   dataList <- run_kmeans(dataList, reductionChoosen = 'pca')
   dataList <- run_kmeans(dataList, reductionChoosen = 'umap')
   dataList <- run_kmeans(dataList, reductionChoosen = 'tsne')
-  sil_pca = run_silhouette(dataList, 'pca')
-  sil_tsne = run_silhouette(dataList, 'tsne')
-  sil_umap = run_silhouette(dataList, 'umap')
-  dunn_pca = run_dunn(dataList, 'pca')
-  dunn_tsne = run_dunn(dataList, 'tsne')
-  dunn_umap = run_dunn(dataList, 'umap')
+  silPca = run_silhouette(dataList, 'pca')
+  silTsne = run_silhouette(dataList, 'tsne')
+  silUmap = run_silhouette(dataList, 'umap')
+  dunnPca = run_dunn(dataList, 'pca')
+  dunnTsne = run_dunn(dataList, 'tsne')
+  dunnUmap = run_dunn(dataList, 'umap')
   ncells = NULL
   nclust = NULL
   for(i in 1:length(names(dataList)))
@@ -125,8 +131,8 @@ complete_kmeans_gficf <- function(datasets, seed = 1, path = '.')
     nclust = append(nclust, nclust_val)
   }
   results_table = NULL
-  results_table = cbind(results_table, sil_pca, sil_umap[,2],sil_tsne[,2],dunn_pca[,2],dunn_umap[,2],dunn_tsne[,2], ncells, nclust )
-  colnames(results_table) = c("ID", "Silhouette_PCA", "Silhouette_UMAP", "Silhouette_TSNE", "Dunn_PCA", "Dunn_UMAP", "Dunn_TSNE", "Number of Cells", "Number of Clusters")
+  results_table = cbind(results_table, silPca, silUmap[,2],silTsne[,2],dunnPca[,2],dunnUmap[,2],dunnTsne[,2], ncells, nclust )
+  colnames(results_table) = c("ID", "Silhouette PCA", "Silhouette UMAP", "Silhouette TSNE", "Dunn PCA", "Dunn UMAP", "Dunn TSNE", "Number of Cells", "Number of Clusters")
   write.table(results_table, file = file, sep = ',', row.names = F, col.names = T)
   return(results_table)
 }
@@ -151,9 +157,15 @@ complete_seurat_gficf <- function(datasets, seed = 1, path = '.', reduction = 'p
   dataList <- run_pca(dataList)
   dataList <- run_umap(dataList)
   dataList <- run_tsne(dataList)
-  dataList <- run_seurat_cluster(dataList, reductionChoosen = reduction)
-  sil_seurat = run_silhouette(dataList, reductionChoosen = reduction, method = "seurat")
-  dunn_seurat = run_dunn(dataList, reductionChoosen = reduction, method = 'seurat')
+  dataList <- run_seurat_cluster(dataList, reductionChoosen = 'pca',numComponents = 10)
+  silSeuratPca = run_silhouette(dataList, reductionChoosen = reduction, method = "seurat")
+  dunnSeuartPca = run_dunn(dataList, reductionChoosen = reduction, method = 'seurat')
+  dataList <- run_seurat_cluster(dataList, reductionChoosen = 'umap',numComponents = 10)
+  silSeuratUmap = run_silhouette(dataList, reductionChoosen = 'umap', method = "seurat")
+  dunnSeuratUmap = run_dunn(dataList, reductionChoosen = 'umap', method = 'seurat')
+  dataList <- run_seurat_cluster(dataList, reductionChoosen = 'tsne',numComponents = 10)
+  silSeuratTsne = run_silhouette(dataList, reductionChoosen = 'tsne', method = "seurat")
+  dunnSeuratTsne = run_dunn(dataList, reductionChoosen = 'tsne', method = 'seurat')
   ncells = NULL
   nclust = NULL
   for(i in 1:length(names(dataList)))
@@ -164,8 +176,8 @@ complete_seurat_gficf <- function(datasets, seed = 1, path = '.', reduction = 'p
     nclust = append(nclust, nclust_val)
   }
   results_table = NULL
-  results_table = cbind(results_table, sil_seurat, dunn_seurat[,2], ncells, nclust)
-  colnames(results_table) = c("ID", "Silhouette", "Dunn", "Number of Cells", "Number of Clusters")
+  results_table = cbind(results_table, silSeuratPca, silSeuratUmap[,2], silSeuratTsne[,2],dunnSeuratPca[,2],dunnSeuratUmap[,2], dunnSeuratTsne[,2],ncells, nclust)
+  colnames(results_table) = c("ID", "Silhouette PCA", "Silhouette UMAP", "Silhouette TSNE", "Dunn PCA", "Dunn UMAP", "Dunn TSNE", "Number of Cells", "Number of Clusters")
   write.table(results_table, file = file, sep = ',' , row.names = F, col.names = T)
   return(results_table)
 }
@@ -193,7 +205,7 @@ run_harmony_workflow <- function(datasets, seed = 1)
   dataList = run_harmony(dataList)
   dataList = run_kmeans(dataList, reductionChoosen = 'harmony')
   dataList = run_silhouette(dataList, reductionChoosen = "harmony")
-  retunr(dataList)
+  return(dataList)
 }
 #' Completes the FastMNN Workflow on Log Data
 #'

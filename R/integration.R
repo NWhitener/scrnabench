@@ -13,11 +13,11 @@ run_cca <- function(dataList)
   if(is.list(dataList))
   {
     features <- Seurat::SelectIntegrationFeatures(object.list = dataList)
-    k.filter <- min(200, min(sapply(dataList, ncol)))
-    data.anchors <- Seurat::FindIntegrationAnchors(object.list = dataList, anchor.features = features, k.filter=k.filter)
-    data.combined <- Seurat::IntegrateData(anchorset = data.anchors)
-    Seurat::DefaultAssay(data.combined) <- "integrated"
-    merged<-list(data.combined)
+    kFilter <- min(200, min(sapply(dataList, ncol)))
+    dataAnchors <- Seurat::FindIntegrationAnchors(object.list = dataList, anchor.features = features, k.filter=kFilter)
+    dataCombined <- Seurat::IntegrateData(anchorset = dataAnchors)
+    Seurat::DefaultAssay(dataCombined) <- "integrated"
+    merged<-list(dataCombined)
     names(merged)<-c("Integrated")
     return(merged)
   }
@@ -99,11 +99,11 @@ run_sctransform <- function(dataList)
   dataList <- lapply(X = dataList, FUN = Seurat::SCTransform)
   features <- Seurat::SelectIntegrationFeatures(object.list = dataList, nfeatures=2000)
   dataList <- Seurat::PrepSCTIntegration(object.list = dataList, anchor.features = features)
-  k.filter <- min(200, min(sapply(dataList, ncol)))
-  data.anchors <- Seurat::FindIntegrationAnchors(object.list = dataList, normalization.method = "SCT", anchor.features = features, k.filter = k.filter)
-  data.combined <- Seurat::IntegrateData(anchorset = data.anchors, normalization.method = "SCT")
-  Seurat::DefaultAssay(data.combined) <- "integrated"
-  merged<-list(data.combined)
+  kFilter <- min(200, min(sapply(dataList, ncol)))
+  dataAnchors <- Seurat::FindIntegrationAnchors(object.list = dataList, normalization.method = "SCT", anchor.features = features, k.filter = kFilter)
+  dataCombined <- Seurat::IntegrateData(anchorset = dataAnchors, normalization.method = "SCT")
+  Seurat::DefaultAssay(dataCombined) <- "integrated"
+  merged<-list(dataCombined)
   names(merged)<-c("Integrated")
   return(merged)
   }

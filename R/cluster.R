@@ -39,16 +39,19 @@ run_kmeans <- function(dataList, k=10, reductionChoosen = 'pca')
 #'  The FindClusters resolution is set to 0.5
 #'
 #' @param dataList A data list of data sets
+#' @param reductionChoosen The dimensionality reduction type that is wanted
+#' @param resolutionGiven the resolution of the seurat clustering method
+#' @param numComponents the number of components to use
 #' @return A data list with clustering completed completed on the features
 #' @export
-run_seurat_cluster <- function(dataList, reductionChoosen = "pca", resolutionGiven = 0.5)
+run_seurat_cluster <- function(dataList, reductionChoosen = "pca", resolutionGiven = 0.5, numComponents = 10)
 {
 
 
   if(is.list(dataList))
   {
   for (i in (1:length(names(dataList)))){
-    dataList[[i]] <- Seurat::FindNeighbors(dataList[[i]], reduction = reductionChoosen, dims = 1:10)
+    dataList[[i]] <- Seurat::FindNeighbors(dataList[[i]], reduction = reductionChoosen, dims=1:numComponents)
     dataList[[i]]<- Seurat::FindClusters(dataList[[i]], resolution = resolutionGiven)
   }
   return(dataList)
@@ -57,4 +60,38 @@ run_seurat_cluster <- function(dataList, reductionChoosen = "pca", resolutionGiv
   {
     stop("A data list of datasets is required to use seurat clustering on the datasets")
   }
+}
+#' Find the number of clusters
+#'
+#' This functions finds the number of clusters in the Seurat Clustering method, or through the kmeans clustering
+#' method.
+#'
+#' @param dataList A data list of data sets
+#' @param reductionChoosen The dimensionality reduction type that is wanted
+#' @param clusteringType the type of clustering you would like to find the number of
+#' @return A results list with the number of clusters
+#' @export
+find_num_cluster <- function(dataList, clusteringType = 'kmeans', reductionType= 'pca')
+{
+  if(is.list(dataList))
+  {
+    result = NULL
+    for (i in (1:length(names(dataList)))){
+    if(clusteringType == 'kmeans')
+    {
+      reductionType <- paste("kmeans_cluster_", reductionChoosen, sep ="")
+      clusters <- dataList[[i]][[reductionType]][,1]
+    }
+    else if(clusteringType == 'seurat')
+    {
+      reductionType = paste('seurat_clusters')
+      clusters <- as.numeric(dataList[[i]][[reductionType]]$seurat_clusters)
+    }
+    numClust = length(unique(clusters))
+    result = append(result, numClust)
+    }
+    return(result)
+
+
   }
+}
