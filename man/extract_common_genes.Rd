@@ -7,7 +7,7 @@
 extract_common_genes(dataList)
 }
 \arguments{
-\item{data}{A scRNA-seq data object (Seurat) with the rows as genes and the cells as objects}
+\item{dataList}{A List of scRNA-seq data object (Seurat) with the rows as genes and the cells as objects}
 }
 \value{
 A list of the common genes in the data object

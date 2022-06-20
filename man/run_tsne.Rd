@@ -4,15 +4,21 @@
 \alias{run_tsne}
 \title{Run tSNE}
 \usage{
-run_tsne(dataList, reductionChoosen = "pca", numDimensions = 2)
+run_tsne(dataList, reductionType = "pca", numDimensions = 10)
 }
 \arguments{
-\item{dataList}{A data list of data sets}
+\item{dataList}{A list of data sets to be reduced by tSNE}
+
+\item{reductionType}{The type of reduction that the tSNE calculation should be based on, defaulted to PCA}
+
+\item{numDimensions}{The number of dimensions to be used in the tSNE calculation, default is 10}
 }
 \value{
 A data list with tSNE completed on the features
 }
 \description{
 This functions runs the Seurat RunTSNE function on a list of data sets. This functions assumes that genes are in rows and
-cells are in columns. The default reduction is set to "pca" with the first 30 dimensions being accepted
+cells are in columns. The default reduction is set to "pca" with the first 10 dimensions being accepted. The perplexity
+is set to the square root of the number of cells, to accomodate for small datasets, and check_duplicated is set
+to be false
 }

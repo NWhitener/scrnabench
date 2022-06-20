@@ -15,5 +15,5 @@ A data list of data that falls within the specified data limitations which acts 
 \description{
 This function "preprocesses" a data list by restricting a input list to a range between minimum and maximum of the Total MRNA counts
 Total Gene Counts that are present in the list. This creates a filtered set of genes to use in experiments, removing extreme
-outliers. These bounds are similar to the ?monocle? package. CITE PAPER
+outliers and making sure that all cells and genes are potentially informative.
 }

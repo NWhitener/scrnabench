@@ -13,6 +13,6 @@ scale_data(dataList)
 A data list of that includes the scaled data
 }
 \description{
-This function uses the ScaleData of Seurat to scale the data set. This function
-assumes that genes are in rows and cells are in columns.
+This function uses the ScaleData of Seurat to scale the data set. Scaling centers the data to a mean of zero,
+and scales to a standard deviation of 1. This function assumes that genes are in rows and cells are in columns.
 }

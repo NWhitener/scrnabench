@@ -2,17 +2,21 @@
 % Please edit documentation in R/preprocessing.R
 \name{run_umap}
 \alias{run_umap}
-\title{Run Uniform Manifold Approximation and Projection}
+\title{Run UMAP}
 \usage{
-run_umap(dataList, reductionChoosen = "pca", numDimensions = 2)
+run_umap(dataList, reductionType = "pca", numDimensions = 10)
 }
 \arguments{
-\item{dataList}{A data list of data sets}
+\item{dataList}{A list of data sets to be reduced by UMAP}
+
+\item{reductionType}{The type of reduction that the UMAP calculation should be based on, defaulted to PCA}
+
+\item{numDimensions}{The number of dimensions to be used in the UMAP calculation, default is 10}
 }
 \value{
 A data list with UMAP completed on the features
 }
 \description{
 This functions runs the Seurat RunUMAP function on a list of data sets. This functions assumes that genes are in rows and
-cells are in columns. The default reduction is set to "pca" with the first 30 dimensions being accepted
+cells are in columns. The default reduction is set to "pca" with the first 10 dimensions being accepted
 }

@@ -7,12 +7,15 @@
 run_pca(dataList, numComponents = 10)
 }
 \arguments{
-\item{dataList}{A data list of data sets}
+\item{dataList}{A list of data sets to be reduced by PCA}
+
+\item{numComponents}{The number fo components to be found, with a default of 10}
 }
 \value{
 A data list with PCA completed on the features
 }
 \description{
 This functions runs the Seurat RunPCA function on a list of data sets. This functions assumes that genes are in rows and
-cells are in columns. The default parameters are used, and verbose is set to false
+cells are in columns. Verbose is set to false, the Features are set to be the Variable Features of the data set, the
+default number of components is 10, and the PCA is run on only scaled data
 }

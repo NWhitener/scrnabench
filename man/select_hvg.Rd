@@ -4,15 +4,17 @@
 \alias{select_hvg}
 \title{Select Highly Variable Genes}
 \usage{
-select_hvg(dataList, numFeatures = 2000)
+select_hvg(dataList, numGenes = 2000)
 }
 \arguments{
-\item{dataList}{A list of data sets that you wouuld like the variable genes of}
+\item{dataList}{A list of data sets for finding HVG's}
+
+\item{numGenes}{The number fo HVG's to be found, defaults to 2000}
 }
 \value{
 A data list of that includes the variable genes of the original data list
 }
 \description{
 This function uses the FindVariablesFeatures of Seurat to find the Highly variable genes of a data set. This function
-assumes that genes are in rows and cells are in columns. The "vst" selection method is used with 2000 nfeatures.
+assumes that genes are in rows and cells are in columns. The "vst" selection method is used with 2000 genes as a default.
 }
