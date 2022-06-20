@@ -11,5 +11,5 @@ download_data(path = ".")
 }
 \description{
 This function downloads the data that is used in the package for use in examples, and automatically loads the data for
-usage. Run this once when the data is not download, if the data is downloaded use the data_load function
+usage. Run this once when the data is not download, if the data is downloaded use the load_data function
 }

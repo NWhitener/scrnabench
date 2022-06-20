@@ -13,6 +13,6 @@ extract_datasets(names)
 A data list of the matrices of the data sets that were extracted
 }
 \description{
-This function extracts a set of Data sets for further use in the workflow. Each data set that is extracted will be a dgCMatrix
+This function extracts a set of Data sets for further use in the workflows. Each data set that is extracted will be a dgCMatrix
 with rows representing genes and cells representing columns
 }
