@@ -2,17 +2,20 @@
 % Please edit documentation in R/validate.R
 \name{run_dunn}
 \alias{run_dunn}
-\title{Run Dunn}
+\title{Run Dunn Index}
 \usage{
-run_dunn(dataList, reductionChoosen, method = "kmeans")
+run_dunn(dataList, reductionType = "pca", method = "kmeans")
 }
 \arguments{
 \item{dataList}{a data list of the data with clustering assignments}
 
-\item{reductionChoosen}{The dimensionality reduction type of the data to find the calculated scores}
+\item{reductionType}{The dimensionality reduction type of the data to find the calculated scores,
+defaults to PCA}
 
-\item{method}{The clustering method used}
+\item{method}{The clustering method used, defaults to Kmeans
+#' @return A table of the Dunn Index Scores, with the data set name and the score}
 }
 \description{
-This function calculates the dunn index of the clustering assignments made on the datasets provided
+This function calculates the Dunn index of the clustering assignments made on the datasets provided. Uses the
+clVaild implementation of the Dunn Index
 }

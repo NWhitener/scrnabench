@@ -1,90 +1,93 @@
-
-###REREVIEW
-
-
 #' Run Silhouette
 #'
-#' This function calculates the average silhouette width of the clustering assignments made on the datasets provided
+#' This function calculates the average silhouette width of the clustering assignments made on the data sets provided
+#' Uses the cluster package implementation.
+#'
 #'
 #' @param dataList a data list of the data with clustering assignments
-#' @param reductionChoosen The dimensionality reduction type of the data to find the calculated scores
-#' @param method The clustering method used
+#' @param reductionType The dimensionality reduction type of the data to find the calculated scores,
+#' defaults to PCA
+#' @param method The clustering method used, defaults to Kmeans
+#' @return A table of the Silhouette Scores, with the data set name and the score
 #' @export
-run_silhouette <- function(dataList, reductionChoosen = 'pca', method = 'kmeans')
+run_silhouette <- function(dataList, reductionType = 'pca', method = 'kmeans')
 {
-  ##Address the merge for dataset naming
-
-  result = NULL
+  resultsTable = NULL
+  annotationField <- toupper(paste(method, '_cluster_', reductionType, sep=''))
   for (i in (1:length(names(dataList))))
   {
-    if(method == "kmeans"){
-      reductionType <- paste("kmeans_cluster_", reductionChoosen, sep ="")
-      clusters <- dataList[[i]][[reductionType]][,1]
-
-    }
-    else if(method == "seurat")
-    {
-      reductionType = paste('seurat_clusters')
-      clusters <- as.numeric(dataList[[i]][[reductionType]]$seurat_clusters)
-    }
-    else{
-      stop("Invalid clustering method requested")
-    }
-    if(length((unique(clusters))) < 2)
-         {
-          warningMessage = paste("Dataset ", datasets[i], " has only one cluster. Consider changing the clustering parameters", sep ='')
-          warning(warningMessage)
-          datasetResult = cbind(names(dataList[i]), NA)
-          }
-      else {
-        cellEmbeddings <- Seurat::Embeddings(dataList[[i]], reduction = reductionChoosen)
-        silhouetteScores <- summary(cluster::silhouette(clusters, dist(cellEmbeddings, "euclidean")))
-        datasetResult = cbind(names(dataList[i]),  silhouetteScores$avg.width)
-      }
-    result = rbind(result, datasetResult)
-    }
-  return(result)
-}
-
-#' Run Dunn
-#'
-#' This function calculates the dunn index of the clustering assignments made on the datasets provided
-#'
-#' @param dataList a data list of the data with clustering assignments
-#' @param reductionChoosen The dimensionality reduction type of the data to find the calculated scores
-#' @param method The clustering method used
-#' @export
-run_dunn <- function(dataList, reductionChoosen,  method = 'kmeans'){
-  result = NULL
-  for (i in (1:length(names(dataList))))
-  {
-    if(method == "kmeans"){
-      reductionType <- paste("kmeans_cluster_", reductionChoosen, sep ="")
-      clusters <- dataList[[i]][[reductionType]][,1]
-
-    }
-    else if(method == "seurat")
-    {
-      reductionType = paste('seurat_clusters')
-      clusters <- as.numeric(dataList[[i]][[reductionType]]$seurat_clusters)
-    }
-    else{
-      stop("Invalid clustering method requested")
-    }
-    if(length((unique(clusters))) < 2)
+    clusters <- dataList[[i]][[annotationField]][,1]
+    if(length(unique(clusters)) < 2)
     {
       warningMessage = paste("Dataset ", datasets[i], " has only one cluster. Consider changing the clustering parameters", sep ='')
       warning(warningMessage)
-      datasetResult = cbind(dataList[[i]]@meta.data$ID[1], NA)
+      resultsTable = rbind(resultsTable, c(names(dataList[i]), NA))
     }
-    else {
-      cellEmbeddings <- Seurat::Embeddings(dataList[[i]], reduction = reductionChoosen)
-      dunn = clValid::dunn(clusters = clusters, Data = cellEmbeddings)
-      datasetResult = cbind(dataList[[i]]@meta.data$ID[1],  dunn)
+    else
+    {
+      cellEmbeddings <- Seurat::Embeddings(dataList[[i]], reduction = reductionType)
+      silhouetteScores <- summary(cluster::silhouette(clusters, dist(cellEmbeddings, 'euclidean')))
+      resultsTable = rbind(resultsTable, c(names(dataList[i]),  silhouetteScores$avg.width))
     }
-    result = rbind(result, datasetResult)
   }
-  return(result)
+  return(resultsTable)
 }
 
+#' Run Dunn Index
+#'
+#' This function calculates the Dunn index of the clustering assignments made on the datasets provided. Uses the
+#' clVaild implementation of the Dunn Index
+#'
+#' @param dataList a data list of the data with clustering assignments
+#' @param reductionType The dimensionality reduction type of the data to find the calculated scores,
+#' defaults to PCA
+#' @param method The clustering method used, defaults to Kmeans
+#' #' @return A table of the Dunn Index Scores, with the data set name and the score
+#' @export
+run_dunn <- function(dataList, reductionType = 'pca',  method = 'kmeans')
+{
+  resultsTable = NULL
+  annotationField <- toupper(paste(method, '_cluster_', reductionType, sep=''))
 
+  for (i in (1:length(names(dataList))))
+  {
+    clusters <- dataList[[i]][[annotationField]][,1]
+    if(length(unique(clusters)) < 2)
+    {
+      warningMessage = paste("Dataset ", datasets[i], " has only one cluster. Consider changing the clustering parameters", sep ='')
+      warning(warningMessage)
+      resultsTable = rbind(resultsTable, c(names(dataList[i]), NA))
+    }
+    else
+    {
+      cellEmbeddings <- Seurat::Embeddings(dataList[[i]], reduction = reductionType)
+      dunnScore = clValid::dunn(clusters = clusters, Data = cellEmbeddings)
+      resultsTable = rbind(resultsTable, c(names(dataList[i]),  dunnScore))
+    }
+  }
+  return(resultsTable)
+}
+
+#' Run ARI
+#'
+#' Computes the Adjusted Rand Index of the cluster memberships. Uses the aricode implementation of ARI
+#'
+#' @param dataList A list of data sets with cluster membership information
+#' @param groundTruths The true cell cluster memberships
+#' @param reductionType The dimensionality reduction type of the data to find the calculated scores,
+#' defaults to PCA
+#' @param method The clustering method used, defaults to Kmeans
+#' @return A table of the ARI Scores, with the data set name and the score
+#' @export
+run_ari <- function(dataList, groundTruths, reductionType = 'pca',  method = 'kmeans')
+{
+  resultsTable = NULL
+  annotationField <- toupper(paste(method, '_cluster_', reductionType, sep=''))
+  for (i in (1:length(names(dataList))))
+  {
+    clusters <- dataList[[i]][[annotationField]][,1]
+    ariScore <- aricode::ARI(clusters, groundTruths[[i]])
+    resultsTable = rbind(resultsTable, c(names(dataList[i]), ariScore))
+  }
+  return(resultsTable)
+}
