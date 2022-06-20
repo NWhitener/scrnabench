@@ -4,13 +4,15 @@
 \alias{run_sctransform}
 \title{Run sctransform}
 \usage{
-run_sctransform(dataList)
+run_sctransform(dataList, numFeatures = 2000)
 }
 \arguments{
-\item{dataList}{A data list of data sets to integrate using the sctransform protocol}
+\item{dataList}{A list of data sets to integrate using the sctransform protocol}
+
+\item{numFeatures}{The number of Features to use, defaults to 2000}
 }
 \value{
-data.combined A data list of the combined data from the sctransform protocol
+A data list of the combined data from the sctransform protocol
 }
 \description{
 This function runs the data integration protocol detailed in the Seurat "Using sctransform in Seurtat"

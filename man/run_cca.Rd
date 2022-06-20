@@ -7,13 +7,13 @@
 run_cca(dataList)
 }
 \arguments{
-\item{dataList}{A data list of data sets to integrate using the cca protocol}
+\item{dataList}{A list of data sets to integrate using the cca protocol}
 }
 \value{
-data.combined A data list of the combined data from the cca protocol
+A data list of the combined data from the cca protocol
 }
 \description{
 This function runs the data integration protocol detailed in the Seurat "Introduction to scRNA-seq
 integration" found at https://satijalab.org/seurat/articles/integration_introduction.html. This function completes the cca process on
-the datasets. Use run_cca_workflow() for the entire workflow process
+the datasets. Use run_cca_integration_workflow() for the entire workflow process
 }

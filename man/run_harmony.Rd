@@ -7,12 +7,15 @@
 run_harmony(dataList, batchName = "ID")
 }
 \arguments{
-\item{dataList}{A data list of data sets to integrate using the harmony protocol}
+\item{dataList}{A list of data sets to integrate using the harmony protocol}
+
+\item{batchName}{The annotation name to group data sets by, defaults to "ID"}
 }
 \value{
-data.combined A data list of the combined data from the harmony protocol
+A list of the integrated data from the harmony protocol
 }
 \description{
-This function runs the data integration protocol detailed in the Seurat ## FIND VING. AND LINK . This function completes the harmonization process on
-the datasets. Use run_harmony_workflow() for the entire workflow process
+This function runs the data integration protocol found at https://github.com/satijalab/seurat-wrappers/blob/master/docs/harmony.md
+This function completes the harmonization process on
+the data sets. Use run_harmony_integration_workflow() for the entire workflow process
 }
