@@ -1,106 +1,98 @@
 #' Run Kmeans
 #'
 #' This function runs Kmeans Clustering. It uses the simple Kmeans algorithm with
-#' a max number of iterations set to be 100.
+#' a max number of iterations set to be 100 by default. The number of clusters is set by the users and defaults
+#' to 10 clusters. This is the R package stats implementation of Kmeans
 #'
-#' @param dataList A list of datasets to apply the Kmeans algorithm too
-#' @param k The number of cluster centers to use, defaults to 10
+#' @param dataList A list of data sets to be clustered by Kmeans
+#' @param reductionType The type of dimensionly reduced data that should be used for clustering
+#' defaults to PCA
+#' @param numberClusters The number of cluster centers to use, defaults to 10
+#' @param iterationsMax The max number of iterations that should be used in the kmeans algorithm
+#' defaults to 100
 #' @return The dataList with kmeans clusters stored in the meta data
 #' @export
-run_kmeans <- function(dataList, k=10, reductionChoosen = 'pca')
+run_kmeans_clustering <- function(dataList, reductionType = 'pca', numberClusters = 10, iterationsMax = 100)
 {
-
-  ##REFACTOR TO THE ADD ANNOTATION FUNCTION
-
   if(is.list(dataList))
   {
-  for (i in (1:length(names(dataList))))
-  {
-    clustData = Seurat::Embeddings(dataList[[i]], reduction = reductionChoosen)
-    meta = dataList[[i]]@meta.data
-    meta[paste("kmeans_cluster_", reductionChoosen, sep = "")] <- stats::kmeans(clustData,  k, iter.max = 100)$cluster
-    print(i)
-    metaFix <- subset(meta, select = c(paste("kmeans_cluster_", reductionChoosen, sep = "")))
-    dataList[[i]] <- Seurat::AddMetaData(dataList[[i]], metaFix)
-
-  }
-    return(dataList)
+    for (i in (1:length(names(dataList))))
+    {
+      cellEmbeddings = Seurat::Embeddings(dataList[[i]], reduction = reductionType)
+      annotationField <- toupper(paste('kmeans_cluster_', reductionType, sep=''))
+      dataList[[i]][[annotationField]] <- stats::kmeans(cellEmbeddings, numberClusters, iter.max = iterationsMax)$cluster
+    }
   }
   else
-    {
-      stop("A data list of datasets is required to kmeans cluster datasets")
-    }
+  {
+    stop("A data list of datasets is required to run k-means clustering.")
+  }
 
+  return(dataList)
 }
 
 #' Complete Clustering Steps
 #'
 #' This functions runs the Seurat FindNeighbors and FindClusters function on a list of data sets.
 #' This functions assumes that genes are in rows and
-#'  cells are in columns. The FindNeighbors reduction is set to "pca" by default and uses the first 30 dimensions
-#'  The FindClusters resolution is set to 0.5
+#' cells are in columns. The FindNeighbors reduction is set to "pca" by default and uses the first 10 dimensions
+#' The FindClusters resolution is set to 0.5 by default, but is controlable by the user
 #'
-#' @param dataList A data list of data sets
-#' @param reductionChoosen The dimensionality reduction type that is wanted
-#' @param resolutionGiven the resolution of the seurat clustering method
-#' @param numComponents the number of components to use
-#' @return A data list with clustering completed completed on the features
+#' @param dataList A list of data sets to be clustered
+#' @param reductionType The type of dimensionly reduced data that should be used for clustering, defaults to PCA
+#' @param resolutionValues The resolution for the Seurat clustering method, defaults to 0.5
+#' @param numComponents the number of components to use, defaults to 10
+#' @return A data list with Seurat clustering completed
 #' @export
-run_seurat_cluster <- function(dataList, reductionChoosen = "pca", resolutionGiven = 0.5, numComponents = 10)
+run_seurat_clustering <- function(dataList, reductionType = 'pca', resolutionValue = 0.5, numberComponents = 10)
 {
 
-## rewrite, go through objects find clusters
   if(is.list(dataList))
   {
-  for (i in (1:length(names(dataList)))){
-    dataList[[i]] <- Seurat::FindNeighbors(dataList[[i]], reduction = reductionChoosen, dims=1:numComponents)
-    dataList[[i]]<- Seurat::FindClusters(dataList[[i]], resolution = resolutionGiven)
-    ##Find clusters
-    ##store them into list of lists
-
-  }
-
-## call add annotation
-  return(dataList)
-
-
+    for (i in (1:length(names(dataList))))
+    {
+      dataList[[i]] <- Seurat::FindNeighbors(dataList[[i]], reduction = reductionType, dims = 1:numberComponents)
+      dataList[[i]]<- Seurat::FindClusters(dataList[[i]], resolution = resolutionValue)
+      annotationField <- toupper(paste('seurat_cluster_', reductionType, sep=''))
+      dataList[[i]][[annotationField]] <- as.numeric(dataList[[i]][['seurat_clusters']][,1])
     }
+  }
   else
   {
-    stop("A data list of datasets is required to use seurat clustering on the datasets")
+    stop("A list of datasets is required to run seurat clustering.")
   }
+
+  return(dataList)
 }
-#' Find the number of clusters
+
+
+#' Get the number of clusters
 #'
 #' This functions finds the number of clusters in the Seurat Clustering method, or through the kmeans clustering
 #' method.
 #'
 #' @param dataList A data list of data sets
-#' @param reductionChoosen The dimensionality reduction type that is wanted
-#' @param clusteringType the type of clustering you would like to find the number of
-#' @return A results list with the number of clusters
+#' @param method The type of clustering, defaults to kmeans
+#' @param reductionType The type of dimensionly reduced data that should be used for clustering,
+#' defaults to PCA
+#' @return A list with the number of clusters
 #' @export
-find_num_cluster <- function(dataList, clusteringType = 'kmeans', reductionType= 'pca')
+get_number_clusters <- function(dataList, method = 'kmeans', reductionType= 'pca')
 {
   if(is.list(dataList))
   {
-    result = NULL
-    for (i in (1:length(names(dataList)))){
-    if(clusteringType == 'kmeans')
+    annotationField <- toupper(paste(method, '_cluster_', reductionType, sep=''))
+    numberClusters = list()
+    for (i in (1:length(names(dataList))))
     {
-      reductionType <- paste("kmeans_cluster_", reductionChoosen, sep ="")
-      clusters <- dataList[[i]][[reductionType]][,1]
+      clusterMemberships <- dataList[[i]][[annotationField]][,1]
+      numberClusters[i] <- length(unique(clusterMemberships))
     }
-    else if(clusteringType == 'seurat')
-    {
-      reductionType = paste('seurat_clusters')
-      clusters <- as.numeric(dataList[[i]][[reductionType]]$seurat_clusters)
-    }
-    numClust = length(unique(clusters))
-    result = append(result, numClust)
-    }
-    return(result)
-
-
   }
+  else
+  {
+    stop("A list of datasets is required to find the number of clusters.")
+  }
+
+  return(numberClusters)
 }
