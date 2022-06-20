@@ -2,7 +2,7 @@
 % Please edit documentation in R/cluster.R
 \name{run_seurat_clustering}
 \alias{run_seurat_clustering}
-\title{Complete Clustering Steps}
+\title{Seurat Clustering}
 \usage{
 run_seurat_clustering(
   dataList,

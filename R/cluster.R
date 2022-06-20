@@ -31,7 +31,7 @@ run_kmeans_clustering <- function(dataList, reductionType = 'pca', numberCluster
   return(dataList)
 }
 
-#' Complete Clustering Steps
+#' Seurat Clustering
 #'
 #' This functions runs the Seurat FindNeighbors and FindClusters function on a list of data sets.
 #' This functions assumes that genes are in rows and
