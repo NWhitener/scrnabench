@@ -7,7 +7,7 @@
 permute_columns(dataList)
 }
 \arguments{
-\item{dataList}{A data list that you would like to permute the columns of}
+\item{dataList}{A list of data}
 }
 \value{
 The data list with the columns permuted

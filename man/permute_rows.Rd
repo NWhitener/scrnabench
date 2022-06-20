@@ -7,7 +7,7 @@
 permute_rows(dataList)
 }
 \arguments{
-\item{dataList}{A data list that you would like to permute the rows of}
+\item{dataList}{A list of data}
 }
 \value{
 The data list with the rows permuted

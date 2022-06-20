@@ -1,11 +1,11 @@
 #' Duplicate Datasets
 #'
-#' This function duplicates a dataset a variable number of times. This function is to be used in
+#' This function duplicates a data set a variable number of times. This function is to be used in
 #' research situations.
 #'
-#' @param dataList A list of dataset names that should be duplicated
-#' @param duplicates The number of duplicates that are desired
-#' @return a dataList of the duplicated datasets
+#' @param dataList A list of data set names that should be duplicated
+#' @param duplicates The number of duplicates that are desired, defaults to 2
+#' @return a data list of the duplicated datasets
 #' @export
 duplicate_datasets <- function(dataList, duplicates = 2)
 {
@@ -28,7 +28,7 @@ duplicate_datasets <- function(dataList, duplicates = 2)
 #' so that further experimentation can be done wit the data list to check the  algorithmic stability of a pipeline or
 #' method
 #'
-#' @param dataList A data list that you would like to permute the rows of
+#' @param dataList A list of data
 #' @return The data list with the rows permuted
 #' @export
 permute_rows <- function(dataList)
@@ -51,7 +51,7 @@ permute_rows <- function(dataList)
 #' so that further experimentation can be done wit the data list to check the  algorithmic stability of a pipeline or
 #' method
 #'
-#' @param dataList A data list that you would like to permute the columns of
+#' @param dataList A list of data
 #' @return The data list with the columns permuted
 #' @export
 permute_columns <- function(dataList)
@@ -72,8 +72,8 @@ permute_columns <- function(dataList)
 #'
 #' This function permutes the order of the data set
 #'
-#' @param dataList a data list of data sets to permute the order of
-#' @return A permuted dataset list
+#' @param dataList a  list of data sets
+#' @return A permuted data set list
 #' @export
 permute_dataset_order <- function(dataList)
 {
@@ -86,5 +86,4 @@ permute_dataset_order <- function(dataList)
     {
       stop("A data list of datasets is required to permute datasets order")
     }
-
 }

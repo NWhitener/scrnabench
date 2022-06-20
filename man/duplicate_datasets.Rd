@@ -7,14 +7,14 @@
 duplicate_datasets(dataList, duplicates = 2)
 }
 \arguments{
-\item{dataList}{A list of dataset names that should be duplicated}
+\item{dataList}{A list of data set names that should be duplicated}
 
-\item{duplicates}{The number of duplicates that are desired}
+\item{duplicates}{The number of duplicates that are desired, defaults to 2}
 }
 \value{
-a dataList of the duplicated datasets
+a data list of the duplicated datasets
 }
 \description{
-This function duplicates a dataset a variable number of times. This function is to be used in
+This function duplicates a data set a variable number of times. This function is to be used in
 research situations.
 }

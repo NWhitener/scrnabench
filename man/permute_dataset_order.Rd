@@ -7,10 +7,10 @@
 permute_dataset_order(dataList)
 }
 \arguments{
-\item{dataList}{a data list of data sets to permute the order of}
+\item{dataList}{a  list of data sets}
 }
 \value{
-A permuted dataset list
+A permuted data set list
 }
 \description{
 This function permutes the order of the data set
