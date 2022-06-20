@@ -7,9 +7,9 @@
 load_data(demo = FALSE, path = ".")
 }
 \arguments{
-\item{path}{The path of the load location to use, if the full datasets is to be loaded}
+\item{demo}{Use the full dataset or the small demo data set, defaulted to use the full data sets}
 
-\item{full}{Use the full dataset or the small demo data set}
+\item{path}{The path of the load location to use, if the full datasets is to be loaded}
 }
 \value{
 A object with the names of the data sets that were loaded

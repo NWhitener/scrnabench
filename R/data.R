@@ -19,7 +19,7 @@ download_data <- function(path = '.')
 #' Loads the data
 #'
 #' This function loads the data that is used in the package for use in workflows, functions, and examples
-#' @param full Use the full dataset or the small demo data set
+#' @param demo Use the full dataset or the small demo data set, defaulted to use the full data sets
 #' @param path The path of the load location to use, if the full datasets is to be loaded
 #' @return A object with the names of the data sets that were loaded
 #' @export
