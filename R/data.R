@@ -4,6 +4,7 @@
 #' usage. Run this once when the data is not download, if the data is downloaded use the load_data function
 #'
 #' @param path The path of the download location to use
+#' @return A object with the names of the data sets that were downloaded and loaded
 #' @export
 download_data <- function(path = '.')
 {
@@ -18,8 +19,9 @@ download_data <- function(path = '.')
 #' Loads the data
 #'
 #' This function loads the data that is used in the package for use in workflows, functions, and examples
-#' @param full Use the full dataset or the small demo dataset
+#' @param full Use the full dataset or the small demo data set
 #' @param path The path of the load location to use, if the full datasets is to be loaded
+#' @return A object with the names of the data sets that were loaded
 #' @export
 load_data <- function(demo = FALSE, path = '.')
   {
@@ -206,6 +208,7 @@ annotate_datasets <- function(dataList)
 #' @param dataList A list of data sets to add the clustering annotation too
 #' @param memberships A list of the cluster memberships of each cell, used to add the annotation
 #' @param clusteringName The name of the clustering method used to obtain the clustering membership
+#' @return A list of the data sets with the clustering annotations added
 #' @export
 add_clustering_annotation <- function(dataList, memberships, clusteringName)
 {

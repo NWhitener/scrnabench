@@ -13,6 +13,9 @@ add_clustering_annotation(dataList, memberships, clusteringName)
 
 \item{clusteringName}{The name of the clustering method used to obtain the clustering membership}
 }
+\value{
+A list of the data sets with the clustering annotations added
+}
 \description{
 This function will add clustering annotations (i.e memberships) to the metadata of the Seurat Object of the matching data.
 Any clustering method can be used to obtain these memberships. The annotation name will include the clustering type

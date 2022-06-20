@@ -9,7 +9,10 @@ load_data(demo = FALSE, path = ".")
 \arguments{
 \item{path}{The path of the load location to use, if the full datasets is to be loaded}
 
-\item{full}{Use the full dataset or the small demo dataset}
+\item{full}{Use the full dataset or the small demo data set}
+}
+\value{
+A object with the names of the data sets that were loaded
 }
 \description{
 This function loads the data that is used in the package for use in workflows, functions, and examples
