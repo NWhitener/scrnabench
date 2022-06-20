@@ -143,7 +143,7 @@ extract_datasets <- function(names)
 #' This function annotates a created Seurat object. It edits the chunks and meta.data in
 #' order to annotate the object for use in down stream analysis
 #'
-#' @param data A Seurat object that you want annotated
+#' @param dataList A list of Seurat object that you want annotated
 #' @return A annotated Seurat Object
 #' @export
 annotate_datasets <- function(dataList)

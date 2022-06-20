@@ -7,7 +7,7 @@
 annotate_datasets(dataList)
 }
 \arguments{
-\item{data}{A Seurat object that you want annotated}
+\item{dataList}{A list of Seurat object that you want annotated}
 }
 \value{
 A annotated Seurat Object

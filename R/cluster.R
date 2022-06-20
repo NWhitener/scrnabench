@@ -40,8 +40,8 @@ run_kmeans_clustering <- function(dataList, reductionType = 'pca', numberCluster
 #'
 #' @param dataList A list of data sets to be clustered
 #' @param reductionType The type of dimensionly reduced data that should be used for clustering, defaults to PCA
-#' @param resolutionValues The resolution for the Seurat clustering method, defaults to 0.5
-#' @param numComponents the number of components to use, defaults to 10
+#' @param resolutionValue The resolution for the Seurat clustering method, defaults to 0.5
+#' @param numberComponents the number of components to use, defaults to 10
 #' @return A data list with Seurat clustering completed
 #' @export
 run_seurat_clustering <- function(dataList, reductionType = 'pca', resolutionValue = 0.5, numberComponents = 10)

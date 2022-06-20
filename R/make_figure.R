@@ -5,13 +5,13 @@
 
 figure1 <- function()
 {
-  palette(brewer.pal(n = 8, name = "Set2"))
+  RColorBrewer::palette(RcolorBrewer::brewer.pal(n = 8, name = "Set2"))
   dir = "../output/fig1_data/"
-  pdf("../output/figures/figure1.pdf", width=12, height=4)
-  par(mfrow=c(1,3))
-  data = read.csv(paste(dir, 'harmonized_umap.csv', sep=''), row.names=1)
-  train = read.csv(paste(dir, 'training.csv', sep=''))
-  test = read.csv(paste(dir, 'test.csv', sep=''))
+  grDevices::pdf("../output/figures/figure1.pdf", width=12, height=4)
+  graphics::par(mfrow=c(1,3))
+  data = utils::read.csv(paste(dir, 'harmonized_umap.csv', sep=''), row.names=1)
+  train = utlis::read.csv(paste(dir, 'training.csv', sep=''))
+  test = utils::read.csv(paste(dir, 'test.csv', sep=''))
   plot(data, col="grey")
   #   plot(data, col="grey")
   #plot(data[train$cell_id,], col="cornflowerblue")
@@ -19,7 +19,7 @@ figure1 <- function()
   #   plot(data, col="grey")
   #plot(data[test$cell_id,], col="orange")
   plot(data[test$cell_id,], col=as.factor(test$celltype))
-  dev.off()
+  utils::dev.off()
 }
 
 figure2 <- function(dir_path, pdf_file)
@@ -85,7 +85,6 @@ figure3 <- function()
 
 figure4 <- function(dir_path, pdf_file)
 {
-  library(rdist)
 
   file = paste("../output/", dir_path, sep="")
   pdf(paste("../output/figures/", pdf_file, sep=""), width=12, height=9)
@@ -96,7 +95,7 @@ figure4 <- function(dir_path, pdf_file)
   for (i in c(1, 22, 43))
   {
     end = i + 20
-    d <- rdist(data[, i:end])
+    d <- rdist::rdist(data[, i:end])
     heatmap(as.matrix(d), col = colorRampPalette(brewer.pal(8, "Set2"))(3*256), margins=c(20, 20))
   }
   dev.off()
@@ -272,8 +271,8 @@ figure10 <- function(pdf_file)
 {
   files = c("harmony_harmonized_28_48_cell_line.csv", "fastmnn_harmonized_28_48_cell_line.csv",
             "cca_pca_28_48_cell_line.csv", "sctransform_pca_28_48_cell_line.csv")
-  pdf(paste("../output/figures/", pdf_file, sep=""), width=12, height=6)
-  par(mfrow=c(2,4))
+  grDevices::pdf(paste("../output/figures/", pdf_file, sep=""), width=12, height=6)
+  utils::par(mfrow=c(2,4))
   dir = "../output/"
   labels = c("HCC1395", "HCC1395BL", "HCC1395", "HCC1395BL", "HCC1395", "HCC1395BL")
   colors = c("#1B9E77", "#1B9E77", "#7570B3", "#7570B3", "#E7298A", "#E7298A")

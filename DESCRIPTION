@@ -12,7 +12,7 @@ RoxygenNote: 7.2.0
 URL: https://github.com/NWhitener/scrnabench
 BugReports: https://github.com/NWhitener/scrnabench/issues
 Depends: R (>= 3.5.0)
-Imports:   R.utils, SeuratWrappers, inborutils, Seurat, Matrix, harmony, aricode, stringr, cluster, clValid, text2vec, RColorBrewer
+Imports:   SeuratWrappers, inborutils, Seurat, Matrix, harmony, aricode, stringr, cluster, clValid, text2vec, RColorBrewer, rdist
 Remotes:   satijalab/seurat-wrappers, inbo/inborutils, 
 
  

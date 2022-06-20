@@ -16,9 +16,9 @@ run_seurat_clustering(
 
 \item{reductionType}{The type of dimensionly reduced data that should be used for clustering, defaults to PCA}
 
-\item{resolutionValues}{The resolution for the Seurat clustering method, defaults to 0.5}
+\item{resolutionValue}{The resolution for the Seurat clustering method, defaults to 0.5}
 
-\item{numComponents}{the number of components to use, defaults to 10}
+\item{numberComponents}{the number of components to use, defaults to 10}
 }
 \value{
 A data list with Seurat clustering completed

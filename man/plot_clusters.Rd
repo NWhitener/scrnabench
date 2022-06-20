@@ -9,9 +9,9 @@ plot_clusters(data, reductionType = "pca", method = "kmeans")
 \arguments{
 \item{data}{An individual data object that you want to visualize}
 
-\item{method}{The cluster method to use, defaults to Kmeans}
+\item{reductionType}{The dimensionality reduction method chosen, defaults to PCA}
 
-\item{reductionTypeThe}{dimensionality reduction method chosen, defaults to PCA}
+\item{method}{The cluster method to use, defaults to Kmeans}
 }
 \description{
 Produces a plot of the clustering, based on the dimensionality reduction method chosen. The plot is a Seurat DimPlot
