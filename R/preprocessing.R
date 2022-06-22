@@ -98,6 +98,10 @@ run_log <- function(dataList)
 #' @export
 preprocess <- function(dataList)
 {
+
+  nCount_RNA = NULL
+  nFeature_RNA = NULL
+  percent.mt = NULL
   if(is.list(dataList))
   {
     for (i in (1:length(names(dataList))))
@@ -105,11 +109,11 @@ preprocess <- function(dataList)
       dataList[[i]]<- Seurat::CreateSeuratObject(counts = dataList[[i]], min.cells = 3, min.features = 200)
       dataList[[i]][["percent.mt"]] <- Seurat::PercentageFeatureSet(dataList[[i]], pattern = "^MT-")
       Total_mRNAs <- dataList[[i]][["nCount_RNA"]]$nCount_RNA
-      mupper_bound <- 10^(mean(log10(Total_mRNAs)) + 2*sd(log10(Total_mRNAs)))
-      mlower_bound <- 10^(mean(log10(Total_mRNAs)) - 2*sd(log10(Total_mRNAs)))
+      mupper_bound <- 10^(mean(log10(Total_mRNAs)) + 2*stats::sd(log10(Total_mRNAs)))
+      mlower_bound <- 10^(mean(log10(Total_mRNAs)) - 2*stats::sd(log10(Total_mRNAs)))
       Total_Genes <- dataList[[i]][["nFeature_RNA"]]$nFeature_RNA
-      gupper_bound <- 10^(mean(log10(Total_Genes)) + 2*sd(log10(Total_Genes)))
-      glower_bound <- 10^(mean(log10(Total_Genes)) - 2*sd(log10(Total_Genes)))
+      gupper_bound <- 10^(mean(log10(Total_Genes)) + 2*stats::sd(log10(Total_Genes)))
+      glower_bound <- 10^(mean(log10(Total_Genes)) - 2*stats::sd(log10(Total_Genes)))
       dataList[[i]] <- subset(x = dataList[[i]], subset = nFeature_RNA > glower_bound & nFeature_RNA < gupper_bound &
                                 nCount_RNA > mlower_bound & nCount_RNA < mupper_bound & percent.mt < 10)
     }
@@ -214,6 +218,7 @@ run_pca <- function(dataList, numComponents = 10)
 #' @export
 run_umap <- function(dataList, reductionType = 'pca', numDimensions = 10)
 {
+
   if(is.list(dataList))
   {
     for (i in (1:length(names(dataList))))

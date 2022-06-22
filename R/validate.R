@@ -19,14 +19,14 @@ run_silhouette <- function(dataList, reductionType = 'pca', method = 'kmeans')
     clusters <- dataList[[i]][[annotationField]][,1]
     if(length(unique(clusters)) < 2)
     {
-      warningMessage = paste("Dataset ", datasets[i], " has only one cluster. Consider changing the clustering parameters", sep ='')
+      warningMessage = paste("Dataset ", dataList[i], " has only one cluster. Consider changing the clustering parameters", sep ='')
       warning(warningMessage)
       resultsTable = rbind(resultsTable, c(names(dataList[i]), NA))
     }
     else
     {
       cellEmbeddings <- Seurat::Embeddings(dataList[[i]], reduction = reductionType)
-      silhouetteScores <- summary(cluster::silhouette(clusters, dist(cellEmbeddings, 'euclidean')))
+      silhouetteScores <- summary(cluster::silhouette(clusters, stats::dist(cellEmbeddings, 'euclidean')))
       resultsTable = rbind(resultsTable, c(names(dataList[i]),  silhouetteScores$avg.width))
     }
   }
@@ -54,7 +54,7 @@ run_dunn <- function(dataList, reductionType = 'pca',  method = 'kmeans')
     clusters <- dataList[[i]][[annotationField]][,1]
     if(length(unique(clusters)) < 2)
     {
-      warningMessage = paste("Dataset ", datasets[i], " has only one cluster. Consider changing the clustering parameters", sep ='')
+      warningMessage = paste("Dataset ", dataList[i], " has only one cluster. Consider changing the clustering parameters", sep ='')
       warning(warningMessage)
       resultsTable = rbind(resultsTable, c(names(dataList[i]), NA))
     }

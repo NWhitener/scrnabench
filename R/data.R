@@ -55,6 +55,12 @@ load_data <- function(demo = FALSE, path = '.')
 #' @export
 merge_datasets <- function(dataList)
 {
+
+  if(length(dataList) == 1)
+  {
+    warning("Only one dataset provided, returning the original dataset")
+    return(dataList)
+  }
   cnnew <- character()
   rnnew <- character()
   x <- vector()
@@ -128,7 +134,7 @@ extract_datasets <- function(names)
   for (name in names)
   {
     dataList[[name]] <- as.matrix(dataList[[name]])
-    dataList[[name]] <- as(dataList[[name]], "dgCMatrix")
+    dataList[[name]] <- Matrix::as(dataList[[name]], "dgCMatrix")
     ix = Matrix::rowSums(dataList[[name]] != 0)
     dataList[[name]] = dataList[[name]][ix > 0,]
     ncols = length(colnames(dataList[[name]]))
