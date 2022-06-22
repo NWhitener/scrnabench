@@ -134,7 +134,7 @@ extract_datasets <- function(names)
   for (name in names)
   {
     dataList[[name]] <- as.matrix(dataList[[name]])
-    dataList[[name]] <- Matrix::as(dataList[[name]], "dgCMatrix")
+    dataList[[name]] <- methods::as(dataList[[name]], "dgCMatrix")
     ix = Matrix::rowSums(dataList[[name]] != 0)
     dataList[[name]] = dataList[[name]][ix > 0,]
     ncols = length(colnames(dataList[[name]]))
