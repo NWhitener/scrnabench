@@ -1,13 +1,17 @@
+utils::globalVariables('geneCounts')
+
 #' Downloads the data
 #'
 #' This function downloads the data that is used in the package for use in examples, and automatically loads the data for
 #' usage. Run this once when the data is not download, if the data is downloaded use the load_data function
 #'
+#' @import inborutils
 #' @param path The path of the download location to use
 #' @return A object with the names of the data sets that were downloaded and loaded
 #' @export
 download_data <- function(path = '.')
 {
+  geneCounts = NULL
   inborutils::download_zenodo(doi = "10.5281/zenodo.6617997", path = path)
   geneCounts <<- readRDS(file = paste(path, "/gene_counts.RDS", sep = ''))
   datasets <- ls(geneCounts)
@@ -25,11 +29,11 @@ download_data <- function(path = '.')
 #' @export
 load_data <- function(demo = FALSE, path = '.')
   {
-    ## Check the Download Path
+    geneCounts = NULL
     path_full = paste(path, "/gene_counts.RDS", sep = '')
     if(demo)
     {
-      geneCounts <<- readRDS(system.file("extdata", "gene_counts_demo.RDS", package = "scrnabench", mustWork = TRUE))
+      geneCounts  <<- readRDS(system.file("extdata", "gene_counts_demo.RDS", package = "scrnabench", mustWork = TRUE))
     }
     else if(file.exists(path_full))
     {
@@ -50,6 +54,7 @@ load_data <- function(demo = FALSE, path = '.')
 #' are of the same format, with genes stored in rows and cells stored in columns. The lists are merged base on the
 #' union of the row names and the union of the column names
 #'
+#' @import Matrix
 #' @param dataList A list of data that  you would like to merge
 #' @return A list of the merged data sets
 #' @export
@@ -121,11 +126,15 @@ describe_datasets <- function(dataList)
 #' This function extracts a set of Data sets for further use in the workflows. Each data set that is extracted will be a dgCMatrix
 #' with rows representing genes and cells representing columns
 #'
+#' @import Matrix
 #' @param names A list of names representing the data sets you would like to extract
 #' @return A data list of the matrices of the data sets that were extracted
 #' @export
 extract_datasets <- function(names)
 {
+  ##Check to see geneCounts exists
+
+if(exists('geneCounts')){
   if(!is.vector(names))
   {
     stop("A list of names of the datasets is required to extract datasets")
@@ -141,6 +150,10 @@ extract_datasets <- function(names)
     colnames(dataList[[name]]) = paste(name, seq(1:ncols), sep="-")
   }
   return(dataList)
+}
+  else{
+    stop("Please run load_data() or download_data() first")
+  }
 }
 
 
