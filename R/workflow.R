@@ -1,7 +1,7 @@
 #' Completes the clustering workflow
 #'
 #' This function completes the entire clustering workflow, on different data transformation types,
-#' and with different clustering methods. The log data transformation pipeline includes filter_dataing, annotating,
+#' and with different clustering methods. The log data transformation pipeline includes filter_data, annotating,
 #' applying the log transformation, selecting the Highly Variable Genes, and finally scaling the data before
 #' dimensionality reduction, and clustering. The TFIDF data transformation completes the TFIDF data transformation,
 #' annotates the data, and selects the Highly Variable Genes before applying dimensionality reduction and finally
