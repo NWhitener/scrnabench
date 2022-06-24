@@ -1,7 +1,7 @@
 #' Completes the clustering workflow
 #'
 #' This function completes the entire clustering workflow, on different data transformation types,
-#' and with different clustering methods. The log data transformation pipeline includes preprocessing, annotating,
+#' and with different clustering methods. The log data transformation pipeline includes filter_dataing, annotating,
 #' applying the log transformation, selecting the Highly Variable Genes, and finally scaling the data before
 #' dimensionality reduction, and clustering. The TFIDF data transformation completes the TFIDF data transformation,
 #' annotates the data, and selects the Highly Variable Genes before applying dimensionality reduction and finally
@@ -23,7 +23,7 @@ run_clustering_workflow <- function(dataList, method = 'kmeans', transformationT
 
   if(transformationType == 'log')
   {
-    dataList <- preprocess(dataList)
+    dataList <- filter_data(dataList)
     dataList <- annotate_datasets(dataList)
     dataList <- run_log(dataList)
     dataList <- select_hvg(dataList)
@@ -89,7 +89,7 @@ run_harmony_integration_workflow <- function(dataList, method = 'kmeans', number
   set.seed(seed)
   dataList = extract_common_genes(dataList)
   dataList = merge_datasets(dataList)
-  dataList = preprocess(dataList)
+  dataList = filter_data(dataList)
   dataList = annotate_datasets(dataList)
   dataList = run_log(dataList)
   dataList = select_hvg(dataList)
@@ -144,7 +144,7 @@ run_fastmnn_integration_workflow <- function(dataList, method = 'kmeans', number
   {
   dataList <- extract_common_genes(dataList)
   dataList <- merge_datasets(dataList)
-  dataList <- preprocess(dataList)
+  dataList <- filter_data(dataList)
   dataList <- annotate_datasets(dataList)
   dataList <- run_log(dataList)
   dataList <- select_hvg(dataList)
@@ -194,7 +194,7 @@ run_cca_integration_workflow <- function(dataList, method = 'kmeans', numberClus
   if(is.list(dataList))
   {
   set.seed(seed)
-  dataList <- preprocess(dataList)
+  dataList <- filter_data(dataList)
   dataList <- annotate_datasets(dataList)
   dataList <- run_log(dataList)
   dataList <- select_hvg(dataList)
@@ -246,7 +246,7 @@ run_sctransform_integration_workflow <- function(dataList, method = 'kmeans', nu
   if(is.list(dataList))
   {
   set.seed(seed)
-  dataList <- preprocess(dataList)
+  dataList <- filter_data(dataList)
   dataList <- annotate_datasets(dataList)
   dataList <- run_sctransform(dataList)
   dataList <- scale_data(dataList)

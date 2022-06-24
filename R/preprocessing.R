@@ -87,16 +87,16 @@ run_log <- function(dataList)
   return(dataList)
 }
 
-#' Preprocesses the a Data List
+#' Filter the a Data List
 #'
-#' This function "preprocesses" a data list by restricting a input list to a range between minimum and maximum of the Total MRNA counts
+#' This function "filters" a data list by restricting a input list to a range between minimum and maximum of the Total MRNA counts
 #' Total Gene Counts that are present in the list. This creates a filtered set of genes to use in experiments, removing extreme
 #' outliers and making sure that all cells and genes are potentially informative.
 #'
 #' @param dataList A list of data, with Genes in Rows and Cells in Columns
 #' @return A data list of data that falls within the specified data limitations which acts as preprocesses
 #' @export
-preprocess <- function(dataList)
+filter_data <- function(dataList)
 {
 
   nCount_RNA = NULL
