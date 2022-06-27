@@ -1,4 +1,4 @@
-utils::globalVariables('geneCounts')
+
 
 #' Downloads the data
 #'
