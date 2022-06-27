@@ -10,7 +10,6 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.0
 URL: https://github.com/NWhitener/scrnabench
 BugReports: https://github.com/NWhitener/scrnabench/issues
-Depends: R (>= 3.5.0), Matrix
-Suggests:  SeuratWrappers
-Imports:   inborutils, Seurat, harmony, aricode, stringr, cluster, clValid, text2vec, methods
+Depends: R (>= 3.5.0), Matrix 
+Imports:   inborutils, SeuratWrappers, Seurat, harmony, aricode, stringr, cluster, clValid, text2vec, methods
 Remotes:   inbo/inborutils, satijalab/seurat-wrappers
