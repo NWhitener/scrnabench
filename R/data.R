@@ -11,7 +11,7 @@ utils::globalVariables('geneCounts')
 #' @export
 download_data <- function(path = '.')
 {
-  geneCounts = NULL
+
   inborutils::download_zenodo(doi = "10.5281/zenodo.6617997", path = path)
   geneCounts <<- readRDS(file = paste(path, "/gene_counts.RDS", sep = ''))
   datasets <- ls(geneCounts)
@@ -29,7 +29,7 @@ download_data <- function(path = '.')
 #' @export
 load_data <- function(demo = FALSE, path = '.')
   {
-    geneCounts = NULL
+
     path_full = paste(path, "/gene_counts.RDS", sep = '')
     if(demo)
     {
