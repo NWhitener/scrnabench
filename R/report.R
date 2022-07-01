@@ -40,7 +40,15 @@ create_internal_cluster_validation_report <- function(dataList, method = 'kmeans
 }
 
 
-
+#' Get Number of CLusters
+#'
+#' This function finds the number of clusters per data set.
+#'
+#' @param dataList A list of datasets with clustering completed
+#' @param method The type of clustering method to validate, defaults to kmeans
+#' @param reductionType The type of reduction to use
+#' @return A list with the number of clusters
+#' @export
 get_num_clusters <- function(dataList, reductionType= 'pca', method = 'kmeans')
 {
   if(is.list(dataList))
