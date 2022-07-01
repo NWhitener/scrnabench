@@ -19,21 +19,43 @@ create_internal_cluster_validation_report <- function(dataList, method = 'kmeans
   }
 
   reductions <- names(dataList[[1]]@reductions)
+
   for (reductionType in reductions)
   {
     annotationField <- toupper(paste(method, '_cluster_', reductionType, sep = ''))
     silhouetteScores <- run_silhouette(dataList, reductionType = reductionType, method = method)
     dunnScores <- run_dunn(dataList, reductionType = reductionType, method = method)
     resultsTable <- cbind(resultsTable,
-                          length(unique(dataList[[i]][[annotationField]][,1])),
+                          get_num_clusters(dataList, reductionType, method),
                           round(as.numeric(silhouetteScores[,2]), 2),
                           round(as.numeric(dunnScores[,2]), 2))
     colNames <- c(colNames, paste('Number Clusters', toupper(reductionType), sep = ' '),
                   paste('Silhouette', toupper(reductionType), sep = ' '),
                   paste('Dunn', toupper(reductionType), sep = ' '))
-  }
+    }
 
   resultsTable <- as.data.frame(resultsTable)
   colnames(resultsTable) = colNames
   return(resultsTable)
+}
+
+
+
+get_num_clusters <- function(dataList, reductionType= 'pca', method = 'kmeans')
+{
+  if(is.list(dataList))
+  {
+   numClusters = NULL
+  for(i in 1:length(names(dataList)))
+  {
+    annotationField <- toupper(paste(method, '_cluster_', reductionType, sep = ''))
+    numClusters = append(numClusters, length(unique(dataList[[i]][[annotationField]][,1])))
+  }
+  return(numClusters)
+  }
+  else
+  {
+    stop("A data list of datasets is required to get the number of clusters in the datasets")
+  }
+
 }

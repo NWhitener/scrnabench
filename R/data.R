@@ -235,7 +235,6 @@ add_clustering_annotation <- function(dataList, memberships, clusteringName)
   {
     for (i in (1: length(names(dataList))))
     {
-      print(memberships[i])
       dataList[[i]][[clusteringName]] <- memberships[i]
     }
   }
