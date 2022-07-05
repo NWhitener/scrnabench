@@ -26,7 +26,7 @@ create_internal_cluster_validation_report <- function(dataList, method = 'kmeans
     silhouetteScores <- run_silhouette(dataList, reductionType = reductionType, method = method)
     dunnScores <- run_dunn(dataList, reductionType = reductionType, method = method)
     resultsTable <- cbind(resultsTable,
-                          get_num_clusters(dataList, reductionType, method),
+                          get_number_clusters(dataList, method, reductionType),
                           round(as.numeric(silhouetteScores[,2]), 2),
                           round(as.numeric(dunnScores[,2]), 2))
     colNames <- c(colNames, paste('Number Clusters', toupper(reductionType), sep = ' '),
@@ -40,30 +40,4 @@ create_internal_cluster_validation_report <- function(dataList, method = 'kmeans
 }
 
 
-#' Get Number of CLusters
-#'
-#' This function finds the number of clusters per data set.
-#'
-#' @param dataList A list of datasets with clustering completed
-#' @param method The type of clustering method to validate, defaults to kmeans
-#' @param reductionType The type of reduction to use
-#' @return A list with the number of clusters
-#' @export
-get_num_clusters <- function(dataList, reductionType= 'pca', method = 'kmeans')
-{
-  if(is.list(dataList))
-  {
-   numClusters = NULL
-  for(i in 1:length(names(dataList)))
-  {
-    annotationField <- toupper(paste(method, '_cluster_', reductionType, sep = ''))
-    numClusters = append(numClusters, length(unique(dataList[[i]][[annotationField]][,1])))
-  }
-  return(numClusters)
-  }
-  else
-  {
-    stop("A data list of datasets is required to get the number of clusters in the datasets")
-  }
 
-}
