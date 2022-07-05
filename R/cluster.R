@@ -81,12 +81,13 @@ get_number_clusters <- function(dataList, method = 'kmeans', reductionType= 'pca
 {
   if(is.list(dataList))
   {
+    numberCLusters = NULL
     annotationField <- toupper(paste(method, '_cluster_', reductionType, sep=''))
     numberClusters = list()
     for (i in (1:length(names(dataList))))
     {
       clusterMemberships <- dataList[[i]][[annotationField]][,1]
-      numberClusters[i] <- length(unique(clusterMemberships))
+      numberClusters<- length(unique(clusterMemberships))
     }
   }
   else
