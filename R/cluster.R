@@ -77,23 +77,21 @@ run_seurat_clustering <- function(dataList, reductionType = 'pca', resolutionVal
 #' defaults to PCA
 #' @return A list with the number of clusters
 #' @export
-get_number_clusters <- function(dataList, method = 'kmeans', reductionType= 'pca')
+get_number_clusters <- function(dataList, reductionType= 'pca', method = 'kmeans')
 {
   if(is.list(dataList))
   {
-    numberCLusters = NULL
-    annotationField <- toupper(paste(method, '_cluster_', reductionType, sep=''))
-    numberClusters = list()
-    for (i in (1:length(names(dataList))))
+    numClusters = NULL
+    for(i in 1:length(names(dataList)))
     {
-      clusterMemberships <- dataList[[i]][[annotationField]][,1]
-      numberClusters<- length(unique(clusterMemberships))
+      annotationField <- toupper(paste(method, '_cluster_', reductionType, sep = ''))
+      numClusters = append(numClusters, length(unique(dataList[[i]][[annotationField]][,1])))
     }
+    return(numClusters)
   }
   else
   {
-    stop("A list of datasets is required to find the number of clusters.")
+    stop("A data list of datasets is required to get the number of clusters in the datasets")
   }
 
-  return(numberClusters)
 }
