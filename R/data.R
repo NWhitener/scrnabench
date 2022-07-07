@@ -179,7 +179,7 @@ annotate_datasets <- function(dataList)
         x@meta.data$ID[i] <- col
 
         chunks <- stringr::str_split(col, "_")
-        x@meta.data$TECHNLOGY[i] <- chunks[[1]][1]
+        x@meta.data$TECHNOLOGY[i] <- chunks[[1]][1]
 
         if(chunks[[1]][2] == "PE" | chunks[[1]][2] == "SE")
         {
