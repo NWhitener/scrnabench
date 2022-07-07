@@ -4,15 +4,15 @@
 \alias{get_number_clusters}
 \title{Get the number of clusters}
 \usage{
-get_number_clusters(dataList, method = "kmeans", reductionType = "pca")
+get_number_clusters(dataList, reductionType = "pca", method = "kmeans")
 }
 \arguments{
 \item{dataList}{A data list of data sets}
 
-\item{method}{The type of clustering, defaults to kmeans}
-
 \item{reductionType}{The type of dimensionly reduced data that should be used for clustering,
 defaults to PCA}
+
+\item{method}{The type of clustering, defaults to kmeans}
 }
 \value{
 A list with the number of clusters
