@@ -4,15 +4,15 @@
 \alias{run_silhouette}
 \title{Run Silhouette}
 \usage{
-run_silhouette(dataList, reductionType = "pca", method = "kmeans")
+run_silhouette(dataList, method = "kmeans", reductionType = "pca")
 }
 \arguments{
 \item{dataList}{a data list of the data with clustering assignments}
 
+\item{method}{The clustering method used, defaults to Kmeans}
+
 \item{reductionType}{The dimensionality reduction type of the data to find the calculated scores,
 defaults to PCA}
-
-\item{method}{The clustering method used, defaults to Kmeans}
 }
 \value{
 A table of the Silhouette Scores, with the data set name and the score

@@ -10,7 +10,7 @@
 #' @param method The clustering method used, defaults to Kmeans
 #' @return A table of the Silhouette Scores, with the data set name and the score
 #' @export
-run_silhouette <- function(dataList, reductionType = 'pca', method = 'kmeans')
+run_silhouette <- function(dataList, method = 'kmeans', reductionType = 'pca')
 {
   resultsTable = NULL
   annotationField <- toupper(paste(method, '_cluster_', reductionType, sep=''))
@@ -26,8 +26,8 @@ run_silhouette <- function(dataList, reductionType = 'pca', method = 'kmeans')
     else
     {
       cellEmbeddings <- Seurat::Embeddings(dataList[[i]], reduction = reductionType)
-      silhouetteScores <- summary(cluster::silhouette(clusters, stats::dist(cellEmbeddings, 'euclidean')))
-      resultsTable = rbind(resultsTable, c(names(dataList[i]),  silhouetteScores$avg.width))
+      silhouetteScore <- clusterCrit::intCriteria(cellEmbeddings, as.integer(clusters), c("Silhouette"))
+      resultsTable = rbind(resultsTable, c(names(dataList[i]),  silhouetteScore))
     }
   }
   return(resultsTable)
@@ -61,7 +61,7 @@ run_dunn <- function(dataList, reductionType = 'pca',  method = 'kmeans')
     else
     {
       cellEmbeddings <- Seurat::Embeddings(dataList[[i]], reduction = reductionType)
-      dunnScore = clValid::dunn(clusters = clusters, Data = cellEmbeddings)
+      dunnScore =  clusterCrit::intCriteria(cellEmbeddings, as.integer(clusters), c("Dunn"))
       resultsTable = rbind(resultsTable, c(names(dataList[i]),  dunnScore))
     }
   }
@@ -91,3 +91,9 @@ run_ari <- function(dataList, groundTruths, reductionType = 'pca',  method = 'km
   }
   return(resultsTable)
 }
+
+
+
+
+
+

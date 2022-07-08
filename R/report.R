@@ -32,7 +32,7 @@ create_internal_cluster_validation_report <- function(dataList, method = 'kmeans
     colNames <- c(colNames, paste('Number Clusters', toupper(reductionType), sep = ' '),
                   paste('Silhouette', toupper(reductionType), sep = ' '),
                   paste('Dunn', toupper(reductionType), sep = ' '))
-    }
+  }
 
   resultsTable <- as.data.frame(resultsTable)
   colnames(resultsTable) = colNames
