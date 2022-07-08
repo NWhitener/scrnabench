@@ -15,7 +15,7 @@ run_cca <- function(dataList)
     kFilter <- min(200, min(sapply(dataList, ncol)))
     dataAnchors <- Seurat::FindIntegrationAnchors(object.list = dataList, anchor.features = features, k.filter=kFilter)
     print("Anchors Found")
-    dataCombined <- list(Seurat::IntegrateData(anchorset = dataAnchors))
+    dataCombined <- list(Seurat::IntegrateData(anchorset = dataAnchors, k.weight= 50))
     names(dataCombined) <- c("Integrated")
   }
   else
