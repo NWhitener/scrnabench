@@ -14,8 +14,7 @@ run_cca <- function(dataList)
     features <- Seurat::SelectIntegrationFeatures(object.list = dataList)
     kFilter <- min(200, min(sapply(dataList, ncol)))
     dataAnchors <- Seurat::FindIntegrationAnchors(object.list = dataList, anchor.features = features, k.filter=kFilter)
-    print("Anchors Found")
-    dataCombined <- list(Seurat::IntegrateData(anchorset = dataAnchors, k.weight= 50))
+    dataCombined <- list(Seurat::IntegrateData(anchorset = dataAnchors, k.weight = 50))
     names(dataCombined) <- c("Integrated")
   }
   else
@@ -97,7 +96,7 @@ run_sctransform <- function(dataList, numFeatures = 2000)
   dataList <- Seurat::PrepSCTIntegration(object.list = dataList, anchor.features = features)
   kFilter <- min(200, min(sapply(dataList, ncol)))
   dataAnchors <- Seurat::FindIntegrationAnchors(object.list = dataList, normalization.method = "SCT", anchor.features = features, k.filter = kFilter)
-  dataCombined <- list(Seurat::IntegrateData(anchorset = dataAnchors, normalization.method = "SCT"))
+  dataCombined <- list(Seurat::IntegrateData(anchorset = dataAnchors, normalization.method = "SCT", k.weight = 50))
   names(dataCombined)<-c("Integrated")
   }
   else
@@ -108,4 +107,6 @@ run_sctransform <- function(dataList, numFeatures = 2000)
 }
 
 
+
+## Use describe datasets method, change signature
 
