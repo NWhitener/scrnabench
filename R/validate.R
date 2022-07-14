@@ -20,7 +20,6 @@ run_silhouette <- function(dataList, method = 'kmeans', reductionType = 'pca')
     singletonClusters <- which(data.frame(table(clusters))$Freq == 1)
     if(length(unique(clusters)) < 2 | length(singletonClusters) > 0)
     {
-      print("In the warnign track")
       warningMessage = paste("Dataset ", names(dataList[i]), " has only one cluster or contains singletons. Consider changing the clustering parameters", sep ='')
       warning(warningMessage)
       resultsTable = rbind(resultsTable, c(names(dataList[i]), NA))
