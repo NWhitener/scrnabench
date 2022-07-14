@@ -17,9 +17,11 @@ run_silhouette <- function(dataList, method = 'kmeans', reductionType = 'pca')
   for (i in (1:length(names(dataList))))
   {
     clusters <- dataList[[i]][[annotationField]][,1]
-    if(length(unique(clusters)) < 2)
+    singletonClusters <- which(data.frame(table(clusters))$Freq == 1)
+    if(length(unique(clusters)) < 2 | length(singletonClusters) > 0)
     {
-      warningMessage = paste("Dataset ", names(dataList[i]), " has only one cluster. Consider changing the clustering parameters", sep ='')
+      print("In the warnign track")
+      warningMessage = paste("Dataset ", names(dataList[i]), " has only one cluster or contains singletons. Consider changing the clustering parameters", sep ='')
       warning(warningMessage)
       resultsTable = rbind(resultsTable, c(names(dataList[i]), NA))
     }
@@ -93,30 +95,7 @@ run_ari <- function(dataList, groundTruths, reductionType = 'pca',  method = 'km
 }
 
 
-run_silhouette2 <- function(dataList, method = 'kmeans', reductionType = 'pca')
-{
-  resultsTable = NULL
-  annotationField <- toupper(paste(method, '_cluster_', reductionType, sep=''))
-  for (i in (1:length(names(dataList))))
-  {
-    clusters <- dataList[[i]][[annotationField]][,1]
-    singletonClusters <- which(data.frame(table(clusters))$Freq == 1)
-    if(length(unique(clusters)) < 2 | length(singletonClusters) > 0)
-    {
-      print("In the warnign track")
-      warningMessage = paste("Dataset ", names(dataList[i]), " has only one cluster or contains singletons. Consider changing the clustering parameters", sep ='')
-      warning(warningMessage)
-      resultsTable = rbind(resultsTable, c(names(dataList[i]), NA))
-    }
-    else
-    {
-      cellEmbeddings <- Seurat::Embeddings(dataList[[i]], reduction = reductionType)
-      silhouetteScore <- clusterCrit::intCriteria(cellEmbeddings, as.integer(clusters), c("Silhouette"))
-      resultsTable = rbind(resultsTable, c(names(dataList[i]),  silhouetteScore))
-    }
-  }
-  return(resultsTable)
-}
+
 
 
 

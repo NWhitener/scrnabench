@@ -23,7 +23,7 @@ create_internal_cluster_validation_report <- function(dataList, method = 'kmeans
   for (reductionType in reductions)
   {
     annotationField <- toupper(paste(method, '_cluster_', reductionType, sep = ''))
-    silhouetteScores <- run_silhouette2(dataList, reductionType = reductionType, method = method)
+    silhouetteScores <- run_silhouette(dataList, reductionType = reductionType, method = method)
     dunnScores <- run_dunn(dataList, reductionType = reductionType, method = method)
     resultsTable <- cbind(resultsTable,
                           get_number_clusters(dataList,reductionType, method),
