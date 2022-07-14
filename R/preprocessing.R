@@ -43,12 +43,11 @@ run_tfidf<-function(dataList)
 {
   if(is.list(dataList))
   {
+    model <- text2vec::TfIdf$new(smooth_idf = TRUE, norm = c('l1'), sublinear_tf = TRUE)
     for (i in (1:length(names(dataList))))
     {
-      model <- text2vec::TfIdf$new()
-      tfidf <- model$fit_transform(dataList[[i]])
-      dataList[[i]] <- Seurat::CreateSeuratObject(counts = dataList[[i]])
-      dataList[[i]]$RNA@data <- tfidf
+      tfidf <- model$fit_transform(t(dataList[[i]]$RNA@data))
+      dataList[[i]]$RNA@data <- t(tfidf)
       dataList[[i]] <- Seurat::SetAssayData(object=dataList[[i]], slot = 'scale.data', new.data = as.matrix(dataList[[i]]$RNA@data))
     }
   }
@@ -59,6 +58,7 @@ run_tfidf<-function(dataList)
 
   return(dataList)
 }
+
 
 
 #' Runs the Log Transformation

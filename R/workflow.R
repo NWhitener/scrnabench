@@ -31,6 +31,8 @@ run_clustering_workflow <- function(dataList, method = 'kmeans', transformationT
   }
   else if (transformationType == 'tfidf')
   {
+
+    dataList <- filter_data(dataList)
     dataList <- run_tfidf(dataList)
     dataList <- annotate_datasets(dataList)
     dataList <- select_hvg(dataList)
