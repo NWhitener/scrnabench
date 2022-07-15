@@ -4,14 +4,21 @@
 \alias{plot_clusters}
 \title{Visualization method for the Clustering Methods}
 \usage{
-plot_clusters(data, reductionType = "pca", method = "kmeans")
+plot_clusters(
+  data,
+  method = "kmeans",
+  reductionType = "pca",
+  transformationType = "log"
+)
 }
 \arguments{
 \item{data}{An individual data object that you want to visualize}
 
+\item{method}{The cluster method to use, defaults to Kmeans}
+
 \item{reductionType}{The dimensionality reduction method chosen, defaults to PCA}
 
-\item{method}{The cluster method to use, defaults to Kmeans}
+\item{transformationType}{The transformation type you would like to see appear in the title}
 }
 \description{
 Produces a plot of the clustering, based on the dimensionality reduction method chosen. The plot is a Seurat DimPlot
