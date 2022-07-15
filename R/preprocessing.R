@@ -196,6 +196,9 @@ run_pca <- function(dataList, numComponents = 10)
     {
       dataList[[i]] <- Seurat::RunPCA(dataList[[i]], features = Seurat::VariableFeatures(object = dataList[[i]]),
                                       npcs = numComponents, verbose = FALSE)
+      dataList[[i]] <- Seurat::DietSeurat(dataList[[i]], data = T,
+                                          counts = F, scale.data = F, features = Seurat::VariableFeatures(object = dataList[[i]]),
+                                          dimreducs = names(dataList[[i]]@reductions))
     }
   }
   else
@@ -204,6 +207,7 @@ run_pca <- function(dataList, numComponents = 10)
   }
   return(dataList)
 }
+
 
 
 #' Run UMAP
