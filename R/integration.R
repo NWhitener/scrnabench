@@ -13,8 +13,11 @@ run_cca <- function(dataList)
   {
     features <- Seurat::SelectIntegrationFeatures(object.list = dataList)
     kFilter <- min(200, min(sapply(dataList, ncol)))
+    print(min(sapply(dataList, ncol)))
+    kWeight <- min(100, (min(sapply(dataList, ncol)) - 10))
+    print(kWeight)
     dataAnchors <- Seurat::FindIntegrationAnchors(object.list = dataList, anchor.features = features, k.filter=kFilter)
-    dataCombined <- list(Seurat::IntegrateData(anchorset = dataAnchors, k.weight = 50))
+    dataCombined <- list(Seurat::IntegrateData(anchorset = dataAnchors, k.weight = kWeight))
     names(dataCombined) <- c("Integrated")
   }
   else
@@ -23,6 +26,7 @@ run_cca <- function(dataList)
   }
   return(dataCombined)
 }
+
 
 #' Run Harmony
 #'
