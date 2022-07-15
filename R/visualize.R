@@ -5,8 +5,9 @@
 #' @param data An individual data object that you want to visualize
 #' @param reductionType The dimensionality reduction method chosen, defaults to PCA
 #' @param method The cluster method to use, defaults to Kmeans
+#' @param transformationType The transformation type you would like to see appear in the title
 #' @export
-plot_clusters <- function(data, reductionType = 'pca', method = 'kmeans', transformationType = 'log')
+plot_clusters <- function(data,method = 'kmeans', reductionType = 'pca', transformationType = 'log')
 {
   annotationField <- toupper(paste(method, '_cluster_', reductionType, sep=''))
   titlePlot =  paste(toupper(method), "_", toupper(reductionType), "_", toupper(transformationType), sep = "")
