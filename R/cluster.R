@@ -100,7 +100,17 @@ get_number_clusters <- function(dataList, reductionType= 'pca', method = 'kmeans
 
 }
 
-
+#' Get the number of Singletons
+#'
+#' This functions finds the number of Singletons Clusters in the Seurat Clustering method, or through the kmeans clustering
+#' method.
+#'
+#' @param dataList A data list of data sets
+#' @param method The type of clustering, defaults to kmeans
+#' @param reductionType The type of dimensionly reduced data that should be used for clustering,
+#' defaults to PCA
+#' @return A list with the number of Singleton Clusters
+#' @export
 get_number_singletons <- function(dataList, reductionType = 'pca', method = 'kmeans')
 {
   if(is.list(dataList))
