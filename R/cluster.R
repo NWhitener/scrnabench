@@ -99,3 +99,27 @@ get_number_clusters <- function(dataList, reductionType= 'pca', method = 'kmeans
   }
 
 }
+
+
+get_number_singletons <- function(dataList, reductionType = 'pca', method = 'kmeans')
+{
+  if(is.list(dataList))
+  {
+    numSingletons = NULL
+    for(i in 1:length(names(dataList)))
+    {
+      annotationField <- toupper(paste(method, '_cluster_', reductionType, sep = ''))
+
+      clusters <- dataList[[i]][[annotationField]][,1]
+      singletonClusters <- which(data.frame(table(clusters))$Freq == 1)
+      numSingletons = append(numSingletons, length(singletonClusters))
+    }
+    print(numSingletons)
+    return(numSingletons)
+  }
+  else
+  {
+    stop("A data list of datasets is required to get the number of clusters in the datasets")
+  }
+
+}
