@@ -87,3 +87,92 @@ permute_dataset_order <- function(dataList)
       stop("A data list of datasets is required to permute datasets order")
     }
 }
+
+
+#' Modify Gene Counts
+#'
+#' This function takes the gene counts of the takes the original gene counts of the datasets, multiplies them by 2 and then adds one to the count,
+#' creating a transformation of 2x+1. This function is designed to test the algorithmic stability of a clustering algorithm
+#'
+#' @param dataList a  list of data sets
+#' @return A data set list with modified gene counts
+#' @export
+modify_gene_counts <- function(dataList)
+{
+  if(is.list(dataList)){
+    for (i in (1:length(names(dataList)))) {
+      geneIndex <- sample.int(nrow(dataList[[i]]), 1)
+      dataList[[i]][geneIndex,] <- 2 * dataList[[i]][geneIndex,] + 1
+    }}
+  else
+  {
+    stop("A list of datasets is required to modify gene counts.")
+  }
+  return(dataList)
+}
+
+#' Add duplicated Cells
+#'
+#' This function takes a random cell sample and adds its duplicate to the data set. This function is a test of algorithmic stability
+#'
+#' @param dataList a  list of data sets
+#' @return A data set list with a duplicated cell sample
+#' @export
+add_duplicate_cells <- function(dataList)
+{
+  if(is.list(dataList)){
+    for (i in (1:length(names(dataList)))) {
+      cellIndex <- sample.int(ncol(dataList[[i]]), 1)
+      duplicatedCell <- dataList[[i]][, cellIndex]
+      columnNames <- c(colnames(dataList[[i]]), paste(colnames(dataList[[i]])[cellIndex], '-dup', sep=''))
+      dataList[[i]] <- cbind(dataList[[i]], duplicatedCell)
+      colnames(dataList[[i]]) <- columnNames
+    }}
+  else
+  {
+    stop("A list of datasets is required to add duplicate cells.")
+  }
+  return(dataList)
+}
+
+#' Add Zero Variance Gene Counts
+#'
+#' This function adds a set of zero variance gene counts to the sample. This function is a test of algorithmic stability
+#'
+#' @param dataList a  list of data sets
+#' @return A data set list with added zero variance gene counts
+#' @export
+add_zero_variance_gene_counts <- function(dataList)
+{
+  if(is.list(dataList)){
+    for (i in (1:length(names(dataList)))) {
+      zeroVarianceCounts <- rep(1, ncol(dataList[[i]]))
+      dataList[[i]] <- rbind(dataList[[i]], zeroVarianceCounts)
+    }}
+  else
+  {
+    stop("A list of datasets is required to add zero variance gene counts.")
+  }
+  return(dataList)
+}
+
+#' Flips the Gene Counts
+#'
+#' This function multiplies the gene count values by -1, "flipping" them over an access. This function is a test of algorithmic stability
+#'
+#' @param dataList a  list of data sets
+#' @return A data set list with flipped gene counts
+#' @export
+flip_gene_counts <- function(dataList)
+{
+  if(is.list(dataList)){
+    for (i in (1:length(names(dataList)))) {
+      geneIndex <- sample.int(nrow(dataList[[i]]), 1)
+      dataList[[i]][geneIndex,] <- (-1) * dataList[[i]][geneIndex,]
+    }}
+  else
+  {
+    stop("A list of datasets is required to filp the gene counts.")
+  }
+  return(dataList)
+}
