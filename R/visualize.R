@@ -11,7 +11,7 @@ plot_clusters <- function(data,method = 'kmeans', reductionType = 'pca', transfo
 {
   annotationField <- toupper(paste(method, '_cluster_', reductionType, sep=''))
   titlePlot =  paste(toupper(method), "_", toupper(reductionType), "_", toupper(transformationType), sep = "")
-  plot = Seurat::DimPlot(data, reduction = reductionType, group.by = annotationField) +
+  plot = Seurat::DimPlot(data, reduction = reductionType, group.by = annotationField, label = T) +
     patchwork::plot_annotation(titlePlot)
   return(plot)
 }
