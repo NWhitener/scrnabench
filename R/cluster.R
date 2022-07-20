@@ -124,7 +124,6 @@ get_number_singletons <- function(dataList, reductionType = 'pca', method = 'kme
       singletonClusters <- which(data.frame(table(clusters))$Freq == 1)
       numSingletons = append(numSingletons, length(singletonClusters))
     }
-    print(numSingletons)
     return(numSingletons)
   }
   else
