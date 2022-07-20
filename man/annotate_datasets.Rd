@@ -2,7 +2,7 @@
 % Please edit documentation in R/data.R
 \name{annotate_datasets}
 \alias{annotate_datasets}
-\title{Annotate Datasets}
+\title{Annotate Data sets}
 \usage{
 annotate_datasets(dataList)
 }

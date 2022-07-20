@@ -157,7 +157,7 @@ if(exists('geneCounts')){
 }
 
 
-#' Annotate Datasets
+#' Annotate Data sets
 #'
 #' This function annotates a created Seurat object. It edits the chunks and meta.data in
 #' order to annotate the object for use in down stream analysis
