@@ -16,7 +16,7 @@ run_cca <- function(dataList)
     print(min(sapply(dataList, ncol)))
     kWeight <- min(100, (min(sapply(dataList, ncol)) - 10))
     print(kWeight)
-    dataAnchors <- Seurat::FindIntegrationAnchors(object.list = dataList, anchor.features = features, k.filter=kFilter)
+    dataAnchors <- Seurat::FindIntegrationAnchors(object.list = dataList, anchor.features = features, k.filter=kFilter, reference = 1)
     dataCombined <- list(Seurat::IntegrateData(anchorset = dataAnchors, k.weight = kWeight))
     names(dataCombined) <- c("Integrated")
   }
@@ -82,9 +82,9 @@ run_fastmnn <- function(dataList, batchName = "ID")
 
 #' Run sctransform
 #'
-#' This function runs the data integration protocol detailed in the Seurat "Using sctransform in Seurtat"
+#' This function runs the data integration protocol detailed in the Seurat "Using sctransform in Seurat"
 #' found at https://satijalab.org/seurat/articles/sctransform_vignette.html . This function completes the sctransform process on
-#' the datasets. Use run_sctransform_workflow() for the entire workflow process
+#' the datasets, using the first data set as a reference as described at https://satijalab.org/seurat/articles/integration_large_datasets.html.   Use run_sctransform_workflow() for the entire workflow process
 #'
 #' @param dataList A list of data sets to integrate using the sctransform protocol
 #' @param numFeatures The number of Features to use, defaults to 2000
@@ -113,5 +113,4 @@ run_sctransform <- function(dataList, numFeatures = 2000)
 
 
 
-## Use describe datasets method, change signature
 
