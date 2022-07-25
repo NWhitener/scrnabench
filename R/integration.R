@@ -13,11 +13,8 @@ run_cca <- function(dataList)
   {
     features <- Seurat::SelectIntegrationFeatures(object.list = dataList)
     kFilter <- min(200, min(sapply(dataList, ncol)))
-    print(min(sapply(dataList, ncol)))
-    kWeight <- min(100, (min(sapply(dataList, ncol)) - 10))
-    print(kWeight)
     dataAnchors <- Seurat::FindIntegrationAnchors(object.list = dataList, anchor.features = features, k.filter=kFilter, reference = 1)
-    dataCombined <- list(Seurat::IntegrateData(anchorset = dataAnchors, k.weight = kWeight))
+    dataCombined <- list(Seurat::IntegrateData(anchorset = dataAnchors))
     names(dataCombined) <- c("Integrated")
   }
   else
@@ -99,9 +96,8 @@ run_sctransform <- function(dataList, numFeatures = 2000)
   features <- Seurat::SelectIntegrationFeatures(object.list = dataList, nfeatures=numFeatures)
   dataList <- Seurat::PrepSCTIntegration(object.list = dataList, anchor.features = features)
   kFilter <- min(200, min(sapply(dataList, ncol)))
-  kWeight <- min(100, (min(sapply(dataList, ncol)) - 10))
   dataAnchors <- Seurat::FindIntegrationAnchors(object.list = dataList, normalization.method = "SCT", anchor.features = features, k.filter = kFilter, reference = 1)
-  dataCombined <- list(Seurat::IntegrateData(anchorset = dataAnchors, normalization.method = "SCT", k.weight = kWeight))
+  dataCombined <- list(Seurat::IntegrateData(anchorset = dataAnchors, normalization.method = "SCT"))
   names(dataCombined)<-c("Integrated")
   }
   else
