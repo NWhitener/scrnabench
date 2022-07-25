@@ -27,17 +27,17 @@ create_internal_cluster_validation_report <- function(dataList, method = 'kmeans
     dunnScores <- run_dunn(dataList, reductionType = reductionType, method = method)
     resultsTable <- cbind(resultsTable,
                           get_number_clusters(dataList,reductionType, method),
+                          get_number_singletons(dataList,reductionType, method),
                           round(as.numeric(silhouetteScores[,2]), 2),
-                          round(as.numeric(dunnScores[,2]), 2),get_number_singletons(dataList,reductionType, method) )
-    colNames <- c(colNames, paste('Number Clusters', toupper(reductionType), sep = ' '),
+                          round(as.numeric(dunnScores[,2]), 2) )
+    colNames <- c(colNames, paste('Number Clusters', toupper(reductionType), sep = ' '),paste("Number Singletons", toupper(reductionType), sep = ' '),
                   paste('Silhouette', toupper(reductionType), sep = ' '),
-                  paste('Dunn', toupper(reductionType), sep = ' '), paste("Number Singletons", toupper(reductionType), sep = ' '))
+                  paste('Dunn', toupper(reductionType), sep = ' '))
   }
 
   resultsTable <- as.data.frame(resultsTable)
   colnames(resultsTable) = colNames
   return(resultsTable)
 }
-
 
 
