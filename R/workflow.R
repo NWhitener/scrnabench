@@ -284,4 +284,56 @@ run_sctransform_integration_workflow <- function(dataList, method = 'kmeans', nu
 }
 
 
+#' Completes the Metamorphic Testing workflow
+#'
+#' This function completes the entire metamorphic testing clustering workflow, on different data transformation types,
+#' and with different clustering methods. This tests different types of metamorphic tests, including permutations, adding genes, etc. The original data
+#' is clustered using the clustering workflow, and then the each of the metamorphic tests is applied and the clustering is recomputed. The log data transformation pipeline includes filter_data, annotating,
+#' applying the log transformation, selecting the Highly Variable Genes, and finally scaling the data before
+#' dimensionality reduction, and clustering. The TFIDF data transformation completes the TFIDF data transformation,
+#' annotates the data, and selects the Highly Variable Genes before applying dimensionality reduction and finally
+#' clustering. The clustering parameters are set to default, except for the number of clusters in
+#' kmeans clustering, which is set to 10. If a score of 0 is returned it means that the dataset did not pass any of the metamorphic
+#' tests, if  a 1 is returned then it means that the datasets passed the metamorphic test. Any number inbetween 0 and 1 represnts the percent of
+#' reductions that passed the metamorphic test
+#'
+#' @param dataList A list of the data sets
+#' @param method The method of clustering to use, defaults to Kmeans
+#' @param transformationType The data transformation to be used, defaults to the log transformation
+#' @param seed The seed to be set for reproducibility, defaults to 1
+#' @param numberClusters The number of clusters to use for Kmeans clustering, defaults to 10
+#' @param metamorphicTests a vector of the metamorphic tests to apply, the options are Permute Cells, Modify Gene Counts, Add Duplicate Cell, Permute Genes, Add Zero Variance Gene, Flip Gene Counts
+#' @return A report of which metamorphic tests were passed.
+#' @export
+run_metamorphic_test_worflow <-function(dataList, method = 'kmeans', transformationType = 'log',  seed = 1, numberClusters = 10, metamorphicTests = c(1:6))
+{
+  metamorphicTestingReport <- NULL
+  if(is.list(dataList))
+  {
+    set.seed(seed)
+    perturbations <- c('Permute Cells', 'Modify Gene Counts', 'Add Duplicate Cell', 'Permute Genes', 'Add Zero Variance Gene', 'Flip Gene Counts')
+    metamorphicReportList <- NULL
+    i <- 1
+    metamorphicReportList <- NULL
+    metamorphicReportList[[i]] <- create_internal_cluster_validation_report(run_clustering_workflow(dataList,
+                                                                                                    method, transformationType,seed, numberClusters), method)
+    for(test in metamorphicTests)
+    {
+      i <- i + 1
+      metamorphicReportList[[i]] <- run_metamorphic_test(dataList, test, method, transformationType, seed, numberClusters)
+    }
+    names(metamorphicReportList) <- c('original', perturbations[metamorphicTests])
+
+    metamorphicTestingReport <- create_metamorphic_testing_report(metamorphicReportList)
+  }
+  else
+  {
+    stop("A data list of datasets is required to run metamorphic tests")
+  }
+  cat(" \n")
+  cat("\n Metamorphic Testing Report: \n")
+  cat(" \n")
+  print(metamorphicTestingReport)
+  return(metamorphicTestingReport)
+}
 

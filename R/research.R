@@ -1,3 +1,26 @@
+#' Preturb Data sets
+#'
+#' This function applies a specific perturbation to the data-list based on the perturbation type. For a description of the
+#' perturbations please see the individual functions
+#'
+#' @param dataList A list of data set that should be perturbed
+#' @param perturbationType The number of the perturbation that is too be applied
+#' @return a data list of the perturbed datasets
+#' @export
+perturb_datasets <- function(dataList, perturbationType = 1)
+{
+  dataList <- switch(
+    perturbationType,
+    '1'= permute_columns(dataList),
+    '2'= modify_gene_counts(dataList),
+    '3'= add_duplicate_cells(dataList),
+    '4'= permute_rows(dataList),
+    '5'= add_zero_variance_gene_counts(dataList),
+    '6'= flip_gene_counts(dataList)
+  )
+  return(dataList)
+}
+
 #' Duplicate Datasets
 #'
 #' This function duplicates a data set a variable number of times. This function is to be used in
@@ -176,3 +199,32 @@ flip_gene_counts <- function(dataList)
   }
   return(dataList)
 }
+
+
+#' Run metamorphic tests
+#'
+#' This function runs the metamorphic test. It applies a perturbation and then clusters based on the method, transformation, and number of
+#' clusters supplied.
+#'
+#' @param dataList A list of data sets
+#' @param method The clustering method to be used, defaults to Kmeans
+#' @param transformationType The type of data transformation to apply, defaults to log
+#' @param seed the seed to be set for reporducability, defaults to 1
+#' @param numberClusters The number of cluster centers to use, defaults to 10
+#' @return A metamophic results table
+#' @export
+run_metamorphic_test <- function(dataList, perturbationType = 1, method = 'kmeans', transformationType = 'log', seed = 1, numberClusters = 10)
+{
+  if(is.list(dataList))
+  {
+    dataList = perturb_datasets(dataList, perturbationType)
+    dataList = run_clustering_workflow(dataList, method, transformationType, seed, numberClusters)
+    metamorphicReport = create_internal_cluster_validation_report(dataList, method)
+  }
+  else
+  {
+    stop("A list of datasets is required to run a metamorphic test")
+  }
+  return(metamorphicReport)
+}
+

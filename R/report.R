@@ -40,4 +40,48 @@ create_internal_cluster_validation_report <- function(dataList, method = 'kmeans
   return(resultsTable)
 }
 
+#' Create Metamorphic Testing Report
+#'
+#' This function creates a metamorphic testing report for clustering methods. This report includes which
+#' reductions of the dataset passed the metamorphic test.
+#'
+#' @param reportList a list of internal clustering validation reports contain information from metamorphic testing
+#' @return A report of the percent of reductions that passed the metamorphic test for each test and each dataset
+#' @export
+create_metamorphic_testing_report <- function(reportList)
+{
+  reportTable <- NULL
+  if(is.list(dataList))
+  {
+    numberReductions <- sum(grepl('Number Clusters ', colnames(reportList[['original']])))
+    if(numberReductions > 0)
+    {
+      reportList[['original']][is.na(reportList[['original']])] <- -10
+      reportTable <- reportList[['original']][,1:2]
+      numberItemsToCompare <- (ncol(reportList[['original']]) - 2 ) / numberReductions
+      for (i in c(2:length(names(reportList))))
+      {
+        reportList[[i]][is.na(reportList[[i]])] <- -10
+        matches <- (reportList[['original']] == reportList[[i]])
+        testOutcomes <- rep(0, nrow(reportList[['original']]))
+        for (j in seq(3, ncol(matches), by = numberItemsToCompare))
+        {
+          testOutcomes <- testOutcomes + ifelse(rowSums(matches[,j:(j + numberItemsToCompare - 1)]) == numberItemsToCompare, 1, 0)
+        }
+        reportTable[[names(reportList)[i]]] <- testOutcomes
+      }
+      reportTable[,3:ncol(reportTable)] = round(reportTable[,3:ncol(reportTable)] / numberReductions, 2)
+    }
+    else
+    {
+      stop("At least one reduction is required to create a report of metamorphic tests")
+    }
+  }
+  else
+  {
+    stop("A list of datasets is required to create a report of metamorphic tests")
+  }
+  return(reportTable)
+}
+
 
