@@ -305,7 +305,7 @@ run_sctransform_integration_workflow <- function(dataList, method = 'kmeans', nu
 #' @param metamorphicTests a vector of the metamorphic tests to apply, the options are Permute Cells, Modify Gene Counts, Add Duplicate Cell, Permute Genes, Add Zero Variance Gene, Flip Gene Counts
 #' @return A report of which metamorphic tests were passed.
 #' @export
-run_metamorphic_test_worflow <-function(dataList, method = 'kmeans', transformationType = 'log',  seed = 1, numberClusters = 10, metamorphicTests = c(1:6))
+run_metamorphic_test_workflow <-function(dataList, method = 'kmeans', transformationType = 'log',  seed = 1, numberClusters = 10, metamorphicTests = c(1:6))
 {
   metamorphicTestingReport <- NULL
   if(is.list(dataList))
