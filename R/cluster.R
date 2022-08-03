@@ -12,10 +12,11 @@
 #' defaults to 100
 #' @return The dataList with kmeans clusters stored in the meta data
 #' @export
-run_kmeans_clustering <- function(dataList, reductionType = 'pca', numberClusters = 10, iterationsMax = 100)
+run_kmeans_clustering <- function(dataList, reductionType = 'pca', numberClusters = 10, iterationsMax = 100, seed = 1)
 {
   if(is.list(dataList))
   {
+    set.seed(seed)
     for (i in (1:length(names(dataList))))
     {
       cellEmbeddings = Seurat::Embeddings(dataList[[i]], reduction = reductionType)
@@ -49,6 +50,7 @@ run_seurat_clustering <- function(dataList, reductionType = 'pca', resolutionVal
 
   if(is.list(dataList))
   {
+    set.seed(seed)
     for (i in (1:length(names(dataList))))
     {
       dataList[[i]] <- Seurat::FindNeighbors(dataList[[i]], reduction = reductionType, dims = 1:numberComponents)

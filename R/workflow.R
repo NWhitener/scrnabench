@@ -48,15 +48,15 @@ run_clustering_workflow <- function(dataList, method = 'kmeans', transformationT
 
   if(method == 'kmeans')
   {
-    dataList <- run_kmeans_clustering(dataList, reductionType = 'pca', numberClusters)
-    dataList <- run_kmeans_clustering(dataList, reductionType = 'umap', numberClusters)
-    dataList <- run_kmeans_clustering(dataList, reductionType = 'tsne', numberClusters)
+    dataList <- run_kmeans_clustering(dataList, reductionType = 'pca', numberClusters, seed = seed)
+    dataList <- run_kmeans_clustering(dataList, reductionType = 'umap', numberClusters, seed = seed)
+    dataList <- run_kmeans_clustering(dataList, reductionType = 'tsne', numberClusters, seed = seed)
   }
   else if(method == 'seurat')
   {
-    dataList <- run_seurat_clustering(dataList, reductionType = 'pca', numberComponents = 10)
-    dataList <- run_seurat_clustering(dataList, reductionType = 'umap', numberComponents = 2)
-    dataList <- run_seurat_clustering(dataList, reductionType = 'tsne', numberComponents = 2)
+    dataList <- run_seurat_clustering(dataList, reductionType = 'pca', numberComponents = 10, seed = seed)
+    dataList <- run_seurat_clustering(dataList, reductionType = 'umap', numberComponents = 2, seed = seed)
+    dataList <- run_seurat_clustering(dataList, reductionType = 'tsne', numberComponents = 2, seed = seed)
   }
   else
   {
@@ -103,17 +103,17 @@ run_harmony_integration_workflow <- function(dataList, method = 'kmeans', number
 
   if(method == 'kmeans')
   {
-    dataList <- run_kmeans_clustering(dataList, reductionType = 'pca', numberClusters)
-    dataList <- run_kmeans_clustering(dataList, reductionType = 'harmony', numberClusters)
-    dataList <- run_kmeans_clustering(dataList, reductionType = 'umap', numberClusters)
+    dataList <- run_kmeans_clustering(dataList, reductionType = 'pca', numberClusters, seed = seed)
+    dataList <- run_kmeans_clustering(dataList, reductionType = 'harmony', numberClusters, seed = seed)
+    dataList <- run_kmeans_clustering(dataList, reductionType = 'umap', numberClusters, seed = seed)
     dataList <- run_kmeans_clustering(dataList, reductionType = 'tsne', numberClusters)
   }
   else if(method == 'seurat')
   {
-    dataList <- run_seurat_clustering(dataList, reductionType = 'pca', numberComponents = 10)
-    dataList <- run_seurat_clustering(dataList, reductionType = 'harmony', numberComponents = 10)
-    dataList <- run_seurat_clustering(dataList, reductionType = 'umap', numberComponents = 2)
-    dataList <- run_seurat_clustering(dataList, reductionType = 'tsne', numberComponents = 2)
+    dataList <- run_seurat_clustering(dataList, reductionType = 'pca', numberComponents = 10, seed = seed)
+    dataList <- run_seurat_clustering(dataList, reductionType = 'harmony', numberComponents = 10, seed = seed)
+    dataList <- run_seurat_clustering(dataList, reductionType = 'umap', numberComponents = 2, seed = seed)
+    dataList <- run_seurat_clustering(dataList, reductionType = 'tsne', numberComponents = 2, seed = seed)
   }
   else
   {
@@ -156,15 +156,15 @@ run_fastmnn_integration_workflow <- function(dataList, method = 'kmeans', number
 
   if(method == 'kmeans')
   {
-    dataList <- run_kmeans_clustering(dataList, reductionType = 'mnn', numberClusters)
-    dataList <- run_kmeans_clustering(dataList, reductionType = 'umap', numberClusters)
-    dataList <- run_kmeans_clustering(dataList, reductionType = 'tsne', numberClusters)
+    dataList <- run_kmeans_clustering(dataList, reductionType = 'mnn', numberClusters, seed = seed)
+    dataList <- run_kmeans_clustering(dataList, reductionType = 'umap', numberClusters, seed = seed)
+    dataList <- run_kmeans_clustering(dataList, reductionType = 'tsne', numberClusters, seed = seed)
   }
   else if(method == 'seurat')
   {
-    dataList <- run_seurat_clustering(dataList, reductionType = 'mnn', numberComponents = 10)
-    dataList <- run_seurat_clustering(dataList, reductionType = 'umap', numberComponents = 2)
-    dataList <- run_seurat_clustering(dataList, reductionType = 'tsne', numberComponents = 2)
+    dataList <- run_seurat_clustering(dataList, reductionType = 'mnn', numberComponents = 10, seed = seed)
+    dataList <- run_seurat_clustering(dataList, reductionType = 'umap', numberComponents = 2, seed = seed)
+    dataList <- run_seurat_clustering(dataList, reductionType = 'tsne', numberComponents = 2, seed = seed)
   }
   else
   {
@@ -208,15 +208,15 @@ run_cca_integration_workflow <- function(dataList, method = 'kmeans', numberClus
 
   if(method == 'kmeans')
   {
-    dataList <- run_kmeans_clustering(dataList, reductionType = 'pca', numberClusters)
-    dataList <- run_kmeans_clustering(dataList, reductionType = 'umap', numberClusters)
-    dataList <- run_kmeans_clustering(dataList, reductionType = 'tsne', numberClusters)
+    dataList <- run_kmeans_clustering(dataList, reductionType = 'pca', numberClusters, seed = seed)
+    dataList <- run_kmeans_clustering(dataList, reductionType = 'umap', numberClusters, seed = seed)
+    dataList <- run_kmeans_clustering(dataList, reductionType = 'tsne', numberClusters, seed = seed)
   }
   else if(method == 'seurat')
   {
-    dataList <- run_seurat_clustering(dataList, reductionType = 'pca', numberComponents = 10)
-    dataList <- run_seurat_clustering(dataList, reductionType = 'umap', numberComponents = 2)
-    dataList <- run_seurat_clustering(dataList, reductionType = 'tsne', numberComponents = 2)
+    dataList <- run_seurat_clustering(dataList, reductionType = 'pca', numberComponents = 10, seed = seed)
+    dataList <- run_seurat_clustering(dataList, reductionType = 'umap', numberComponents = 2, seed = seed)
+    dataList <- run_seurat_clustering(dataList, reductionType = 'tsne', numberComponents = 2, seed = seed)
   }
   else
   {
@@ -259,15 +259,15 @@ run_sctransform_integration_workflow <- function(dataList, method = 'kmeans', nu
 
   if(method == 'kmeans')
   {
-    dataList <- run_kmeans_clustering(dataList, reductionType = 'pca', numberClusters)
-    dataList <- run_kmeans_clustering(dataList, reductionType = 'umap', numberClusters)
-    dataList <- run_kmeans_clustering(dataList, reductionType = 'tsne', numberClusters)
+    dataList <- run_kmeans_clustering(dataList, reductionType = 'pca', numberClusters, seed = seed)
+    dataList <- run_kmeans_clustering(dataList, reductionType = 'umap', numberClusters, seed = seed)
+    dataList <- run_kmeans_clustering(dataList, reductionType = 'tsne', numberClusters, seed = seed)
   }
   else if(method == 'seurat')
   {
-    dataList <- run_seurat_clustering(dataList, reductionType = 'pca', numberComponents = 10)
-    dataList <- run_seurat_clustering(dataList, reductionType = 'umap', numberComponents = 2)
-    dataList <- run_seurat_clustering(dataList, reductionType = 'tsne', numberComponents = 2)
+    dataList <- run_seurat_clustering(dataList, reductionType = 'pca', numberComponents = 10, seed = seed)
+    dataList <- run_seurat_clustering(dataList, reductionType = 'umap', numberComponents = 2, seed = seed)
+    dataList <- run_seurat_clustering(dataList, reductionType = 'tsne', numberComponents = 2, seed = seed)
   }
   else
   {
