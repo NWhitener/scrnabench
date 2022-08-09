@@ -1,6 +1,6 @@
 # scrnabench
-A benchmarking tools to test downstream analysis on benchmark datasets. 'scrnabench' aims to provide all the tools necessary to test down stream analysis methods for scRNA-seq datasets, 
-either on a set of benchmark data, or on the users own datasets. scrnabench makes use of the Seurat Object and several Seurat methods as well as various other downstream methods for convience of benchmarking scRNA-seq data.  
+'scrnabench' aims to provide all the tools necessary to test down stream analysis methods for scRNA-seq datasets, 
+either on a set of benchmark data, or on the users own datasets. With a focus on clustering analysis, metamorphic stability testing, and integration. scrnabench makes use of the Seurat Object and several Seurat methods as well as various other downstream methods for cluserting, integration, and stability benchmarking on scRNA-seq data.  
 
 
 ## Installing From Github
