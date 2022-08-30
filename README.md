@@ -9,27 +9,25 @@ In the R terminal execute the following command
 ```
 devtools::install_github("NWhitener/scrnabench")
 ```
-This will install the package. To use the pasckage, call the package like any other R package 
-
+This will install the package. To use the package:
 ```
 library(scrnabench)
 ```
 
 ## Common Issues 
 
-Below are solutions to some of the common issues while using the package. 
+Below are some of the solutions to some of the common issues that may appear while using the package. 
 
 ### Vector Memory Exhausted 
 
-This issue may occur when using the workflows if R does not have access to enough memory. To fix this execute the following commands. 
+This issue may occur when using the workflows that require large amount of memory. To fix this issue, execute the following commands: 
 
 ```
 library(usethis) 
 usethis::edit_r_environ()
 ```
 
-This will open the R environment file. Add the following command, with your request memory size and restart your R session to increase the memory and 
-complete the workflows 
+This will open the R environment file. Add the following command, requesting larger memory (example 100gb) and restart your R session. 
 
 ```
 R_MAX_VSIZE=100Gb
