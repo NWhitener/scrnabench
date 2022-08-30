@@ -80,6 +80,10 @@ dataList = extract_datasets(datasets)
 dataList = run_clustering_workflow(dataList, method = 'seurat', transformationType = 'log', seed = 1)
  ```
 
+### Metamorphic Benchmarking
+
+
+
 ### Harmony Integration 
 
 The Harmony integration workflow completes a data integration pipeline using the harmony package. The workflow steps include: extraction of common genes, dataset merging, filtering, annotation, data transformation,
@@ -126,7 +130,7 @@ dataList = run_fastmnn_integration_workflow(dataList, method = 'seurat', seed = 
 
 ### CCA Integration 
 
-The cca integration workflow completes the data integration usign Seurat's CCA pipeline.  Each dataset is preproceesed seperately, then integrated via CCA, folowed by scaling, dimensionality reduction, and clustering. The preprocess consists of filetering, annotation, data transformation, and HVG selction. Two baseline clustering algorithms are supported, Kmeans and Seurat Phenograph.
+The cca integration workflow completes the data integration usign Seurat's CCA pipeline.  Each dataset is preproceesed separately, then integrated via CCA, followed by scaling, dimensionality reduction, and clustering. The preprocess consists of filtering, annotation, data transformation, and HVG selection. Two baseline clustering algorithms are supported, Kmeans and Seurat Phenograph.
 
 
 To integrate the data and complete Kmeans clustering, the following command can be used: 
@@ -144,9 +148,9 @@ dataList = extract_datasets(datasets)
 dataList = run_cca_integration_workflow(dataList, method = 'seurat', seed = 1)
 ```
 
-### Sctransform Integration 
+### sctransform Integration 
 
-The SCtransform integration workflow completes the Seurat SCTransforma pipeline. This includes filtering, annotation, integration via sctransform, scaling, dimensionality reduction, and clustering. Two baseline clustering algorithms are supported, Kmeans and Seurat Phenograph.
+The sctransform integration workflow completes the Seurat scransform pipeline. This includes filtering, annotation, integration via sctransform, scaling, dimensionality reduction, and clustering. Two baseline clustering algorithms are supported, Kmeans and Seurat Phenograph.
 
 
 To integrate the data and complete Kmeans clustering, the following command can be used: 
