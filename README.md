@@ -36,15 +36,15 @@ R_MAX_VSIZE=100Gb
 # Quick Start Guide 
 
 ## Dataset Download
-In order to download the dataset use the **download_data** function. This will download the dataset from [Zenodo](https://zenodo.org/record/6617997).
-To download the data provide a path to the desired directory where the data should be downloaded. For example, path = "/User/Downloads".  This function will download and automatically load the data file which can be immediately used for benchmarking. This function only needs to be run once. 
+In order to download the dataset use the **download_data()** function. This will download the dataset from [Zenodo](https://zenodo.org/record/6617997).
+To download the data provide a path to the desired directory where the data should be downloaded. For example, **path = "/User/Downloads"**.  This function will download and automatically load the data file which can be immediately used for benchmarking. This function only needs to be run once. 
 
 ```
 datasets = dowload_data(path = "/Users/Downloads")  
 ```
 
 ## Dataset Load 
-If you have already downloaded the data to a directory on your local computer or would like to use the demo dataset,  call the **load_data()** function.  Provide the path of the data file. This will load the dataset for usage.
+If you have already downloaded the data to a directory on your local computer or would like to use the demo dataset, call the **load_data()** function.  Provide the path of the downloaded data file. The demo dataset is smaller than the full dataset, comprising of 2 data files, and can be used for rapid testing and experimentation. This will load the dataset for benchmarking. This function should be used anytime the data needs to be loaded.
 
 ```
 #Load the demo dataset 
