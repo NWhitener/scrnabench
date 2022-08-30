@@ -1,6 +1,6 @@
 # scrnabench
 'scrnabench' aims to provide the tools necessary to test downstream analysis methods on 48 reference scRNA-seq datasets.
-The package focuses on metamorphic stability of clustert analysis and data integration. 
+This R package focuses on metamorphic stability of clustert analysis and data integration. 
 
 ## Installing From Github
 
