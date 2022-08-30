@@ -44,7 +44,7 @@ datasets = dowload_data(path = "/Users/Downloads")
 ```
 
 ## Dataset Load 
-If you have already downloaded the data to a directory on your local computer or would like to use the demo dataset, call the **load_data()** function.  Provide the path of the downloaded data file. The demo dataset is smaller than the full dataset, comprising of 2 data files, and can be used for rapid testing and experimentation. This will load the dataset for benchmarking. This function should be used anytime the data needs to be loaded.
+If you have already downloaded the data to a directory on your local computer or would like to use the demo dataset, call the **load_data()** function.  Provide the path of the downloaded data file.  This will load the dataset for benchmarking. This function should be used anytime the data needs to be loaded.
 
 ```
 #Load the demo dataset 
@@ -54,21 +54,31 @@ datasets = load_data(demo = TRUE, path = "/Users/Downloads")
 datasets = load_data(demo = FALSE, path = "/Users/Downloads")
 ```
 
+The demo dataset is smaller than the full dataset, comprising of 2 data files, and can be used for rapid testing and experimentation.
+
 ## Workflows 
-Now that the data is loaded, the clustering and integration workflows are ready to use. Below we show the syntax for the workflows.
+Below we have provided sample workflows to demonstrate the functionality of the scrnabench package
 
-### Clustering
+### Cluster Analysis 
 
-The clustering workflow completes the full clustering pipeline. The log transformation includes preprocessing, transformation, Highly Variable Gene Selection, 
-scaling, dimensionality reduction, and clustering. The tfidf transformation includes transformation, Highly Variable Gene Selection, scaling, dimensionality reduction and 
-clustering. The cluster method can be KMeans Clustering or Seurat's Phenograph clustering. 
+The clustering workflow completes the standard clustering pipeline. The following steps are performed: filtering, annotation, data transformation, transformation, Highly Variable Gene selection (HVG), 
+scaling, dimensionality reduction, and clustering. scrnabench supports two baseline clustering methods, Kmeans clustering and Seurat's Phenograph clustering. 
+
+For example, to cluster the data into 10 clusters using Kmeans clustering, thee following command can be used: 
 
 ```
-#Clustering Workflow
+#Clustering Workflow 
 datasets = load_data(demo = FALSE, path = "/Users/Downloads")
 dataList = extract_datasets(datasets)
-dataList = run_clustering_workflow(dataList, method = 'kmeans', transformationType = 'log', seed = 17, numberClusters = 10)
+dataList = run_clustering_workflow(dataList, method = 'kmeans', transformationType = 'log', seed = 1, numberClusters = 10)
 ```
+To cluster the data using Seurat's phenograph, do the following: 
+ ```
+ #Clustering Workflow 
+datasets = load_data(demo = FALSE, path = "/Users/Downloads")
+dataList = extract_datasets(datasets)
+dataList = run_clustering_workflow(dataList, method = 'seurat', transformationType = 'log', seed = 1, numberClusters = 10)
+ ```
 
 ### Harmony Integration 
 
@@ -79,7 +89,7 @@ Highly Variable Gene selection, scaling, integration via harmony, dimensionality
 #Harmony workflow
 datasets = load_data(demo = FALSE, path = "/Users/Downloads")
 dataList = extract_datasets(datasets)
-dataList = run_harmony_integration_workflow(dataList, method = 'kmeans', seed = 17, numberClusters = 10)
+dataList = run_harmony_integration_workflow(dataList, method = 'kmeans', seed = 1, numberClusters = 10)
 ```
 
 ### FastMnn Integration 
@@ -91,7 +101,7 @@ Highly Variable Gene selection, integration via fastmnn, dimensionality reductio
 #FastMNN workflow
 datasets = load_data(demo = FALSE, path = "/Users/Downloads")
 dataList = extract_datasets(datasets)
-dataList = run_fastmnn_integration_workflow(dataList, method = 'kmeans', seed = 17, numberClusters = 10)
+dataList = run_fastmnn_integration_workflow(dataList, method = 'kmeans', seed = 1, numberClusters = 10)
 ```
 ### CCA Integration 
 
@@ -102,7 +112,7 @@ Highly Variable Gene selection, integration via cca, scaling, dimensionality red
 #cca workflow
 datasets = load_data(demo = FALSE, path = "/Users/Downloads")
 dataList = extract_datasets(datasets)
-dataList = run_cca_integration_workflow(dataList, method = 'kmeans', seed = 17, numberClusters = 10)
+dataList = run_cca_integration_workflow(dataList, method = 'kmeans', seed = 1, numberClusters = 10)
 ```
 
 ### Sctransform Integration 
@@ -114,5 +124,5 @@ The cluster method can be KMeans Clustering or Seurat's Phenograph clustering.
 #SCtransform workflow
 datasets = load_data(demo = FALSE, path = "/Users/Downloads")
 dataList = extract_datasets(datasets)
-dataList = run_sctransform_integration_workflow(dataList, method = 'kmeans', seed = 17, numberClusters = 10)
+dataList = run_sctransform_integration_workflow(dataList, method = 'kmeans', seed = 1, numberClusters = 10)
 ```
