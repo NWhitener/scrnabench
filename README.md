@@ -82,8 +82,8 @@ dataList = run_clustering_workflow(dataList, method = 'seurat', transformationTy
 
 ### Harmony Integration 
 
-The Harmony integration workflow completes a data integration pipeline using the harmony pacakge. The workflow steps include, extraction of common genes, dataset merging, preprocessing, data transformation,
-HVG, scaling, harmonization, dimensionality reduction, and clustering. Two baseline clustering algorithms are supported, Kmeans and Seurat Phenograph
+The Harmony integration workflow completes a data integration pipeline using the harmony package. The workflow steps include: extraction of common genes, dataset merging, filtering, annotation, data transformation,
+HVG selection, scaling, harmonization, dimensionality reduction, and clustering. Two baseline clustering algorithms are supported, Kmeans and Seurat Phenograph.
 
 
 For example, to integrate the data and complete Kmeans clustering, the following command can be used: 
@@ -103,17 +103,27 @@ dataList = run_harmony_integration_workflow(dataList, method = 'seurat', seed = 
 ```
 
 
-### FastMnn Integration 
+### fastMNN Integration 
 
-The fastmnn integration workflow completes the full fastmnn pipeline. This includes extracting common genes, merging datasets, preprocessing, transformation,
-Highly Variable Gene selection, integration via fastmnn, dimensionality reduction, and clustering. The cluster method can be KMeans Clustering or Seurat's Phenograph clustering.
+The fastMNN integration workflow completes the data integration pipeline, using the SeuratWrapper's fastMNN functions (LINK). Here the steps include: extraction of common genes, dataset merging, filtering, annotation, data transformation,
+HVG selection, integration via fastmnn, dimensionality reduction, and clustering. The cluster method can be KMeans Clustering or Seurat's Phenograph clustering.
 
+To integrate the data and complete Kmeans clustering, the following command can be used: 
 ```
 #FastMNN workflow
 datasets = load_data(demo = FALSE, path = "/Users/Downloads")
 dataList = extract_datasets(datasets)
 dataList = run_fastmnn_integration_workflow(dataList, method = 'kmeans', seed = 1, numberClusters = 10)
 ```
+To integrate the data and complete Seurat's Phenograph, do the following: 
+```
+#FastMNN workflow
+datasets = load_data(demo = FALSE, path = "/Users/Downloads")
+dataList = extract_datasets(datasets)
+dataList = run_fastmnn_integration_workflow(dataList, method = 'seurat', seed = 1)
+```
+
+
 ### CCA Integration 
 
 The cca integration workflow completes the full cca pipeline. This includes preprocessing, transformation,
