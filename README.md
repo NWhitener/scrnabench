@@ -20,14 +20,14 @@ Below are some of the solutions to some of the common issues that may appear whi
 
 ### Vector Memory Exhausted 
 
-This issue may occur when using the workflows that require large amount of memory. To fix this issue, execute the following commands: 
+This issue may occur when R does not have a large enough max vector heap size. To fix this issue, execute the following commands: 
 
 ```
 library(usethis) 
 usethis::edit_r_environ()
 ```
 
-This will open the R environment file. Add the following command, requesting larger memory (example 100gb) and restart your R session. 
+This will open the R environment file. Add the following command, requesting larger memory (example 100 Gb) and restart your R session. 
 
 ```
 R_MAX_VSIZE=100Gb
@@ -36,21 +36,19 @@ R_MAX_VSIZE=100Gb
 # Quick Start Guide 
 
 ## Dataset Download
-In order to download the dataset use the download_data function. This will download the dataset from [Zenodo](https://zenodo.org/record/6617997).
-To download the data provide a path for the download. This function will download and automatically load the gene_counts.RDS file which can be used for benchmarking. 
-This function only needs to be run once. 
+In order to download the dataset use the **download_data** function. This will download the dataset from [Zenodo](https://zenodo.org/record/6617997).
+To download the data provide a path to the desired directory where the data should be downloaded. For example, path = "/User/Downloads".  This function will download and automatically load the data file which can be immediately used for benchmarking. This function only needs to be run once. 
 
 ```
 datasets = dowload_data(path = "/Users/Downloads")  
 ```
 
 ## Dataset Load 
-If you have already downloaded the data or would like to use the demo dataset use the load_data() function. This will load the dataset into memory for usage. To 
-load the full dataset, provide the path of the gene_counts.RDS file from the download.
+If you have already downloaded the data to a directory on your local computer or would like to use the demo dataset,  call the **load_data()** function.  Provide the path of the data file. This will load the dataset for usage.
 
 ```
 #Load the demo dataset 
-datasets = load_data(demo = TRUE) 
+datasets = load_data(demo = TRUE, path = "/Users/Downloads") 
 
 #Load the full dataset 
 datasets = load_data(demo = FALSE, path = "/Users/Downloads")
