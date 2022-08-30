@@ -126,24 +126,40 @@ dataList = run_fastmnn_integration_workflow(dataList, method = 'seurat', seed = 
 
 ### CCA Integration 
 
-The cca integration workflow completes the full cca pipeline. This includes preprocessing, transformation,
-Highly Variable Gene selection, integration via cca, scaling, dimensionality reduction, and clustering. The cluster method can be KMeans Clustering or Seurat's Phenograph clustering.
+The cca integration workflow completes the data integration usign Seurat's CCA pipeline.  Each dataset is preproceesed seperately, then integrated via CCA, folowed by scaling, dimensionality reduction, and clustering. The preprocess consists of filetering, annotation, data transformation, and HVG selction. Two baseline clustering algorithms are supported, Kmeans and Seurat Phenograph.
 
+
+To integrate the data and complete Kmeans clustering, the following command can be used: 
 ```
 #cca workflow
 datasets = load_data(demo = FALSE, path = "/Users/Downloads")
 dataList = extract_datasets(datasets)
 dataList = run_cca_integration_workflow(dataList, method = 'kmeans', seed = 1, numberClusters = 10)
 ```
+To integrate the data and complete Seurat's Phenograph, do the following: 
+```
+#cca workflow
+datasets = load_data(demo = FALSE, path = "/Users/Downloads")
+dataList = extract_datasets(datasets)
+dataList = run_cca_integration_workflow(dataList, method = 'seurat', seed = 1)
+```
 
 ### Sctransform Integration 
 
-The SCtransform integration workflow completes the full cca pipeline. This includes preprocessing, integration via sctransform scaling, dimensionality reduction, and clustering. 
-The cluster method can be KMeans Clustering or Seurat's Phenograph clustering.
+The SCtransform integration workflow completes the Seurat SCTransforma pipeline. This includes filtering, annotation, integration via sctransform, scaling, dimensionality reduction, and clustering. Two baseline clustering algorithms are supported, Kmeans and Seurat Phenograph.
 
+
+To integrate the data and complete Kmeans clustering, the following command can be used: 
 ```
 #SCtransform workflow
 datasets = load_data(demo = FALSE, path = "/Users/Downloads")
 dataList = extract_datasets(datasets)
 dataList = run_sctransform_integration_workflow(dataList, method = 'kmeans', seed = 1, numberClusters = 10)
+```
+To integrate the data and complete Seurat's Phenograph, do the following: 
+```
+#SCtransform workflow
+datasets = load_data(demo = FALSE, path = "/Users/Downloads")
+dataList = extract_datasets(datasets)
+dataList = run_sctransform_integration_workflow(dataList, method = 'Seurat', seed = 1)
 ```
