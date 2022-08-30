@@ -61,10 +61,10 @@ Below we have provided sample workflows to demonstrate the functionality of the 
 
 ### Cluster Analysis 
 
-The clustering workflow completes the standard clustering pipeline. The following steps are performed: filtering, annotation, data transformation, transformation, Highly Variable Gene selection (HVG), 
-scaling, dimensionality reduction, and clustering. scrnabench supports two baseline clustering methods, Kmeans clustering and Seurat's Phenograph clustering. 
+The clustering workflow completes the standard clustering pipeline. The following steps are performed: filtering, annotation, data transformation, Highly Variable Gene selection(HVG), 
+scaling, dimensionality reduction, and clustering. The pacakge supports two baseline clustering methods, Kmeans clustering and Seurat's Phenograph clustering. 
 
-For example, to cluster the data into 10 clusters using Kmeans clustering, thee following command can be used: 
+For example, to cluster the data into 10 clusters using Kmeans algorithm, the following command can be used: 
 
 ```
 #Clustering Workflow 
@@ -72,25 +72,36 @@ datasets = load_data(demo = FALSE, path = "/Users/Downloads")
 dataList = extract_datasets(datasets)
 dataList = run_clustering_workflow(dataList, method = 'kmeans', transformationType = 'log', seed = 1, numberClusters = 10)
 ```
-To cluster the data using Seurat's phenograph, do the following: 
+To cluster the data using Seurat's Phenograph, do the following: 
  ```
  #Clustering Workflow 
 datasets = load_data(demo = FALSE, path = "/Users/Downloads")
 dataList = extract_datasets(datasets)
-dataList = run_clustering_workflow(dataList, method = 'seurat', transformationType = 'log', seed = 1, numberClusters = 10)
+dataList = run_clustering_workflow(dataList, method = 'seurat', transformationType = 'log', seed = 1)
  ```
 
 ### Harmony Integration 
 
-The harmony integration workflow completes the full harmony pipeline. This includes extracting common genes, merging datasets, preprocessing, transformation,
-Highly Variable Gene selection, scaling, integration via harmony, dimensionality reduction, and clustering. The cluster method can be KMeans Clustering or Seurat's Phenograph clustering.
+The Harmony integration workflow completes a data integration pipeline using the harmony pacakge. The workflow steps include, extraction of common genes, dataset merging, preprocessing, data transformation,
+HVG, scaling, harmonization, dimensionality reduction, and clustering. Two baseline clustering algorithms are supported, Kmeans and Seurat Phenograph
 
+
+For example, to integrate the data and complete Kmeans clustering, the following command can be used: 
 ```
 #Harmony workflow
 datasets = load_data(demo = FALSE, path = "/Users/Downloads")
 dataList = extract_datasets(datasets)
 dataList = run_harmony_integration_workflow(dataList, method = 'kmeans', seed = 1, numberClusters = 10)
 ```
+To integrate the data and complete Seurat's Phenograph, do the following: 
+
+```
+#Harmony workflow
+datasets = load_data(demo = FALSE, path = "/Users/Downloads")
+dataList = extract_datasets(datasets)
+dataList = run_harmony_integration_workflow(dataList, method = 'seurat', seed = 1)
+```
+
 
 ### FastMnn Integration 
 
