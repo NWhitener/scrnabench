@@ -62,7 +62,7 @@ Below we have provided sample workflows to demonstrate the functionality of the 
 ### Cluster Analysis 
 
 The clustering workflow completes the standard clustering pipeline. The following steps are performed: filtering, annotation, data transformation, Highly Variable Gene selection(HVG), 
-scaling, dimensionality reduction, and clustering. The pacakge supports two baseline clustering methods, Kmeans clustering and Seurat's Phenograph clustering. 
+scaling, dimensionality reduction, and clustering. The pacakge supports two baseline clustering methods, Kmeans clustering and [Seurat's](https://satijalab.org/seurat/) Phenograph clustering. 
 
 For example, to cluster the data into 10 clusters using Kmeans algorithm, the following command can be used: 
 
@@ -86,7 +86,7 @@ dataList = run_clustering_workflow(dataList, method = 'seurat', transformationTy
 
 ### Harmony Integration 
 
-The Harmony integration workflow completes a data integration pipeline using the harmony package. The workflow steps include: extraction of common genes, dataset merging, filtering, annotation, data transformation,
+The Harmony integration workflow completes a data integration pipeline using the [harmony](https://github.com/immunogenomics/harmony) package. The workflow steps include: extraction of common genes, dataset merging, filtering, annotation, data transformation,
 HVG selection, scaling, harmonization, dimensionality reduction, and clustering. Two baseline clustering algorithms are supported, Kmeans and Seurat Phenograph.
 
 
@@ -109,7 +109,7 @@ dataList = run_harmony_integration_workflow(dataList, method = 'seurat', seed = 
 
 ### fastMNN Integration 
 
-The fastMNN integration workflow completes the data integration pipeline, using the SeuratWrapper's fastMNN functions (LINK). Here the steps include: extraction of common genes, dataset merging, filtering, annotation, data transformation,
+The fastMNN integration workflow completes the data integration pipeline, using the SeuratWrapper's [fastMNN](https://github.com/satijalab/seurat-wrappers) functions (LINK). Here the steps include: extraction of common genes, dataset merging, filtering, annotation, data transformation,
 HVG selection, integration via fastmnn, dimensionality reduction, and clustering. The cluster method can be KMeans Clustering or Seurat's Phenograph clustering.
 
 To integrate the data and complete Kmeans clustering, the following command can be used: 
