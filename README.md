@@ -84,6 +84,21 @@ dataList = run_clustering_workflow(dataList, method = 'seurat', transformationTy
 
 The metamorphic benchamrking workflow completes a clustering analysis pipeline. This workflow includes clustering amd all associated preprocessing, and the completion of up to 6 metamorphic testing [protocols](https://core.ac.uk/download/pdf/228032568.pdf). The result returned is table of how many dimensionality reductions saw no change after the metamorphic testing. 
 
+For example, to cluster the data into 10 clusters using Kmeans algorithm, the following command can be used: 
+
+```
+#Metamorphic Testing Workflow 
+datasets = load_data(demo = F, path = 'Users/Downloads') 
+dataList = extract_datasets(datasets) 
+MetamorphicReport = run_metamorphic_test_workflow(dataList, method = 'kmeans', transformation = "log", metamorphicTests= c(6,5,4,3,2,1))
+```
+To cluster the data using Seurat's Phenograph, do the following: 
+ ```
+datasets = load_data(demo = F, path = '/Users/Downloads') 
+dataList = extract_datasets(datasets) 
+MetamorphicReport = run_metamorphic_test_workflow(dataList, method = 'seurat', transformation = "log", metamorphicTests= c(6,5,4,3,2,1))
+```
+
 ### Harmony Integration 
 
 The Harmony integration workflow completes a data integration pipeline using the [harmony](https://github.com/immunogenomics/harmony) package. The workflow steps include: extraction of common genes, dataset merging, filtering, annotation, data transformation,
