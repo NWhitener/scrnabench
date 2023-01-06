@@ -1,14 +1,14 @@
 #' Run Kmeans
 #'
 #' This function runs Kmeans Clustering. It uses the simple Kmeans algorithm with
-#' a max number of iterations set to be 100 by default. The number of clusters is set by the users and defaults
+#' a max number of iterations set to be 100 by default. The number of clusters can be set by the users and defaults
 #' to 10 clusters. This is the R package stats implementation of Kmeans
 #'
 #' @param dataList A list of data sets to be clustered by Kmeans
-#' @param reductionType The type of dimensionly reduced data that should be used for clustering
+#' @param reductionType The type of dimensionly reduced data that should be used for clustering,
 #' defaults to PCA
 #' @param numberClusters The number of cluster centers to use, defaults to 10
-#' @param iterationsMax The max number of iterations that should be used in the kmeans algorithm
+#' @param iterationsMax The max number of iterations that should be used in the kmeans algorithm,
 #' defaults to 100
 #' @return The dataList with kmeans clusters stored in the meta data
 #' @export
@@ -35,9 +35,8 @@ run_kmeans_clustering <- function(dataList, reductionType = 'pca', numberCluster
 #' Seurat Clustering
 #'
 #' This functions runs the Seurat FindNeighbors and FindClusters function on a list of data sets.
-#' This functions assumes that genes are in rows and
-#' cells are in columns. The FindNeighbors reduction is set to "pca" by default and uses the first 10 dimensions
-#' The FindClusters resolution is set to 0.5 by default, but is controlable by the user
+#' This functions assumes that genes are in rows and cells are in columns. The FindNeighbors reduction is set to "pca" by default and uses the first 10 dimensions.
+#' The FindClusters resolution is set to 0.5 by default, but is controllable by the user
 #'
 #' @param dataList A list of data sets to be clustered
 #' @param reductionType The type of dimensionly reduced data that should be used for clustering, defaults to PCA
@@ -45,7 +44,7 @@ run_kmeans_clustering <- function(dataList, reductionType = 'pca', numberCluster
 #' @param numberComponents the number of components to use, defaults to 10
 #' @return A data list with Seurat clustering completed
 #' @export
-run_seurat_clustering <- function(dataList, reductionType = 'pca', resolutionValue = 0.5, numberComponents = 10)
+run_seurat_clustering <- function(dataList, reductionType = 'pca', resolutionValue = 0.5, numberComponents = 10, seed = 1)
 {
 
   if(is.list(dataList))
