@@ -1,15 +1,13 @@
-
-
 #' Downloads the data
 #'
 #' This function downloads the data that is used in the package for use in examples, and automatically loads the data for
-#' usage. Run this once when the data is not download, if the data is downloaded use the load_data function
+#' usage. Run this once when the data is not downloaded, if the data is downloaded use the load_data function
 #'
 #' @import inborutils
 #' @param path The path of the download location to use
 #' @return A object with the names of the data sets that were downloaded and loaded
 #' @export
-download_data <- function(path = '.')
+download_data <- function(path = './')
 {
 
   inborutils::download_zenodo(doi = "10.5281/zenodo.6617997", path = path)
@@ -23,7 +21,7 @@ download_data <- function(path = '.')
 #' Loads the data
 #'
 #' This function loads the data that is used in the package for use in workflows, functions, and examples
-#' @param demo Use the full dataset or the small demo data set, defaulted to use the full data sets
+#' @param demo Use the full dataset or the small demo data set, defaulted to FALSE and will use the full datasets
 #' @param path The path of the load location to use, if the full datasets is to be loaded
 #' @return A object with the names of the data sets that were loaded
 #' @export
@@ -51,7 +49,7 @@ load_data <- function(demo = FALSE, path = '.')
 #' Merge the Sparse data sets
 #'
 #' This function merges the contents of two lists into a sparse matrix. It assumes that the data sets
-#' are of the same format, with genes stored in rows and cells stored in columns. The lists are merged base on the
+#' are of the same format, with genes stored in rows and cells stored in columns. The lists are merged based on the
 #' union of the row names and the union of the column names
 #'
 #' @import Matrix
@@ -104,9 +102,6 @@ merge_datasets <- function(dataList)
 #' @export
 describe_datasets <- function(dataList)
 {
-
-  # Show the dataset name, number of genes, number of cells
-
   summaryTable = NULL
   for (i in 1:length(names(dataList)))
   {
@@ -134,32 +129,34 @@ extract_datasets <- function(names)
 {
   ##Check to see geneCounts exists
 
-if(exists('geneCounts')){
-  if(!is.vector(names))
-  {
-    stop("A list of names of the datasets is required to extract datasets")
+  if(exists('geneCounts')){
+    if(!is.vector(names))
+    {
+      stop("A list of names of the datasets is required to extract datasets")
+    }
+    dataList <- geneCounts[names]
+    for (i in 1:length(names))
+    {
+      dataList[[i]] <- as.matrix(dataList[[i]])
+      dataList[[i]] <- methods::as(dataList[[i]], "dgCMatrix")
+      ix = Matrix::rowSums(dataList[[i]] != 0)
+      dataList[[i]] = dataList[[i]][ix > 0,]
+      ncols = length(colnames(dataList[[i]]))
+      colnames(dataList[[i]]) = paste(names[i], seq(1:ncols), sep="-")
+    }
+    return(dataList)
   }
-  dataList <- geneCounts[names]
-  for (name in names)
-  {
-    dataList[[name]] <- as.matrix(dataList[[name]])
-    dataList[[name]] <- methods::as(dataList[[name]], "dgCMatrix")
-    ix = Matrix::rowSums(dataList[[name]] != 0)
-    dataList[[name]] = dataList[[name]][ix > 0,]
-    ncols = length(colnames(dataList[[name]]))
-    colnames(dataList[[name]]) = paste(name, seq(1:ncols), sep="-")
-  }
-  return(dataList)
-}
   else{
     stop("Please run load_data() or download_data() first")
   }
 }
 
 
+
+
 #' Annotate Data sets
 #'
-#' This function annotates a created Seurat object. It edits the chunks and meta.data in
+#' This function annotates a created Seurat object. It edits the meta.data in
 #' order to annotate the object for use in down stream analysis
 #'
 #' @param dataList A list of Seurat object that you want annotated
@@ -205,7 +202,7 @@ annotate_datasets <- function(dataList)
       x@meta.data$orig.ident <- x@meta.data$CELL_LINE
       x <- x
     })
-    for (i in range(1, length(dataList)))
+    for (i in (1:length(dataList)))
     {
       dataList[[i]]@meta.data$SID = rep(i, length(dataList[[i]]@meta.data$SID))
     }
