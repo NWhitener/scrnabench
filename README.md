@@ -1,7 +1,6 @@
 # scrnabench
-A benchmarking tools to test downstream analysis on benchmark datasets. 'scrnabench' aims to provide all the tools necessary to test down stream analysis methods for scRNA-seq datasets, 
-either on a set of benchmark data, or on the users own datasets. scrnabench makes use of the Seurat Object and several Seurat methods as well as various other downstream methods for convience of benchmarking scRNA-seq data.  
-
+'scrnabench' aims to provide the tools necessary to test downstream analysis methods on 48 reference scRNA-seq datasets.
+This R package focuses on metamorphic stability of clustert analysis and data integration. 
 
 ## Installing From Github
 
@@ -10,27 +9,25 @@ In the R terminal execute the following command
 ```
 devtools::install_github("NWhitener/scrnabench")
 ```
-This will install the package. To use the pasckage, call the package like any other R package 
-
+This will install the package. To use the package:
 ```
 library(scrnabench)
 ```
 
 ## Common Issues 
 
-Below are solutions to some of the common issues while using the package. 
+Below are some of the solutions to some of the common issues that may appear while using the package. 
 
 ### Vector Memory Exhausted 
 
-This issue may occur when using the workflows if R does not have access to enough memory. To fix this execute the following commands. 
+This issue may occur when R does not have a large enough max vector heap size. To fix this issue, execute the following commands: 
 
 ```
 library(usethis) 
 usethis::edit_r_environ()
 ```
 
-This will open the R environment file. Add the following command, with your request memory size and restart your R session to increase the memory and 
-complete the workflows 
+This will open the R environment file. Add the following command, requesting larger memory (example 100 Gb) and restart your R session. 
 
 ```
 R_MAX_VSIZE=100Gb
@@ -39,85 +36,149 @@ R_MAX_VSIZE=100Gb
 # Quick Start Guide 
 
 ## Dataset Download
-In order to download the dataset use the download_data function. This will download the dataset from [Zenodo](https://zenodo.org/record/6617997).
-To download the data provide a path for the download. This function will download and automatically load the gene_counts.RDS file which can be used for benchmarking. 
-This function only needs to be run once. 
+In order to download the dataset use the **download_data()** function. This will download the dataset from [Zenodo](https://zenodo.org/record/6617997).
+To download the data provide a path to the desired directory where the data should be downloaded. For example, **path = "/User/Downloads"**.  This function will download and automatically load the data file which can be immediately used for benchmarking. This function only needs to be run once. 
 
 ```
 datasets = dowload_data(path = "/Users/Downloads")  
 ```
 
 ## Dataset Load 
-If you have already downloaded the data or would like to use the demo dataset use the load_data() function. This will load the dataset into memory for usage. To 
-load the full dataset, provide the path of the gene_counts.RDS file from the download.
+If you have already downloaded the data to a directory on your local computer or would like to use the demo dataset, call the **load_data()** function.  Provide the path of the downloaded data file.  This will load the dataset for benchmarking. This function should be used anytime the data needs to be loaded.
 
 ```
 #Load the demo dataset 
-datasets = load_data(demo = TRUE) 
+datasets = load_data(demo = TRUE, path = "/Users/Downloads") 
 
 #Load the full dataset 
 datasets = load_data(demo = FALSE, path = "/Users/Downloads")
 ```
 
+The demo dataset is smaller than the full dataset, comprising of 2 data files, and can be used for rapid testing and experimentation.
+
 ## Workflows 
-Now that the data is loaded, the clustering and integration workflows are ready to use. Below we show the syntax for the workflows.
+Below we have provided sample workflows to demonstrate the functionality of the scrnabench package
 
-### Clustering
+### Cluster Analysis 
 
-The clustering workflow completes the full clustering pipeline. The log transformation includes preprocessing, transformation, Highly Variable Gene Selection, 
-scaling, dimensionality reduction, and clustering. The tfidf transformation includes transformation, Highly Variable Gene Selection, scaling, dimensionality reduction and 
-clustering. The cluster method can be KMeans Clustering or Seurat's Phenograph clustering. 
+The clustering workflow completes the standard clustering pipeline. The following steps are performed: filtering, annotation, data transformation, Highly Variable Gene selection(HVG), 
+scaling, dimensionality reduction, and clustering. The pacakge supports two baseline clustering methods, Kmeans clustering and [Seurat's](https://satijalab.org/seurat/) Phenograph clustering. 
+
+For example, to cluster the data into 10 clusters using Kmeans algorithm, the following command can be used: 
 
 ```
-#Clustering Workflow
+#Clustering Workflow 
 datasets = load_data(demo = FALSE, path = "/Users/Downloads")
 dataList = extract_datasets(datasets)
-dataList = run_clustering_workflow(dataList, method = 'kmeans', transformationType = 'log', seed = 17, numberClusters = 10)
+dataList = run_clustering_workflow(dataList, method = 'kmeans', transformationType = 'log', seed = 1, numberClusters = 10)
+```
+To cluster the data using Seurat's Phenograph, do the following: 
+ ```
+ #Clustering Workflow 
+datasets = load_data(demo = FALSE, path = "/Users/Downloads")
+dataList = extract_datasets(datasets)
+dataList = run_clustering_workflow(dataList, method = 'seurat', transformationType = 'log', seed = 1)
+ ```
+
+### Metamorphic Benchmarking
+
+The metamorphic benchamrking workflow completes a clustering analysis pipeline. This workflow includes clustering amd all associated preprocessing, and the completion of up to 6 metamorphic testing [protocols](https://core.ac.uk/download/pdf/228032568.pdf). The result returned is table of how many dimensionality reductions saw no change after the metamorphic testing. 
+
+For example, to cluster the data into 10 clusters using Kmeans algorithm, the following command can be used: 
+
+```
+#Metamorphic Testing Workflow 
+datasets = load_data(demo = F, path = 'Users/Downloads') 
+dataList = extract_datasets(datasets) 
+MetamorphicReport = run_metamorphic_test_workflow(dataList, method = 'kmeans', transformation = "log", metamorphicTests= c(6,5,4,3,2,1))
+```
+To cluster the data using Seurat's Phenograph, do the following: 
+ ```
+datasets = load_data(demo = F, path = '/Users/Downloads') 
+dataList = extract_datasets(datasets) 
+MetamorphicReport = run_metamorphic_test_workflow(dataList, method = 'seurat', transformation = "log", metamorphicTests= c(6,5,4,3,2,1))
 ```
 
 ### Harmony Integration 
 
-The harmony integration workflow completes the full harmony pipeline. This includes extracting common genes, merging datasets, preprocessing, transformation,
-Highly Variable Gene selection, scaling, integration via harmony, dimensionality reduction, and clustering. The cluster method can be KMeans Clustering or Seurat's Phenograph clustering.
+The Harmony integration workflow completes a data integration pipeline using the [harmony](https://github.com/immunogenomics/harmony) package. The workflow steps include: extraction of common genes, dataset merging, filtering, annotation, data transformation,
+HVG selection, scaling, harmonization, dimensionality reduction, and clustering. Two baseline clustering algorithms are supported, Kmeans and Seurat Phenograph.
+
+
+For example, to integrate the data and complete Kmeans clustering, the following command can be used: 
+```
+#Harmony workflow
+datasets = load_data(demo = FALSE, path = "/Users/Downloads")
+dataList = extract_datasets(datasets)
+dataList = run_harmony_integration_workflow(dataList, method = 'kmeans', seed = 1, numberClusters = 10)
+```
+To integrate the data and complete Seurat's Phenograph, do the following: 
 
 ```
 #Harmony workflow
 datasets = load_data(demo = FALSE, path = "/Users/Downloads")
 dataList = extract_datasets(datasets)
-dataList = run_harmony_integration_workflow(dataList, method = 'kmeans', seed = 17, numberClusters = 10)
+dataList = run_harmony_integration_workflow(dataList, method = 'seurat', seed = 1)
 ```
 
-### FastMnn Integration 
 
-The fastmnn integration workflow completes the full fastmnn pipeline. This includes extracting common genes, merging datasets, preprocessing, transformation,
-Highly Variable Gene selection, integration via fastmnn, dimensionality reduction, and clustering. The cluster method can be KMeans Clustering or Seurat's Phenograph clustering.
+### fastMNN Integration 
 
+The fastMNN integration workflow completes the data integration pipeline, using the SeuratWrapper's [fastMNN](https://github.com/satijalab/seurat-wrappers) functions (LINK). Here the steps include: extraction of common genes, dataset merging, filtering, annotation, data transformation,
+HVG selection, integration via fastmnn, dimensionality reduction, and clustering. The cluster method can be KMeans Clustering or Seurat's Phenograph clustering.
+
+To integrate the data and complete Kmeans clustering, the following command can be used: 
 ```
 #FastMNN workflow
 datasets = load_data(demo = FALSE, path = "/Users/Downloads")
 dataList = extract_datasets(datasets)
-dataList = run_fastmnn_integration_workflow(dataList, method = 'kmeans', seed = 17, numberClusters = 10)
+dataList = run_fastmnn_integration_workflow(dataList, method = 'kmeans', seed = 1, numberClusters = 10)
 ```
+To integrate the data and complete Seurat's Phenograph, do the following: 
+```
+#FastMNN workflow
+datasets = load_data(demo = FALSE, path = "/Users/Downloads")
+dataList = extract_datasets(datasets)
+dataList = run_fastmnn_integration_workflow(dataList, method = 'seurat', seed = 1)
+```
+
+
 ### CCA Integration 
 
-The cca integration workflow completes the full cca pipeline. This includes preprocessing, transformation,
-Highly Variable Gene selection, integration via cca, scaling, dimensionality reduction, and clustering. The cluster method can be KMeans Clustering or Seurat's Phenograph clustering.
+The cca integration workflow completes the data integration usign Seurat's CCA pipeline.  Each dataset is preproceesed separately, then integrated via CCA, followed by scaling, dimensionality reduction, and clustering. The preprocess consists of filtering, annotation, data transformation, and HVG selection. Two baseline clustering algorithms are supported, Kmeans and Seurat Phenograph.
 
+
+To integrate the data and complete Kmeans clustering, the following command can be used: 
 ```
 #cca workflow
 datasets = load_data(demo = FALSE, path = "/Users/Downloads")
 dataList = extract_datasets(datasets)
-dataList = run_cca_integration_workflow(dataList, method = 'kmeans', seed = 17, numberClusters = 10)
+dataList = run_cca_integration_workflow(dataList, method = 'kmeans', seed = 1, numberClusters = 10)
+```
+To integrate the data and complete Seurat's Phenograph, do the following: 
+```
+#cca workflow
+datasets = load_data(demo = FALSE, path = "/Users/Downloads")
+dataList = extract_datasets(datasets)
+dataList = run_cca_integration_workflow(dataList, method = 'seurat', seed = 1)
 ```
 
-### Sctransform Integration 
+### sctransform Integration 
 
-The SCtransform integration workflow completes the full cca pipeline. This includes preprocessing, integration via sctransform scaling, dimensionality reduction, and clustering. 
-The cluster method can be KMeans Clustering or Seurat's Phenograph clustering.
+The sctransform integration workflow completes the Seurat scransform pipeline. This includes filtering, annotation, integration via sctransform, scaling, dimensionality reduction, and clustering. Two baseline clustering algorithms are supported, Kmeans and Seurat Phenograph.
 
+
+To integrate the data and complete Kmeans clustering, the following command can be used: 
 ```
 #SCtransform workflow
 datasets = load_data(demo = FALSE, path = "/Users/Downloads")
 dataList = extract_datasets(datasets)
-dataList = run_sctransform_integration_workflow(dataList, method = 'kmeans', seed = 17, numberClusters = 10)
+dataList = run_sctransform_integration_workflow(dataList, method = 'kmeans', seed = 1, numberClusters = 10)
+```
+To integrate the data and complete Seurat's Phenograph, do the following: 
+```
+#SCtransform workflow
+datasets = load_data(demo = FALSE, path = "/Users/Downloads")
+dataList = extract_datasets(datasets)
+dataList = run_sctransform_integration_workflow(dataList, method = 'Seurat', seed = 1)
 ```
