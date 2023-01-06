@@ -1,8 +1,8 @@
 #' Run CCA
 #'
 #' This function runs the data integration protocol detailed in the Seurat "Introduction to scRNA-seq
-#' integration" found at https://satijalab.org/seurat/articles/integration_introduction.html. This function completes the cca process on
-#' the datasets. Use run_cca_integration_workflow() for the entire workflow process
+#' integration" found at https://satijalab.org/seurat/articles/integration_introduction.html. This function completes the cca integration process using the first data set as a reference as described at https://satijalab.org/seurat/articles/integration_large_datasets.html
+#' Use run_cca_integration_workflow() for the entire workflow process
 #'
 #' @param dataList A list of data sets to integrate using the cca protocol
 #' @return A data list of the combined data from the cca protocol
@@ -36,7 +36,7 @@ run_cca <- function(dataList)
 #' @param batchName The annotation name to group data sets by, defaults to "ID"
 #' @return  A list of the integrated data from the harmony protocol
 #' @export
-run_harmony <- function(dataList, batchName = 'ID')
+run_harmony <- function(dataList, batchName = 'SID')
 {
   if(is.list(dataList))
   {
@@ -61,7 +61,7 @@ run_harmony <- function(dataList, batchName = 'ID')
 #' @param batchName The annotation name to group data sets by, defaults to "ID"
 #' @return A data list of the combined data from the fastmnn protocol
 #' @export
-run_fastmnn <- function(dataList, batchName = "ID")
+run_fastmnn <- function(dataList, batchName = "SID")
 {
   if(is.list(dataList))
   {
@@ -82,7 +82,7 @@ run_fastmnn <- function(dataList, batchName = "ID")
 #'
 #' This function runs the data integration protocol detailed in the Seurat "Using sctransform in Seurat"
 #' found at https://satijalab.org/seurat/articles/sctransform_vignette.html . This function completes the sctransform process on
-#' the datasets, using the first data set as a reference as described at https://satijalab.org/seurat/articles/integration_large_datasets.html.   Use run_sctransform_workflow() for the entire workflow process
+#' the datasets, using the first data set as a reference as described at https://satijalab.org/seurat/articles/integration_large_datasets.html. Use run_sctransform_workflow() for the entire workflow process
 #'
 #' @param dataList A list of data sets to integrate using the sctransform protocol
 #' @param numFeatures The number of Features to use, defaults to 2000
