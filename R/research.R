@@ -33,22 +33,35 @@ perturb_datasets <- function(dataList, perturbationType = 1)
 duplicate_datasets <- function(dataList, duplicates = 2)
 {
   if(is.list(dataList)){
-  names <- names(dataList)
-  names <- rep(names, duplicates)
-  dataList <- extract_datasets(names)
+    names <- names(dataList)
+    names <- rep(names, duplicates)
+    dataList <- extract_datasets(names)
   }
   else
   {
     stop("A data list of datasets is required to duplicate datasets")
   }
+
+  for (i in 1:length(names))
+  {
+    names[i] <- paste(i, names[i], sep="_")
+    cols <- colnames(dataList[[i]])
+    for (j in 1:length(cols))
+    {
+      cols[j] <- paste(i, cols[j], sep="_")
+    }
+    colnames(dataList[[i]]) <- cols
+    names(dataList) <- names
+  }
   return(dataList)
 }
+
 
 
 #' Permute the Rows of a Data List
 #'
 #' This function is designed for experimental analysis of algorithmic stability. It permutes the rows of a data list
-#' so that further experimentation can be done wit the data list to check the  algorithmic stability of a pipeline or
+#' so that further experimentation can be done with the data list to check the  algorithmic stability of a pipeline or
 #' method
 #'
 #' @param dataList A list of data
@@ -71,7 +84,7 @@ permute_rows <- function(dataList)
 #' Permute the columns of a Data List
 #'
 #' This function is designed for experimental analysis of algorithmic stability. It permutes the columns of a data list
-#' so that further experimentation can be done wit the data list to check the  algorithmic stability of a pipeline or
+#' so that further experimentation can be done with the data list to check the  algorithmic stability of a pipeline or
 #' method
 #'
 #' @param dataList A list of data
@@ -93,7 +106,9 @@ permute_columns <- function(dataList)
 
 #' Permute the Order fo the data sets
 #'
-#' This function permutes the order of the data set
+#' This function is designed for experimental analysis of algorithmic stability.
+#' This function permutes the order of the data set so that further experimentation can be done with the data list to check the  algorithmic stability of a pipeline or
+#' method
 #'
 #' @param dataList a  list of data sets
 #' @return A permuted data set list
@@ -114,7 +129,7 @@ permute_dataset_order <- function(dataList)
 
 #' Modify Gene Counts
 #'
-#' This function takes the gene counts of the takes the original gene counts of the datasets, multiplies them by 2 and then adds one to the count,
+#' This function takes the gene counts of a row of the takes the original gene counts of the datasets, multiplies them by 2 and then adds one to the count,
 #' creating a transformation of 2x+1. This function is designed to test the algorithmic stability of a clustering algorithm
 #'
 #' @param dataList a  list of data sets
@@ -136,7 +151,7 @@ modify_gene_counts <- function(dataList)
 
 #' Add duplicated Cells
 #'
-#' This function takes a random cell sample and adds its duplicate to the data set. This function is a test of algorithmic stability
+#' This function takes a random cell sample and adds its duplicate to the data set. This function is a test of algorithmic stability of a pipeline or method.
 #'
 #' @param dataList a  list of data sets
 #' @return A data set list with a duplicated cell sample
@@ -160,7 +175,7 @@ add_duplicate_cells <- function(dataList)
 
 #' Add Zero Variance Gene Counts
 #'
-#' This function adds a set of zero variance gene counts to the sample. This function is a test of algorithmic stability
+#' This function adds a set of zero variance gene counts to the sample. This function is a test of algorithmic stability of a pipeline or a method.
 #'
 #' @param dataList a  list of data sets
 #' @return A data set list with added zero variance gene counts
@@ -181,7 +196,7 @@ add_zero_variance_gene_counts <- function(dataList)
 
 #' Flips the Gene Counts
 #'
-#' This function multiplies the gene count values by -1, "flipping" them over an access. This function is a test of algorithmic stability
+#' This function multiplies the gene count values by -1, "flipping" them over an access. This function is a test of algorithmic stability of a pipeline or method.
 #'
 #' @param dataList a  list of data sets
 #' @return A data set list with flipped gene counts
@@ -209,9 +224,9 @@ flip_gene_counts <- function(dataList)
 #' @param dataList A list of data sets
 #' @param method The clustering method to be used, defaults to Kmeans
 #' @param transformationType The type of data transformation to apply, defaults to log
-#' @param seed the seed to be set for reporducability, defaults to 1
+#' @param seed the seed to be set for reproducibility, defaults to 1
 #' @param numberClusters The number of cluster centers to use, defaults to 10
-#' @return A metamophic results table
+#' @return A metamorphic results table
 #' @export
 run_metamorphic_test <- function(dataList, perturbationType = 1, method = 'kmeans', transformationType = 'log', seed = 1, numberClusters = 10)
 {

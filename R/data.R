@@ -202,9 +202,16 @@ annotate_datasets <- function(dataList)
       x@meta.data$orig.ident <- x@meta.data$CELL_LINE
       x <- x
     })
-    for (i in (1:length(dataList)))
+    if(length(dataList) == 1)
     {
-      dataList[[i]]@meta.data$SID = rep(i, length(dataList[[i]]@meta.data$SID))
+      dataList[[1]]@meta.data$SID = as.numeric(as.factor(dataList[[1]]@meta.data$ID))
+    }
+    else
+    {
+      for (i in (2:length(dataList)))
+      {
+        dataList[[i]]@meta.data$SID = rep(i, length(dataList[[i]]@meta.data$SID))
+      }
     }
   }
 
@@ -213,6 +220,8 @@ annotate_datasets <- function(dataList)
   }
   return(dataList)
 }
+
+
 
 
 #' Add Clustering Annotations
