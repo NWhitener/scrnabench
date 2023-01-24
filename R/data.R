@@ -177,7 +177,10 @@ annotate_datasets <- function(dataList)
 
         chunks <- stringr::str_split(col, "_")
         x@meta.data$TECHNOLOGY[i] <- chunks[[1]][1]
-
+        if(chunks[[1]][3] == "HT")
+        {
+          x@meta.data$TECHNOLOGY[i] <- 'C1_HT'
+        }
         if(chunks[[1]][2] == "PE" | chunks[[1]][2] == "SE")
         {
           x@meta.data$CENTER[i] <- "TBU"
