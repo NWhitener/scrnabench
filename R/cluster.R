@@ -57,8 +57,8 @@ run_seurat_clustering <- function(dataList, reductionType = 'pca', resolutionVal
       annotationField <- toupper(paste('seurat_cluster_', reductionType, sep=''))
       dataList[[i]][[annotationField]] <- as.numeric(dataList[[i]][['seurat_clusters']][,1])
       dataList[[i]] <- Seurat::DietSeurat(dataList[[i]], data = T,
-                                          counts = F, scale.data = F, features = Seurat::VariableFeatures(object = dataList[[i]]),
-                                          dimreducs = names(dataList[[i]]@reductions), graphs = NULL)
+                                         counts = F, scale.data = F,
+                                         dimreducs = names(dataList[[i]]@reductions), graphs = NULL)
     }
   }
   else
