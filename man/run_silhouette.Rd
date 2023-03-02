@@ -18,6 +18,6 @@ defaults to PCA}
 A table of the Silhouette Scores, with the data set name and the score
 }
 \description{
-This function calculates the average silhouette width of the clustering assignments made on the data sets provided
-Uses the cluster package implementation.
+This function calculates the average silhouette width of the clustering assignments made on the data sets provided.
+Uses the clusterCrit package implementation.
 }

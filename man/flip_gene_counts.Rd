@@ -13,5 +13,5 @@ flip_gene_counts(dataList)
 A data set list with flipped gene counts
 }
 \description{
-This function multiplies the gene count values by -1, "flipping" them over an access. This function is a test of algorithmic stability
+This function multiplies the gene count values by -1, negating their values. This function is a test of algorithmic stability of a pipeline or method.
 }

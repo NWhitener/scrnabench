@@ -13,6 +13,6 @@ modify_gene_counts(dataList)
 A data set list with modified gene counts
 }
 \description{
-This function takes the gene counts of the takes the original gene counts of the datasets, multiplies them by 2 and then adds one to the count,
+This function takes the gene counts of a row of the takes the original gene counts of the datasets, multiplies them by 2 and then adds one to the count,
 creating a transformation of 2x+1. This function is designed to test the algorithmic stability of a clustering algorithm
 }

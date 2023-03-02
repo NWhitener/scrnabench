@@ -9,7 +9,7 @@ run_pca(dataList, numComponents = 10)
 \arguments{
 \item{dataList}{A list of data sets to be reduced by PCA}
 
-\item{numComponents}{The number fo components to be found, with a default of 10}
+\item{numComponents}{The number of components to be found, with a default of 10}
 }
 \value{
 A data list with PCA completed on the features

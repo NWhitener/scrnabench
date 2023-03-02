@@ -14,6 +14,6 @@ The data list with the rows permuted
 }
 \description{
 This function is designed for experimental analysis of algorithmic stability. It permutes the rows of a data list
-so that further experimentation can be done wit the data list to check the  algorithmic stability of a pipeline or
+so that further experimentation can be done with the data list to check the  algorithmic stability of a pipeline or
 method
 }

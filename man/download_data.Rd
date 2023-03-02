@@ -4,7 +4,7 @@
 \alias{download_data}
 \title{Downloads the data}
 \usage{
-download_data(path = ".")
+download_data(path = "./")
 }
 \arguments{
 \item{path}{The path of the download location to use}
@@ -14,5 +14,5 @@ A object with the names of the data sets that were downloaded and loaded
 }
 \description{
 This function downloads the data that is used in the package for use in examples, and automatically loads the data for
-usage. Run this once when the data is not download, if the data is downloaded use the load_data function
+usage. Run this once when the data is not downloaded, if the data is downloaded use the load_data function
 }

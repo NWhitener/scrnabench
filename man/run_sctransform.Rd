@@ -15,7 +15,7 @@ run_sctransform(dataList, numFeatures = 2000)
 A data list of the combined data from the sctransform protocol
 }
 \description{
-This function runs the data integration protocol detailed in the Seurat "Using sctransform in Seurtat"
+This function runs the data integration protocol detailed in the Seurat "Using sctransform in Seurat"
 found at https://satijalab.org/seurat/articles/sctransform_vignette.html . This function completes the sctransform process on
-the datasets. Use run_sctransform_workflow() for the entire workflow process
+the datasets, using the first data set as a reference as described at https://satijalab.org/seurat/articles/integration_large_datasets.html. Use run_sctransform_workflow() for the entire workflow process
 }

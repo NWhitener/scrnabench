@@ -20,12 +20,12 @@ run_metamorphic_test(
 
 \item{transformationType}{The type of data transformation to apply, defaults to log}
 
-\item{seed}{the seed to be set for reporducability, defaults to 1}
+\item{seed}{the seed to be set for reproducibility, defaults to 1}
 
 \item{numberClusters}{The number of cluster centers to use, defaults to 10}
 }
 \value{
-A metamophic results table
+A metamorphic results table
 }
 \description{
 This function runs the metamorphic test. It applies a perturbation and then clusters based on the method, transformation, and number of

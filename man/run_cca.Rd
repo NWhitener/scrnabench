@@ -14,6 +14,6 @@ A data list of the combined data from the cca protocol
 }
 \description{
 This function runs the data integration protocol detailed in the Seurat "Introduction to scRNA-seq
-integration" found at https://satijalab.org/seurat/articles/integration_introduction.html. This function completes the cca process on
-the datasets. Use run_cca_integration_workflow() for the entire workflow process
+integration" found at https://satijalab.org/seurat/articles/integration_introduction.html. This function completes the cca integration process using the first data set as a reference as described at https://satijalab.org/seurat/articles/integration_large_datasets.html
+Use run_cca_integration_workflow() for the entire workflow process
 }

@@ -8,18 +8,19 @@ run_kmeans_clustering(
   dataList,
   reductionType = "pca",
   numberClusters = 10,
-  iterationsMax = 100
+  iterationsMax = 100,
+  seed = 1
 )
 }
 \arguments{
 \item{dataList}{A list of data sets to be clustered by Kmeans}
 
-\item{reductionType}{The type of dimensionly reduced data that should be used for clustering
+\item{reductionType}{The type of dimensionly reduced data that should be used for clustering,
 defaults to PCA}
 
 \item{numberClusters}{The number of cluster centers to use, defaults to 10}
 
-\item{iterationsMax}{The max number of iterations that should be used in the kmeans algorithm
+\item{iterationsMax}{The max number of iterations that should be used in the kmeans algorithm,
 defaults to 100}
 }
 \value{
@@ -27,6 +28,6 @@ The dataList with kmeans clusters stored in the meta data
 }
 \description{
 This function runs Kmeans Clustering. It uses the simple Kmeans algorithm with
-a max number of iterations set to be 100 by default. The number of clusters is set by the users and defaults
+a max number of iterations set to be 100 by default. The number of clusters can be set by the users and defaults
 to 10 clusters. This is the R package stats implementation of Kmeans
 }

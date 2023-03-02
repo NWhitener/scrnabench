@@ -13,6 +13,6 @@ annotate_datasets(dataList)
 A annotated Seurat Object
 }
 \description{
-This function annotates a created Seurat object. It edits the chunks and meta.data in
+This function annotates a created Seurat object. It edits the meta.data in
 order to annotate the object for use in down stream analysis
 }

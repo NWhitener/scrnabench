@@ -13,5 +13,5 @@ add_zero_variance_gene_counts(dataList)
 A data set list with added zero variance gene counts
 }
 \description{
-This function adds a set of zero variance gene counts to the sample. This function is a test of algorithmic stability
+This function adds a set of zero variance gene counts to the sample. This function is a test of algorithmic stability of a pipeline or a method.
 }

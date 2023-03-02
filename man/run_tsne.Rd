@@ -19,6 +19,6 @@ A data list with tSNE completed on the features
 \description{
 This functions runs the Seurat RunTSNE function on a list of data sets. This functions assumes that genes are in rows and
 cells are in columns. The default reduction is set to "pca" with the first 10 dimensions being accepted. The perplexity
-is set to the square root of the number of cells, to accomodate for small datasets, and check_duplicated is set
+is set to the square root of the number of cells, to accommodate for small datasets, and check_duplicated is set
 to be false
 }

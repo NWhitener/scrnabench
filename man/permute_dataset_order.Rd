@@ -13,5 +13,7 @@ permute_dataset_order(dataList)
 A permuted data set list
 }
 \description{
-This function permutes the order of the data set
+This function is designed for experimental analysis of algorithmic stability.
+This function permutes the order of the data set so that further experimentation can be done with the data list to check the  algorithmic stability of a pipeline or
+method
 }

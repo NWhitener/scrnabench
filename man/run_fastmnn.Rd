@@ -4,7 +4,7 @@
 \alias{run_fastmnn}
 \title{Run fastmnn}
 \usage{
-run_fastmnn(dataList, batchName = "ID")
+run_fastmnn(dataList, batchName = "SID")
 }
 \arguments{
 \item{dataList}{A  list of data sets to integrate using the fastmnn protocol}

@@ -10,10 +10,10 @@ run_log(dataList)
 \item{dataList}{A data list of Data sets in the Gene in Row and Cell in Columns format}
 }
 \value{
-A data list with Log scores of Each Gene Cell Relationship
+A data list with Log scores of each Gene-Cell relationship
 }
 \description{
 This function completes the Log data transformation on a list of data. This step can be done to
-create and use Log data for further downstream data analysis and computations. For more information on the Log calculation
+create and use Log transformed data for further downstream data analysis and computations. For more information on the Log calculation
 please see https://cran.r-project.org/web/packages/Seurat/Seurat.pdf
 }

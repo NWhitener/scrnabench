@@ -10,10 +10,10 @@ filter_data(dataList)
 \item{dataList}{A list of data, with Genes in Rows and Cells in Columns}
 }
 \value{
-A data list of data that falls within the specified data limitations which acts as preprocesses
+A data list of data that falls within the specified data limitations
 }
 \description{
 This function "filters" a data list by restricting a input list to a range between minimum and maximum of the Total MRNA counts
-Total Gene Counts that are present in the list. This creates a filtered set of genes to use in experiments, removing extreme
+and Total Gene Counts that are present in the list. This creates a filtered set of genes to use in experiments, removing extreme
 outliers and making sure that all cells and genes are potentially informative.
 }

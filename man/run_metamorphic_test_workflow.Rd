@@ -38,6 +38,6 @@ dimensionality reduction, and clustering. The TFIDF data transformation complete
 annotates the data, and selects the Highly Variable Genes before applying dimensionality reduction and finally
 clustering. The clustering parameters are set to default, except for the number of clusters in
 kmeans clustering, which is set to 10. If a score of 0 is returned it means that the dataset did not pass any of the metamorphic
-tests, if  a 1 is returned then it means that the datasets passed the metamorphic test. Any number inbetween 0 and 1 represnts the percent of
+tests, if  a 1 is returned then it means that the datasets passed the metamorphic test. Any number in between 0 and 1 representsd the percent of
 reductions that passed the metamorphic test
 }

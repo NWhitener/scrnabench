@@ -24,6 +24,6 @@ run_harmony_integration_workflow(
 A list of datasets with the harmony workflow applied
 }
 \description{
-This function completes the harmony workflow procedure for the log data transformation for merging datasets. This workflow handles data transformation,
-dimensionality reduction, merging, and clustering.
+This function completes the harmony workflow procedure for the log data transformation for merging datasets. This workflow handles data transformation, variable gene selection,
+scaling, dimensionality reduction, integration, and clustering.
 }

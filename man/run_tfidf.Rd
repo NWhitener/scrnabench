@@ -10,9 +10,9 @@ run_tfidf(dataList)
 \item{dataList}{A data list of Data sets in the Gene in Row and Cell in Columns format}
 }
 \value{
-A data list with GFICF scores of Each Gene Cell Relationship
+A data list with TFIDF scores of each Gene-Cell relationship
 }
 \description{
-This function completes the Term Frequency Inverse Document Frequency data transformation on a list of data. This is step is complete by
-using the text2vec protocol for completing TF-IDF on the cell data, creating TF-IDF Scores
+This function completes the Term Frequency Inverse Document Frequency data transformation on a list of data. This is step is completed by
+using the text2vec protocol for TF-IDF on the cell data, creating TF-IDF Scores
 }

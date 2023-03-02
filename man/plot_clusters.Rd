@@ -21,5 +21,5 @@ plot_clusters(
 \item{transformationType}{The transformation type you would like to see appear in the title}
 }
 \description{
-Produces a plot of the clustering, based on the dimensionality reduction method chosen. The plot is a Seurat DimPlot
+Produces a plot of the clustering, based on the dimensionality reduction method chosen. The plot is a Seurat DimPlot.
 }

@@ -14,6 +14,6 @@ A list of the merged data sets
 }
 \description{
 This function merges the contents of two lists into a sparse matrix. It assumes that the data sets
-are of the same format, with genes stored in rows and cells stored in columns. The lists are merged base on the
+are of the same format, with genes stored in rows and cells stored in columns. The lists are merged based on the
 union of the row names and the union of the column names
 }

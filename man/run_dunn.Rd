@@ -17,5 +17,5 @@ defaults to PCA}
 }
 \description{
 This function calculates the Dunn index of the clustering assignments made on the datasets provided. Uses the
-clVaild implementation of the Dunn Index
+clusterCrit implementation of the Dunn Index
 }

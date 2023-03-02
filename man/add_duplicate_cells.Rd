@@ -13,5 +13,5 @@ add_duplicate_cells(dataList)
 A data set list with a duplicated cell sample
 }
 \description{
-This function takes a random cell sample and adds its duplicate to the data set. This function is a test of algorithmic stability
+This function takes a random cell sample and adds its duplicate to the data set. This function is a test of algorithmic stability of a pipeline or method.
 }

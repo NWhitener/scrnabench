@@ -24,6 +24,6 @@ run_sctransform_integration_workflow(
 A list of datasets with the harmony workflow applied
 }
 \description{
-This function completes the SCtansform workflow procedure for the log data transformation for merging datasets. This workflow handles data transformation,
-dimensionality reduction, merging, and clustering.
+This function completes the SCtansform workflow procedure for the log data transformation for merging datasets. This workflow handles integration, dimensionality reduction,
+and clustering.
 }
