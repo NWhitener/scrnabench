@@ -1,7 +1,8 @@
 #' Create Internal Cluster Validation Report
 #'
 #' This function creates an internal validation report for clustering methods. This report includes the
-#' Average Silhouette Width, as well as the Dunn Index as measures of Internal Validation.
+#' Average Silhouette Width, as well as the Dunn Index as measures of Internal Validation. It also includes other useful information
+#' such as the Number of Clusters and the Number of Singletons.
 #'
 #' @param dataList A list of datasets with clustering completed
 #' @param method The type of clustering method to validate, defaults to kmeans

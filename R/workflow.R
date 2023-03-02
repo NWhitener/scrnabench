@@ -75,8 +75,8 @@ run_clustering_workflow <- function(dataList, method = 'kmeans', transformationT
 
 #' Completes the Harmony Workflow
 #'
-#' This function completes the harmony workflow procedure for the log data transformation for merging datasets. This workflow handles data transformation,
-#' dimensionality reduction, merging, and clustering.
+#' This function completes the harmony workflow procedure for the log data transformation for merging datasets. This workflow handles data transformation, variable gene selection,
+#' scaling, dimensionality reduction, integration, and clustering.
 #'
 #' @param dataList A list of data sets to merge
 #' @param method The clustering method to use
@@ -131,8 +131,8 @@ run_harmony_integration_workflow <- function(dataList, method = 'kmeans', number
 
 #' Completes the FastMNN Workflow
 #'
-#' This function completes the FastMNN workflow procedure for the log data transformation for merging datasets. This workflow handles data transformation,
-#' dimensionality reduction, merging, and clustering.
+#' This function completes the FastMNN workflow procedure for the log data transformation for merging datasets. This workflow handles data transformation, variable gene selection,
+#' dimensionality reduction, integration, and clustering.
 #'
 #' @param dataList A list of data sets to merge
 #' @param method The clustering method to use
@@ -182,8 +182,8 @@ run_fastmnn_integration_workflow <- function(dataList, method = 'kmeans', number
 
 #' Completes the CCA Workflow
 #'
-#' This function completes the CCA workflow procedure for the log data transformation for merging datasets. This workflow handles data transformation,
-#' dimensionality reduction, merging, and clustering.
+#' This function completes the CCA workflow procedure for the log data transformation for merging datasets. This workflow handles data transformation, variable gene selection,
+#' integration, scaling, dimensionality reduction, and clustering.
 #'
 #' @param dataList A list of data sets to merge
 #' @param method The clustering method to use
@@ -234,8 +234,8 @@ run_cca_integration_workflow <- function(dataList, method = 'kmeans', numberClus
 
 #' Completes the SCtransform Workflow
 #'
-#' This function completes the SCtansform workflow procedure for the log data transformation for merging datasets. This workflow handles data transformation,
-#' dimensionality reduction, merging, and clustering.
+#' This function completes the SCtansform workflow procedure for the log data transformation for merging datasets. This workflow handles integration, dimensionality reduction,
+#'  and clustering.
 #'
 #' @param dataList A list of data sets to merge
 #' @param method The clustering method to use
@@ -294,7 +294,7 @@ run_sctransform_integration_workflow <- function(dataList, method = 'kmeans', nu
 #' annotates the data, and selects the Highly Variable Genes before applying dimensionality reduction and finally
 #' clustering. The clustering parameters are set to default, except for the number of clusters in
 #' kmeans clustering, which is set to 10. If a score of 0 is returned it means that the dataset did not pass any of the metamorphic
-#' tests, if  a 1 is returned then it means that the datasets passed the metamorphic test. Any number inbetween 0 and 1 represnts the percent of
+#' tests, if  a 1 is returned then it means that the datasets passed the metamorphic test. Any number in between 0 and 1 representsd the percent of
 #' reductions that passed the metamorphic test
 #'
 #' @param dataList A list of the data sets

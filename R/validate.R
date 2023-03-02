@@ -1,7 +1,7 @@
 #' Run Silhouette
 #'
-#' This function calculates the average silhouette width of the clustering assignments made on the data sets provided
-#' Uses the cluster package implementation.
+#' This function calculates the average silhouette width of the clustering assignments made on the data sets provided.
+#' Uses the clusterCrit package implementation.
 #'
 #'
 #' @param dataList a data list of the data with clustering assignments
@@ -37,7 +37,7 @@ run_silhouette <- function(dataList, method = 'kmeans', reductionType = 'pca')
 #' Run Dunn Index
 #'
 #' This function calculates the Dunn index of the clustering assignments made on the datasets provided. Uses the
-#' clVaild implementation of the Dunn Index
+#' clusterCrit implementation of the Dunn Index
 #'
 #' @param dataList a data list of the data with clustering assignments
 #' @param reductionType The dimensionality reduction type of the data to find the calculated scores,
@@ -92,9 +92,6 @@ run_ari <- function(dataList, groundTruths, reductionType = 'pca',  method = 'km
   }
   return(resultsTable)
 }
-
-
-
 
 
 

@@ -1,6 +1,6 @@
 #' Visualization method for the Clustering Methods
 #'
-#' Produces a plot of the clustering, based on the dimensionality reduction method chosen. The plot is a Seurat DimPlot
+#' Produces a plot of the clustering, based on the dimensionality reduction method chosen. The plot is a Seurat DimPlot.
 #'
 #' @param data An individual data object that you want to visualize
 #' @param reductionType The dimensionality reduction method chosen, defaults to PCA

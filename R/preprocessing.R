@@ -33,11 +33,11 @@ extract_common_genes <- function(dataList)
 
 #' Runs the tfidf Transformations
 #'
-#' This function completes the Term Frequency Inverse Document Frequency data transformation on a list of data. This is step is complete by
-#' using the text2vec protocol for completing TF-IDF on the cell data, creating TF-IDF Scores
+#' This function completes the Term Frequency Inverse Document Frequency data transformation on a list of data. This is step is completed by
+#' using the text2vec protocol for TF-IDF on the cell data, creating TF-IDF Scores
 #'
 #' @param dataList A data list of Data sets in the Gene in Row and Cell in Columns format
-#' @return A data list with GFICF scores of Each Gene Cell Relationship
+#' @return A data list with TFIDF scores of each Gene-Cell relationship
 #' @export
 run_tfidf<-function(dataList)
 {
@@ -64,11 +64,11 @@ run_tfidf<-function(dataList)
 #' Runs the Log Transformation
 #'
 #' This function completes the Log data transformation on a list of data. This step can be done to
-#' create and use Log data for further downstream data analysis and computations. For more information on the Log calculation
+#' create and use Log transformed data for further downstream data analysis and computations. For more information on the Log calculation
 #' please see https://cran.r-project.org/web/packages/Seurat/Seurat.pdf
 #'
 #' @param dataList A data list of Data sets in the Gene in Row and Cell in Columns format
-#' @return A data list with Log scores of Each Gene Cell Relationship
+#' @return A data list with Log scores of each Gene-Cell relationship
 #' @export
 run_log <- function(dataList)
 {
@@ -90,11 +90,11 @@ run_log <- function(dataList)
 #' Filter the a Data List
 #'
 #' This function "filters" a data list by restricting a input list to a range between minimum and maximum of the Total MRNA counts
-#' Total Gene Counts that are present in the list. This creates a filtered set of genes to use in experiments, removing extreme
+#' and Total Gene Counts that are present in the list. This creates a filtered set of genes to use in experiments, removing extreme
 #' outliers and making sure that all cells and genes are potentially informative.
 #'
 #' @param dataList A list of data, with Genes in Rows and Cells in Columns
-#' @return A data list of data that falls within the specified data limitations which acts as preprocesses
+#' @return A data list of data that falls within the specified data limitations
 #' @export
 filter_data <- function(dataList)
 {
@@ -185,7 +185,7 @@ scale_data <- function(dataList)
 #' default number of components is 10, and the PCA is run on only scaled data
 #'
 #' @param dataList A list of data sets to be reduced by PCA
-#' @param numComponents The number fo components to be found, with a default of 10
+#' @param numComponents The number of components to be found, with a default of 10
 #' @return A data list with PCA completed on the features
 #' @export
 run_pca <- function(dataList, numComponents = 10)
@@ -242,7 +242,7 @@ run_umap <- function(dataList, reductionType = 'pca', numDimensions = 10)
 #'
 #' This functions runs the Seurat RunTSNE function on a list of data sets. This functions assumes that genes are in rows and
 #' cells are in columns. The default reduction is set to "pca" with the first 10 dimensions being accepted. The perplexity
-#' is set to the square root of the number of cells, to accomodate for small datasets, and check_duplicated is set
+#' is set to the square root of the number of cells, to accommodate for small datasets, and check_duplicated is set
 #' to be false
 #'
 #' @param dataList A list of data sets to be reduced by tSNE

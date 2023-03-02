@@ -196,7 +196,7 @@ add_zero_variance_gene_counts <- function(dataList)
 
 #' Flips the Gene Counts
 #'
-#' This function multiplies the gene count values by -1, "flipping" them over an access. This function is a test of algorithmic stability of a pipeline or method.
+#' This function multiplies the gene count values by -1, negating their values. This function is a test of algorithmic stability of a pipeline or method.
 #'
 #' @param dataList a  list of data sets
 #' @return A data set list with flipped gene counts
