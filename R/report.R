@@ -67,7 +67,7 @@ create_metamorphic_testing_report <- function(reportList)
         testOutcomes <- rep(0, nrow(reportList[['original']]))
         for (j in seq(3, ncol(matches), by = numberItemsToCompare))
         {
-          testOutcomes <- testOutcomes + ifelse(rowSums(matches[,j:(j + numberItemsToCompare - 1)]) == numberItemsToCompare, 1, 0)
+          testOutcomes <- testOutcomes + ifelse(rowSums(matches[,j:(j + numberItemsToCompare - 1), drop =F]) == numberItemsToCompare, 1, 0)
         }
         reportTable[[names(reportList)[i]]] <- testOutcomes
       }
