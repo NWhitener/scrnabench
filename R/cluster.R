@@ -80,7 +80,7 @@ run_seurat_clustering <- function(dataList, reductionType = 'pca', resolutionVal
 #' @param method The type of clustering, defaults to kmeans
 #' @param reductionType The type of dimensionly reduced data that should be used for clustering,
 #' defaults to PCA
-#' @return A list with the number of clusters
+#' @return A list with the correct number of clusters
 #' @export
 get_number_clusters <- function(dataList, reductionType= 'pca', method = 'kmeans')
 {
