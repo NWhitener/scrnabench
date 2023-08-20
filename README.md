@@ -82,7 +82,7 @@ dataList = run_clustering_workflow(dataList, method = 'seurat', transformationTy
 
 ### Metamorphic Benchmarking
 
-The metamorphic benchamrking workflow completes a clustering analysis pipeline. This workflow includes clustering amd all associated preprocessing, and the completion of up to 6 metamorphic testing [protocols](https://core.ac.uk/download/pdf/228032568.pdf). The result returned is table of how many dimensionality reductions saw no change after the metamorphic testing. 
+The metamorphic benchamrking workflow completes a clustering analysis pipeline. This workflow includes clustering and all associated preprocessing, and the completion of up to 6 metamorphic testing [protocols](https://core.ac.uk/download/pdf/228032568.pdf). The result returned is table of how many dimensionality reductions saw no change after the metamorphic testing. 
 
 For example, to cluster the data into 10 clusters using Kmeans algorithm, the following command can be used: 
 
