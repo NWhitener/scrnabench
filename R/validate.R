@@ -8,9 +8,11 @@
 #' @param reductionType The dimensionality reduction type of the data to find the calculated scores,
 #' defaults to PCA
 #' @param method The clustering method used, defaults to Kmeans
+#' @param sampling The size of the data sample that should be used
+#' @param t The iteration of resampling the dataset and re-calculate silhouette scores
 #' @return A table of the Silhouette Scores, with the data set name and the score
 #' @export
-run_silhouette <- function(dataList, method = 'kmeans', reductionType = 'pca')
+run_silhouette <- function(dataList, method = 'kmeans', reductionType = 'pca', sampling = 8000, t = 2)
 {
   resultsTable = NULL
   annotationField <- toupper(paste(method, '_cluster_', reductionType, sep=''))
@@ -27,7 +29,23 @@ run_silhouette <- function(dataList, method = 'kmeans', reductionType = 'pca')
     else
     {
       cellEmbeddings <- Seurat::Embeddings(dataList[[i]], reduction = reductionType)
-      silhouetteScore <- clusterCrit::intCriteria(cellEmbeddings, as.integer(clusters), c("Silhouette"))
+      if(length(cellEmbeddings[,1]) > sampling)
+      {
+        silhouetteScore = 0
+        for(i in (1:t))
+        {
+          sampleIndices <- sample(nrow(cellEmbeddings), sampling)
+          samplesData <- cellEmbeddings[sampleIndices, ]
+          samplesClusters <- clusters[sampleIndices]
+          sampleSil <- mean(cluster::silhouette(as.integer(samplesClusters), dist(samplesData))[,3])
+          silhouetteScore <-silhouetteScore +  sampleSil
+        }
+        silhouetteScore <- silhouetteScore / t
+      }
+      else
+      {
+        silhouetteScore <- mean(cluster::silhouette(as.integer(clusters), dist(cellEmbeddings))[,3])
+      }
       resultsTable = rbind(resultsTable, c(names(dataList[i]),  silhouetteScore))
     }
   }
@@ -43,9 +61,11 @@ run_silhouette <- function(dataList, method = 'kmeans', reductionType = 'pca')
 #' @param reductionType The dimensionality reduction type of the data to find the calculated scores,
 #' defaults to PCA
 #' @param method The clustering method used, defaults to Kmeans
-#' #' @return A table of the Dunn Index Scores, with the data set name and the score
+#' @param sampling The size of the data sample that should be used
+#' @param t The iteration of resampling the dataset and re-calculate silhouette scores
+#' @return A table of the Dunn Index Scores, with the data set name and the score
 #' @export
-run_dunn <- function(dataList, reductionType = 'pca',  method = 'kmeans')
+run_dunn <- function(dataList, reductionType = 'pca',  method = 'kmeans', sampling = 8000, t = 2)
 {
   resultsTable = NULL
   annotationField <- toupper(paste(method, '_cluster_', reductionType, sep=''))
@@ -61,8 +81,26 @@ run_dunn <- function(dataList, reductionType = 'pca',  method = 'kmeans')
     }
     else
     {
+      
       cellEmbeddings <- Seurat::Embeddings(dataList[[i]], reduction = reductionType)
-      dunnScore =  clusterCrit::intCriteria(cellEmbeddings, as.integer(clusters), c("Dunn"))
+      if(length(cellEmbeddings[,1]) > sampling)
+      {
+        dunnScore = 0
+        for(i in (1:t))
+        {
+          sampleIndices <- sample(nrow(cellEmbeddings), sampling)
+          samplesData <- cellEmbeddings[sampleIndices, ]
+          samplesClusters <- clusters[sampleIndices]
+          sampleDunn <- clValid::dunn(Data = samplesData, clusters = as.integer(samplesClusters))
+          dunnScore <- dunnScore +  sampleDunn
+        }
+        dunnScore <- dunnScore / t
+      }
+      else
+      {
+        dunnScore =  clValid::dunn(Data = cellEmbeddings, clusters = as.integer(clusters))
+      }
+      
       resultsTable = rbind(resultsTable, c(names(dataList[i]),  dunnScore))
     }
   }
