@@ -6,17 +6,17 @@ This R package focuses on metamorphic stability of clustert analysis and data in
 
 In the R terminal execute the following command 
 
-'''
+```
 devtools::install_github("NWhitener/scrnabench")
-'''
+```
 This will install the package. 
 
 The "BiocManager" is required to install the dependent package of scrnabench. To install the package, execute the following commands:
-'''
+```
 if (!require("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 BiocManager::install()
-'''
+```
 
 To use the package:
 ```
