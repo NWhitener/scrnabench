@@ -67,6 +67,7 @@ run_fastmnn <- function(dataList, batchName = "SID")
   if(is.list(dataList))
   {
   for (i in 1:length(names(dataList))){
+    dataList[[i]]@meta.data[[batchName]] <- as.factor(dataList[[i]]@meta.data[[batchName]])
     dataList[[i]] <- SeuratWrappers::RunFastMNN(object.list = Seurat::SplitObject(dataList[[i]], split.by = batchName))
   }
   }
