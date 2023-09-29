@@ -11,6 +11,7 @@ if (!require("BiocManager", quietly = TRUE))
 BiocManager::install()
 ```
 If you don't have devtools installed, run this: `install.packages("devtools")`.
+
 In the R terminal execute the following command to install the package:
 ```
 devtools::install_github("NWhitener/scrnabench")
