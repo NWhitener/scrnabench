@@ -13,9 +13,10 @@
 #' @param transformationType The data transformation to be used, defaults to the log transformation
 #' @param seed The seed to be set for reproducibility, defaults to 1
 #' @param numberClusters The number of clusters to use for Kmeans clustering, defaults to 10
+#' @param dataDir The directory to save the cluster validation report
 #' @return the Data list with all components of the workflow completed
 #' @export
-run_clustering_workflow <- function(dataList, method = 'kmeans', transformationType = 'log', seed = 1, numberClusters = 10)
+run_clustering_workflow <- function(dataList, method = 'kmeans', transformationType = 'log', seed = 1, numberClusters = 10, dataDir = "./")
 {
   if(is.list(dataList))
   {
@@ -63,7 +64,9 @@ run_clustering_workflow <- function(dataList, method = 'kmeans', transformationT
     stop("Unknown clustering method. Only seurat and kmeans methods are supported.")
   }
 
-  print(create_internal_cluster_validation_report(dataList, method = method))
+  report = create_internal_cluster_validation_report(dataList, method = method)
+  write.csv(report, paste(dataDir, "cluster_validation_report.csv", sep = ""))
+  print(report)
   }
   else
   {
