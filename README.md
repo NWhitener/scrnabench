@@ -50,7 +50,7 @@ In order to download the dataset use the **download_data()** function. This will
 To download the data provide a path to the desired directory where the data should be downloaded. For example, **path = "/User/Downloads"**.  This function will download and automatically load the data file which can be immediately used for benchmarking. This function only needs to be run once. 
 
 ```
-datasets = dowload_data(path = "/Users/Downloads")  
+datasets = download_data(path = "/Users/Downloads")  
 ```
 
 ## Dataset Load 
