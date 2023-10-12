@@ -17,7 +17,7 @@ In the R terminal execute the following command to install the package:
 devtools::install_github("NWhitener/scrnabench")
 ```
 
-If you recieve errors like "reach API limit", please refer to this [post](https://gist.github.com/Z3tt/3dab3535007acf108391649766409421).
+If you receive errors like "reach API limit", please refer to this [post](https://gist.github.com/Z3tt/3dab3535007acf108391649766409421).
 
 To use the package:
 ```
