@@ -8,7 +8,7 @@ The "BiocManager" is required to install the dependent package of scrnabench. To
 ```
 if (!require("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
-BiocManager::install()
+BiocManager::install("batchelor")
 ```
 If you don't have devtools installed, run this: `install.packages("devtools")`.
 
