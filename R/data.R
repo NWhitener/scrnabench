@@ -9,9 +9,9 @@
 #' @export
 download_data <- function(path = './')
 {
-
-  inborutils::download_zenodo(doi = "10.5281/zenodo.6617997", path = path)
-  geneCounts <<- readRDS(file = paste(path, "/gene_counts.RDS", sep = ''))
+  dataDir <- file.path(path, "/gene_counts.RDS")
+  download.file("https://zenodo.org/records/6617997/files/gene_counts.RDS?download=1", dataDir)
+  geneCounts <- readRDS(file = paste(path, "/gene_counts.RDS", sep = ''))
   datasets <- ls(geneCounts)
 
   return(datasets)
